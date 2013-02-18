@@ -1,14 +1,22 @@
-package nebula.mpie
+package billy.mpie
 
 import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
+
 import java.io.File
 
 import scala.annotation.elidable
 import scala.annotation.elidable.ASSERTION
 
 import org.apache.commons.io.FilenameUtils
-
-import nebula.RuntimeConfig
 
 // TODO: Duplication. Grr.
 case class MPIERuntimeConfig(

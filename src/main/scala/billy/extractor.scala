@@ -1,7 +1,19 @@
-package nebula
+package billy
 
 import java.awt.image.BufferedImage
 
+import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
+
+import nebula._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
@@ -11,12 +23,7 @@ import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 import imageProcessing.ImageUtil
 import imageProcessing.Pixel
-import nebula.OpenCVExtractor.BRIEF
-import nebula.OpenCVExtractor.BRISK
-import nebula.OpenCVExtractor.FREAK
-import nebula.OpenCVExtractor.ORB
-import nebula.OpenCVExtractor.SIFT
-import nebula.OpenCVExtractor.SURF
+
 import nebula.imageProcessing.RichImage.bufferedImage
 import nebula.util.JSONUtil.AddClassName
 import nebula.util.JSONUtil.singletonObject

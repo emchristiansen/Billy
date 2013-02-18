@@ -1,21 +1,32 @@
-package nebula
+package billy
+
+import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
 
 import java.io.File
 import org.apache.commons.io.FileUtils.readFileToString
 import javax.imageio.ImageIO
 
-import nebula.summary.ExperimentSummary
+import billy.summary.ExperimentSummary
 import spray.json.JsonFormat
 import spray.json.pimpAny
 import spray.json._
-import nebula.DetectorJsonProtocol._
-import nebula.ExtractorJsonProtocol._
-import nebula.MatcherJsonProtocol._
-import nebula.wideBaseline.WideBaselineJsonProtocol._
+import billy.DetectorJsonProtocol._
+import billy.ExtractorJsonProtocol._
+import billy.MatcherJsonProtocol._
+
 import scala.reflect.runtime.universe._
 import org.apache.commons.io.FileUtils
 import shapeless._
-import nebula.wideBaseline._
+import billy.wideBaseline._
 
 ///////////////////////////////////////////////////////////
 

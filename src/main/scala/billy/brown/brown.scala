@@ -1,17 +1,27 @@
-package nebula.brown
+package billy.brown
+
+import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
 
 import org.opencv.features2d.DMatch
 import nebula.util._
-import nebula.summary._
-import nebula.JsonProtocols._
+import billy.summary._
+import billy.JsonProtocols._
 import spray.json._
-import nebula.ExperimentRunner
-import nebula.Extractor
-import nebula.Matcher
-import nebula.brown._
+import billy.ExperimentRunner
+import billy.Extractor
+import billy.Matcher
 
-import nebula.RuntimeConfig
-import nebula.StorageInfo
+import billy.RuntimeConfig
+import billy.StorageInfo
 import scala.Option.option2Iterable
 
 

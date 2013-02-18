@@ -1,4 +1,15 @@
-package nebula
+package billy
+
+import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
 
 import scala.Int.int2double
 import scala.reflect.runtime.universe
@@ -7,11 +18,7 @@ import scala.runtime.ZippedTraversable2.zippedTraversable2ToTraversable
 import org.opencv.features2d.DMatch
 
 import breeze.linalg.DenseMatrix
-import nebula.Matcher.KendallTau
-import nebula.Matcher.L0
-import nebula.Matcher.L1
-import nebula.Matcher.L2
-import nebula.SortDescriptor.implicitIndexedSeq
+import billy.SortDescriptor.implicitIndexedSeq
 import nebula.util.JSONUtil
 import nebula.util.JSONUtil.AddClassName
 import spray.json.DefaultJsonProtocol

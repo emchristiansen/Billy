@@ -1,14 +1,23 @@
-package nebula.summary
+package billy.summary
+
+import nebula._
+import nebula.imageProcessing._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
 
 import java.awt.image.BufferedImage
 import java.io.File
 
 import javax.imageio.ImageIO
 import nebula.PimpFile
-import nebula.RuntimeConfig
+import billy.RuntimeConfig
 import nebula.getResource
-import nebula.util.IO
-import nebula.wideBaseline.WideBaselineExperimentResults
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +46,7 @@ case class Histogram(
     val pythonScript = getResource("python/distance_histogram.py")
     val outputFile = IO.createTempFile("histogram", ".png")
     val command = "python %s %s %s".format(pythonScript, tempFile, outputFile)
-    IO.runSystemCommand(command)
+    nebula.util.IO.runSystemCommand(command)
 
     ImageIO.read(outputFile)
   }

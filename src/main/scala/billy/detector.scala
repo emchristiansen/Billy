@@ -1,4 +1,15 @@
-package nebula
+package billy
+
+import nebula._
+import nebula.imageProcessing._
+import nebula.util._
+
+import billy._
+import billy.brown._
+import billy.mpie._
+import billy.smallBaseline._
+import billy.wideBaseline._
+import billy.summary._
 
 import java.awt.image.BufferedImage
 
@@ -8,6 +19,7 @@ import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.FeatureDetector
 import org.opencv.features2d.KeyPoint
 
+import nebula._
 import nebula.util.JSONUtil.singletonObject
 import spray.json.DefaultJsonProtocol
 import spray.json.JsonFormat
