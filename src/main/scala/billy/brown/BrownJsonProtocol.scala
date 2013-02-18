@@ -11,8 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import billy.Extractor
-import billy.Matcher
 import nebula.util.DMatchJsonProtocol.dmatchJsonProtocol
 import nebula.util.JSONUtil.AddClassName
 import spray.json.DefaultJsonProtocol
