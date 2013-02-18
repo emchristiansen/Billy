@@ -10,6 +10,7 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
+import billy.matchers._
 
 ///////////////////////////////////////////////////////////
 
@@ -26,7 +27,8 @@ trait ExpectedDistance {
 }
 
 object ExpectedDistance {
-  implicit class NCCAndL12ExpectedDistance(self: (PatchNormalizer.NCC.type, Matcher.L1.type)) extends ExpectedDistance {
+  implicit class NCCAndL12ExpectedDistance(
+      self: (PatchNormalizer.NCC.type, VectorMatcher.L1.type)) extends ExpectedDistance {
     // Fitted using ZunZun.com (Simple Equation 32 With Offset)
     override def expectedDistance = size => {
       val a = 7.4442627202579173E-02
@@ -37,11 +39,13 @@ object ExpectedDistance {
     }
   }
 
-  implicit class NCCAndL22ExpectedDistance(self: (PatchNormalizer.NCC.type, Matcher.L2.type)) extends ExpectedDistance {
+  implicit class NCCAndL22ExpectedDistance(
+      self: (PatchNormalizer.NCC.type, VectorMatcher.L2.type)) extends ExpectedDistance {
     override def expectedDistance = size => math.sqrt(2)
   }
 
-  implicit class RankAndL12ExpectedDistance(self: (PatchNormalizer.Rank.type, Matcher.L1.type)) extends ExpectedDistance {
+  implicit class RankAndL12ExpectedDistance(
+      self: (PatchNormalizer.Rank.type, VectorMatcher.L1.type)) extends ExpectedDistance {
     // Fitted using ZunZun.com (Simple Equation 14)
     override def expectedDistance = size => {
       val a = 3.3371413204051159E-01
@@ -51,7 +55,8 @@ object ExpectedDistance {
     }
   }
 
-  implicit class RankAndL22ExpectedDistance(self: (PatchNormalizer.Rank.type, Matcher.L2.type)) extends ExpectedDistance {
+  implicit class RankAndL22ExpectedDistance(
+      self: (PatchNormalizer.Rank.type, VectorMatcher.L2.type)) extends ExpectedDistance {
     // Fitted using ZunZun.com (Simple Equation 27 With Offset)
     override def expectedDistance = size => {
       val a = 6.3765625443234372E-02

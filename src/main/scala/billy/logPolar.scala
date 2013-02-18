@@ -14,6 +14,7 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
+import billy.matchers._
 
 import breeze.linalg.{ DenseMatrix, DenseVector, copy }
 import nebula.util.DenseMatrixUtil._
