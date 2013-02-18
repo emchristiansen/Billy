@@ -1,0 +1,22 @@
+package nebula
+
+import java.awt.image.BufferedImage
+
+///////////////////////////////////////////////////////////
+
+trait HasImagePair {
+  def leftImage: BufferedImage
+  def rightImage: BufferedImage
+}
+
+///////////////////////////////////////////////////////////
+
+trait HasGroundTruth[A] {
+  def groundTruth: A
+}
+
+///////////////////////////////////////////////////////////
+
+trait HasEstimate[A] {
+  def estimate: A
+}
