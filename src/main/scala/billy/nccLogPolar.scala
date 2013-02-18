@@ -10,6 +10,7 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
+import billy.extractors._
 
 import java.awt.image.BufferedImage
 import breeze.math._
