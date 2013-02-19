@@ -1,3 +1,5 @@
+Named after Billy Pilgrim in Slaughterhouse Five. Currently trying to find the appropriate quote.
+
 This is a framework for testing visual features, eg SIFT, SURF, and BRIEF. It is similar to [VLBenchmarks](http://www.vlfeat.org/benchmarks/index.html) except it is written in Scala and thus automatically superior to anything touching that awful language Matlab.
 
 This project is under development. Stay tuned for documentation.

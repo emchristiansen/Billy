@@ -11,6 +11,10 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
+import billy.detectors._
+import billy.extractors._
+import billy.matchers._
+
 import nebula._
 import org.scalatest._
 import javax.imageio.ImageIO
@@ -46,7 +50,7 @@ class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
       "liberty",
       1000,
       OpenCVExtractor.SIFT,
-      Matcher.L2)
+      VectorMatcher.L2)
 
     implicit val runtimeConfig: RuntimeConfig = BillyTestUtil.runtimeConfig
 
@@ -61,7 +65,7 @@ class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
       "liberty",
       1000,
       OpenCVExtractor.SIFT,
-      Matcher.L2)
+      VectorMatcher.L2)
 
     experiment.toJson
   }

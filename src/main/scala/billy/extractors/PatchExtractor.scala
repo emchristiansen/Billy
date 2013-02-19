@@ -35,6 +35,10 @@ import nebula.util._
 
 ///////////////////////////////////////////////////////////
 
+/**
+ * Represents an extractor that blurs a region, possibly normalizes it up
+ * to similarity, and then extracts a square patch of given size and color.
+ */
 case class PatchExtractor(
   normalizeRotation: Boolean,
   normalizeScale: Boolean,
@@ -42,7 +46,10 @@ case class PatchExtractor(
   blurWidth: Int,
   color: String)
 
-object PatchExtractor {
+/**
+ * Views to Extractor.
+ */
+trait PatchExtractor2Extractor {
   implicit def PatchExtractor2Extractor(
     self: PatchExtractor): Extractor[IndexedSeq[Int]] =
     Extractor(
@@ -56,9 +63,12 @@ object PatchExtractor {
       })
 }
 
-trait PatchJsonProtocol extends DefaultJsonProtocol {
+/**
+ * Implementations of JsonProtocol.
+ */
+trait PatchExtractorJsonProtocol extends DefaultJsonProtocol {
   implicit val patchExtractorJsonProtocol =
     jsonFormat5(PatchExtractor.apply).addClassInfo("PatchExtractor")
 }
 
-object PatchJsonProtocol extends PatchJsonProtocol
+object PatchExtractor extends PatchExtractor2Extractor with PatchExtractorJsonProtocol
