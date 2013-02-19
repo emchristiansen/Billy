@@ -41,9 +41,11 @@ trait OpenCVDetector {
 }
 
 /**
- * Views to Detector and PairDetector.
+ * Views to Detector and PairDetector. The views to Detector are mixed
+ * in here to ensure the Detector views have higher priority than the
+ * PairDetector views.
  */
-trait OpenCVDetector2Detector {
+trait OpenCVDetector2Detector extends OpenCVDetector2PairDetector {
   /**
    * Turns an enum exposed by the OpenCV Java interface into a proper
    * extractor.
@@ -69,7 +71,12 @@ trait OpenCVDetector2Detector {
     detectorFromEnum(FeatureDetector.SIFT)
   implicit def openCVDetectorSurf2Detector(self: OpenCVDetector.SURF.type) =
     detectorFromEnum(FeatureDetector.SURF)
+}
 
+/**
+ * Views to PairDetector.
+ */
+trait OpenCVDetector2PairDetector {
   // This enumeration is necessary because Scala doesn't do deep 
   // searches for implicits.
   implicit def openCVDetectorDense2PairDetector(
@@ -85,7 +92,7 @@ trait OpenCVDetector2Detector {
 }
 
 /**
- * Implementations of JsonProtocol.
+ * Implementations of JsonFormat.
  */
 trait OpenCVDetectorJsonProtocol extends DefaultJsonProtocol {
   implicit val openCVDetectorDenseJsonProtocol =
