@@ -22,7 +22,6 @@ import java.io.File
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import nebula.util._
-import billy.JsonProtocols._
 import spray.json._
 import com.sun.xml.internal.bind.v2.model.runtime.RuntimeClassInfo
 

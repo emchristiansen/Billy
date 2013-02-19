@@ -10,6 +10,9 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
+import billy.detectors._
+import billy.extractors._
+import billy.matchers._
 
 import nebula._
 import org.scalatest.FunSuite
@@ -62,18 +65,18 @@ class TestExpectedDistance extends FunSuite {
   }
 
   test("NCC and L1", MediumTest) {
-    testExpectedDistance(PatchNormalizer.NCC, Matcher.L1)
+    testExpectedDistance(PatchNormalizer.NCC, VectorMatcher.L1)
   }
   
   test("NCC and L2", MediumTest) {
-    testExpectedDistance(PatchNormalizer.NCC, Matcher.L2)
+    testExpectedDistance(PatchNormalizer.NCC, VectorMatcher.L2)
   }
   
   test("Rank and L1", MediumTest) {
-    testExpectedDistance(PatchNormalizer.Rank, Matcher.L1)
+    testExpectedDistance(PatchNormalizer.Rank, VectorMatcher.L1)
   }
   
   test("Rank and L2", MediumTest) {
-    testExpectedDistance(PatchNormalizer.Rank, Matcher.L2)
+    testExpectedDistance(PatchNormalizer.Rank, VectorMatcher.L2)
   }
 }

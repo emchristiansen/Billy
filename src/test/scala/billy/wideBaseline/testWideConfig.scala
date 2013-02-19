@@ -10,6 +10,9 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
+import billy.detectors._
+import billy.extractors._
+import billy.matchers._
 
 import nebula._
 import org.scalatest.FunSuite
@@ -18,7 +21,6 @@ import java.io.File
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import nebula.util._
-import billy.JsonProtocols._
 
 ///////////////////////////////////////////////////////////
 
@@ -30,7 +32,7 @@ class TestWideConfig extends FunSuite {
       2,
       OpenCVDetector.FAST,
       OpenCVExtractor.SIFT,
-      Matcher.L2)
+      VectorMatcher.L2)
       
     implicit val runtimeConfig = BillyTestUtil.runtimeConfig
     

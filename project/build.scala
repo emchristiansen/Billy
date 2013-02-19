@@ -48,7 +48,8 @@ object BillyBuild extends Build {
       "-feature",
       "-language:implicitConversions",
       // "-language:reflectiveCalls",
-      "-language:postfixOps"
+      "-language:postfixOps",
+      "-Yinline-warnings"
     )
   )
 
