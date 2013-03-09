@@ -104,7 +104,7 @@ object Extractor {
       val descriptor = new Mat
       extractor.compute(imageMat, new MatOfKeyPoint(keyPoint), descriptor)
 
-      DenseMatrixUtil.matToMatrixDouble(descriptor) map (_.data.toIndexedSeq)
+      DenseMatrixUtil.matToMatrixDoubleSingleChannel(descriptor) map (_.data.toIndexedSeq)
 //      
 //      if (descriptor.rows == 0 || descriptor.cols == 0) None
 //      else {

@@ -39,12 +39,12 @@ case class Histogram(
       title,
       sameDistances.sorted.mkString(" "),
       differentDistances.sorted.mkString(" "))
-    val tempFile = IO.createTempFile("histogramData", ".txt")
+    val tempFile = billy.IO.createTempFile("histogramData", ".txt")
     org.apache.commons.io.FileUtils.writeStringToFile(tempFile, tempContents)
 
     // TODO: Fix path
     val pythonScript = getResource("python/distance_histogram.py")
-    val outputFile = IO.createTempFile("histogram", ".png")
+    val outputFile = billy.IO.createTempFile("histogram", ".png")
     val command = "python %s %s %s".format(pythonScript, tempFile, outputFile)
     nebula.util.IO.runSystemCommand(command)
 
