@@ -147,6 +147,13 @@ trait SingleExtractor[F] extends Extractor[F] {
 
 ///////////////////////////////////////////////////////////
 
+trait BatchExtractor[F] extends Extractor[F] {
+  override def extractSingle = (image, keyPoint) => 
+    extract(image, Seq(keyPoint)).head 
+}
+
+///////////////////////////////////////////////////////////
+
 case class NormalizedExtractor[E, N, F1, F2](
   extractor: E,
   normalizer: N)(

@@ -89,6 +89,13 @@ trait SingleMatcher[F] extends Matcher[F] {
 
 ///////////////////////////////////////////////////////////
 
+trait BatchMatcher[F] extends Matcher[F] {
+  override def distance = (left, right) => 
+    doMatch(true, Seq(left), Seq(right)).head.distance
+}
+
+///////////////////////////////////////////////////////////
+
 case class NormalizedMatcher[N <% Normalizer[F1, F2], M <% Matcher[F2], F1, F2](
   normalizer: N,
   matcher: M)
