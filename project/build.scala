@@ -15,13 +15,15 @@ object BillyBuild extends Build {
     )
   )
 
+  val scalaVersionString = "2.10.1-SNAPSHOT"
+
   def extraLibraryDependencies = Seq(
     libraryDependencies ++= Seq(
       "nebula" %% "nebula" % "0.1-SNAPSHOT",
       "org.expecty" % "expecty" % "0.9",
       "commons-lang" % "commons-lang" % "2.6",
-      "org.scala-lang" % "scala-reflect" % "2.10.0",
-      "org.scala-lang" % "scala-compiler" % "2.10.0",
+      "org.scala-lang" % "scala-reflect" % scalaVersionString,
+      "org.scala-lang" % "scala-compiler" % scalaVersionString,
       "org.apache.commons" % "commons-math3" % "3.1.1",
       "commons-io" % "commons-io" % "2.4",
       "org.scalatest" %% "scalatest" % "2.0.M5b" % "test",
@@ -40,7 +42,7 @@ object BillyBuild extends Build {
   )
 
   def scalaSettings = Seq(
-    scalaVersion := "2.10.0",
+    scalaVersion := scalaVersionString,
     scalacOptions ++= Seq(
       "-optimize",
       "-unchecked",
