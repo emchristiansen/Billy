@@ -47,12 +47,12 @@ object StorageInfo {
     override def save = results => {
       println(s"Saving to ${currentPath}")
       val json = results.toJson
-      org.apache.commons.io.FileUtils.writeStringToFile(currentPath, json.prettyPrint)
+      currentPath.bz2WriteString(json.prettyPrint)
     }
 
     override def load = mostRecentPath map { file =>
       println(s"Loading ${file}")
-      val jsonString = FileUtils.readFileToString(file)
+      val jsonString = file.bz2ReadString
       jsonString.asJson.convertTo[R]
     }
 
@@ -69,7 +69,7 @@ object StorageInfo {
       fullString
     }
 
-    def filenameNoTime: String = nameNoTime + ".json"
+    def filenameNoTime: String = nameNoTime + ".json.bz2"
 
     def filename: String = unixEpoch + "_" + filenameNoTime
 

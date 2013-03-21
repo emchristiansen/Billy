@@ -28,18 +28,18 @@ import org.scalatest.junit.JUnitRunner
 @WrapWith(classOf[ConfigMapWrapperSuite])
 class TestMiddlebury(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
   test("construct FlowField from file", SlowTest, DatasetTest) {
-    val file = datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt" 
+    val file = (datasetRoot: File) + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt" 
     FlowField(file)
   }
 
   test("construct SmallBaselinePair from file", FastTest, DatasetTest) {
-    val rootDirectory = datasetRoot + "middleburyImages"
+    val rootDirectory = (datasetRoot: File) + "middleburyImages"
     SmallBaselinePair(rootDirectory, "Dimetrodon")
   }
 
   test("the distance from a FlowField to itself should be zero", FastTest, DatasetTest) {
     val flow = {
-      val file = datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt"
+      val file = (datasetRoot: File) + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt"
       FlowField(file)
     }
     

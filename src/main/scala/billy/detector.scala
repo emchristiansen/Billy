@@ -42,7 +42,12 @@ object Detector {
 
 case class BoundedDetector[D <% Detector](detector: D, maxKeyPoints: Int)
 
-object BoundedDetector {
+trait BoundedDetectorJsonProtocol extends DefaultJsonProtocol {
+    implicit def boundedDetectorJsonProtocol[D <% Detector: JsonFormat] = 
+    jsonFormat2(BoundedDetector.apply[D])
+}
+
+object BoundedDetector extends BoundedDetectorJsonProtocol {
   implicit class ToDetector[D <% Detector](self: BoundedDetector[D]) extends Detector {
     override def detect = image => self.detector.detect(image).take(self.maxKeyPoints)
   }
@@ -86,7 +91,12 @@ case class BoundedPairDetector[D <% PairDetector](
   pairDetector: D,
   maxKeyPoints: Int)
 
-object BoundedPairDetector {
+trait BoundedPairDetectorJsonProtocol extends DefaultJsonProtocol {
+  implicit def boundedPairDetectorJsonProtocol[D <% PairDetector: JsonFormat] = 
+    jsonFormat2(BoundedPairDetector.apply[D])  
+}
+  
+object BoundedPairDetector extends BoundedPairDetectorJsonProtocol {
   implicit class ToPairDetector[D <% PairDetector](
     self: BoundedPairDetector[D]) extends PairDetector {
     override def detect =
@@ -100,16 +110,5 @@ object BoundedPairDetector {
   }
 }
 
-///////////////////////////////////////////////////////////
-
-trait DetectorJsonProtocol extends DefaultJsonProtocol {
-  implicit def boundedDetectorJsonProtocol[D <% Detector: JsonFormat] = 
-    jsonFormat2(BoundedDetector.apply[D])
-
-  /////////////////////////////////////////////////////////  
-
-  implicit def boundedPairDetectorJsonProtocol[D <% PairDetector: JsonFormat] = 
-    jsonFormat2(BoundedPairDetector.apply[D])
-}
-
-object DetectorJsonProtocol extends DetectorJsonProtocol
+// TODO: Delete
+object DetectorJsonProtocol

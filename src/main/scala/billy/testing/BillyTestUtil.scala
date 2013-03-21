@@ -1,7 +1,8 @@
-package billy
+package billy.testing
 
 import nebula._
 import java.io.File
+import billy._
 
 ///////////////////////////////////////////////////////////
 

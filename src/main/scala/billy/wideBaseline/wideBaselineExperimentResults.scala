@@ -41,9 +41,11 @@ trait WideBaselineExperimentResults2ExperimentSummary {
     implicit val iRC = runtimeConfig
     ExperimentSummary(
       Map(
-        "recognitionRate" -> (() => SummaryUtil.recognitionRate(self.dmatches))),
-      Map(
-        "histogram" -> (() => Histogram(self, "").render)))
+        "recognitionRate" -> (SummaryUtil.recognitionRate(self.dmatches))),
+      // TODO
+//      Map(
+//        "histogram" -> (Histogram(self, "").render)),
+      Map())
   }
 
   // TODO: Remove when Scala inference bug is fixed.
@@ -65,13 +67,18 @@ trait WideBaselineExperimentResultsJsonProtocol extends DefaultJsonProtocol {
 }
 
 object WideBaselineExperimentResults extends WideBaselineExperimentResults2ExperimentSummary with WideBaselineExperimentResultsJsonProtocol {
-  def apply[D, E, M, F](
+  def apply[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
     experiment: WideBaselineExperiment[D, E, M, F])(
-      implicit runtimeConfig: RuntimeConfig,
-      evPairDetector: D => PairDetector,
-      evExtractor: E => Extractor[F],
-      evMatcher: M => Matcher[F]): WideBaselineExperimentResults[D, E, M, F] = {
-    run(experiment)
+      implicit runtimeConfig: RuntimeConfig): WideBaselineExperimentResults[D, E, M, F] = {
+    if (runtimeConfig.skipCompletedExperiments && 
+        experiment.mostRecentPath.isDefined) {
+      experiment.load.get 
+    } else {
+      // TODO: Don't hardcode saving here.
+      val results = run(experiment)
+      experiment.save(results)
+      results
+    }
   }
 
   private def run[D, E, M, F](

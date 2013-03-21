@@ -10,15 +10,19 @@ object BillyBuild extends Build {
       "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
       "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 //      "repo.codahale.com" at "http://repo.codahale.com",
+      "Akka Repository" at "http://repo.akka.io/releases/",
       "spray-io" at "http://repo.spray.io/",
-      "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo"
+      "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
+      "Local Maven Repository" at Path.userHome.asFile.toURI.toURL+"/.m2/repository"
     )
   )
 
-  val scalaVersionString = "2.10.1-SNAPSHOT"
+  val scalaVersionString = "2.10.1"
 
   def extraLibraryDependencies = Seq(
     libraryDependencies ++= Seq(
+      "opencv" % "opencv" % "2.4.9",
+//      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "nebula" %% "nebula" % "0.1-SNAPSHOT",
       "org.expecty" % "expecty" % "0.9",
       "commons-lang" % "commons-lang" % "2.6",

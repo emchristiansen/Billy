@@ -3,18 +3,15 @@ package billy.brown
 import nebula._
 import nebula.imageProcessing._
 import nebula.util._
-
 import billy._
 import billy.brown._
 import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
-
 import billy.detectors._
 import billy.extractors._
 import billy.matchers._
-
 import nebula._
 import org.scalatest._
 import javax.imageio.ImageIO
@@ -24,6 +21,7 @@ import org.scalatest.junit.JUnitRunner
 import nebula.util._
 import spray.json._
 import com.sun.xml.internal.bind.v2.model.runtime.RuntimeClassInfo
+import billy.testing.BillyTestUtil
 
 ///////////////////////////////////////////////////////////
 
@@ -56,7 +54,7 @@ class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
     val results = experiment.run
     val summary = results.to[ExperimentSummary]  
 
-    Distributed.unsafeCapstone(experiment)
+//    Distributed.unsafeCapstone(experiment)
   }
 
   test("brown toJson", InstantTest) {

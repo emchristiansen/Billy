@@ -19,14 +19,44 @@ import org.opencv.features2d.DMatch
 import nebula.PimpFile
 import billy.RuntimeConfig
 import billy.wideBaseline.WideBaselineExperiment
+import spray.json._
+import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
+import javax.imageio.ImageIO
+import JSONUtil._
 
 ///////////////////////////////////////////////////////////////////////////////
 
-case class ExperimentSummary(
-  summaryNumbers: Map[String, () => Double],
-  summaryImages: Map[String, () => BufferedImage])
+// TODO: Better place for this
+trait BufferedImageJsonProtocol extends DefaultJsonProtocol {
+  implicit def jsonBufferedImage: RootJsonFormat[BufferedImage] = {
+    object NoScalaClass extends RootJsonFormat[BufferedImage] {
+      override def write(self: BufferedImage) = {
+        val baos = new ByteArrayOutputStream
+        ImageIO.write(self, "png", baos)
+        val array: Array[Byte] = baos.toByteArray
+        array.toJson
+      }
+      override def read(value: JsValue) = {
+        val array = value.convertTo[Array[Byte]]
+        val bois = new ByteArrayInputStream(array)
+        ImageIO.read(bois)
+      }
+    }
 
-object ExperimentSummary {
+    NoScalaClass.addClassInfo("BufferedImage")
+  }
+}
+
+case class ExperimentSummary(
+  summaryNumbers: Map[String, Double],
+  summaryImages: Map[String, BufferedImage])
+
+trait ExperimentSummaryJsonProtocol extends DefaultJsonProtocol with BufferedImageJsonProtocol {
+  implicit def jsonExperimentSummary = jsonFormat2(ExperimentSummary.apply)
+}
+
+object ExperimentSummary extends ExperimentSummaryJsonProtocol {
   implicit class ExperimentSummaryOps(self: ExperimentSummary) {
     def outDirectory(implicit runtime: RuntimeConfig) =
       new File(runtime.outputRoot, "summary").mustExist

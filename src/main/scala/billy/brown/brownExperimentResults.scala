@@ -44,7 +44,7 @@ trait BrownExperimentResults2ExperimentSummary {
     implicit val iRC = runtimeConfig
     ExperimentSummary(
       Map(
-        "errorRateAtRecall95" -> (() => SummaryUtil.errorRateAtRecall(
+        "errorRateAtRecall95" -> (SummaryUtil.errorRateAtRecall(
           0.95,
           self.dmatches))),
       Map())
