@@ -38,6 +38,7 @@ trait OpenCVDetector {
   object BRISK
   object SIFT
   object SURF
+  object ORB
 }
 
 /**
@@ -71,6 +72,8 @@ trait OpenCVDetector2Detector extends OpenCVDetector2PairDetector {
     detectorFromEnum(FeatureDetector.SIFT)
   implicit def openCVDetectorSurf2Detector(self: OpenCVDetector.SURF.type) =
     detectorFromEnum(FeatureDetector.SURF)
+  implicit def openCVDetectorOrb2Detector(self: OpenCVDetector.ORB.type) =
+    detectorFromEnum(FeatureDetector.ORB)
 }
 
 /**
@@ -89,6 +92,8 @@ trait OpenCVDetector2PairDetector {
     self: OpenCVDetector.SIFT.type) = self.to[Detector].to[PairDetector]
   implicit def openCVDetectorSurf2PairDetector(
     self: OpenCVDetector.SURF.type) = self.to[Detector].to[PairDetector]
+  implicit def openCVDetectorOrb2PairDetector(
+    self: OpenCVDetector.ORB.type) = self.to[Detector].to[PairDetector]
 }
 
 /**
@@ -105,6 +110,8 @@ trait OpenCVDetectorJsonProtocol extends DefaultJsonProtocol {
     singletonObject(OpenCVDetector.SIFT)
   implicit val openCVDetectorSurfJsonProtocol =
     singletonObject(OpenCVDetector.SURF)
+  implicit val openCVDetectorOrbJsonProtocol =
+    singletonObject(OpenCVDetector.ORB)
 }
 
 object OpenCVDetector extends OpenCVDetector with OpenCVDetector2Detector with OpenCVDetectorJsonProtocol

@@ -36,8 +36,8 @@ trait JSONAndTypeNameJsonProtocol extends DefaultJsonProtocol {
 }
 
 object JSONAndTypeName extends JSONAndTypeNameJsonProtocol {
-  def apply[E <% RuntimeConfig => ExperimentRunner[R]: JsonFormat: TypeTag, R](
-    experiment: E): JSONAndTypeName = JSONAndTypeName(
+  def apply[A: JsonFormat: TypeTag](
+    experiment: A): JSONAndTypeName = JSONAndTypeName(
     experiment.toJson,
     instanceToTypeName(experiment))
 
