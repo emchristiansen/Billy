@@ -76,7 +76,19 @@ object StorageInfo {
 
     def filename: String = unixEpoch + "_" + filenameNoTime
 
-    def outDirectory: File = new File(runtimeConfig.outputRoot, "results/experiment_data/").mustExist
+    def outDirectory: File = {
+      val experimentDataRoot = 
+        (runtimeConfig.outputRoot + "results/experiment_data/") mustExist
+      val outDirectory = experimentDataRoot + nameNoTime
+      if (!outDirectory.exists) {
+        outDirectory.mkdir
+      }
+      outDirectory
+    }
+      
+      new File(
+        runtimeConfig.outputRoot, 
+        "results/experiment_data/").mustExist
 
     def existingResultsFiles: Seq[File] = {
       val allPaths = outDirectory.list.toList.map(path => outDirectory + "/" + path.toString)

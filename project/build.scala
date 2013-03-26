@@ -7,8 +7,9 @@ import AssemblyKeys._
 object BillyBuild extends Build {
   def extraResolvers = Seq(
     resolvers ++= Seq(
-      "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
-      "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
+     "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
+     "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
+//     "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/",
 //      "repo.codahale.com" at "http://repo.codahale.com",
       "Akka Repository" at "http://repo.akka.io/releases/",
       "spray-io" at "http://repo.spray.io/",
@@ -45,6 +46,9 @@ object BillyBuild extends Build {
     )
   )
 
+  def updateOnDependencyChange = Seq(
+    watchSources <++= (managedClasspath in Test) map { cp => cp.files })
+
   def scalaSettings = Seq(
     scalaVersion := scalaVersionString,
     scalacOptions ++= Seq(
@@ -64,7 +68,8 @@ object BillyBuild extends Build {
     extraResolvers ++
     extraLibraryDependencies ++
     scalaSettings ++
-    assemblySettings
+    assemblySettings ++
+    updateOnDependencyChange
 
   val projectName = "Billy"
   lazy val root = {

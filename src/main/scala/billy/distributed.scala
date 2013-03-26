@@ -65,24 +65,22 @@ trait Distributed {
   // TODO: Should I be sending just pure source code across the wire?
   def typecheckExperiment(
     experiment: JSONAndTypeName)(
-      implicit imports: Imports): () => RuntimeConfig => JSONAndTypeName = {
+      implicit imports: Imports,
+      runtimeConfig: RuntimeConfig): () => JSONAndTypeName = {
     val source = s"""
     loadOpenCV  
      
+    implicit val runtimeConfig = ${getSource(runtimeConfig)}
+    
     val experiment = ${experiment.toSource}    
     
-    def addRuntime(runtimeConfig: RuntimeConfig): JSONAndTypeName = {
-      implicit val rC = runtimeConfig
-      val results = experiment.run
-      JSONAndTypeName(results.toJson, instanceToTypeName(results))
-    }
-    
-    addRuntime _
+    val results = experiment.run
+    JSONAndTypeName(results.toJson, instanceToTypeName(results))
     """
 
     // TODO: Move elsewhere
     GlobalLock.synchronized {
-      typeCheck[RuntimeConfig => JSONAndTypeName](source.addImports)
+      typeCheck[JSONAndTypeName](source.addImports)
     }
   }
 
@@ -97,33 +95,29 @@ trait Distributed {
       implicit imports: Imports,
       runtimeConfig: RuntimeConfig): JSONAndTypeName = {
     println("Running experiment.")
-    val needsRuntime = typecheckExperiment(experiment).apply()
-
-    val results = needsRuntime(runtimeConfig)
+    val results = typecheckExperiment(experiment).apply
     println("Done running experiment.")
     results
   }
 
   def typecheckExperimentResults(
     results: JSONAndTypeName)(
-      implicit imports: Imports): () => RuntimeConfig => JSONAndTypeName = {
+      implicit imports: Imports,
+      runtimeConfig: RuntimeConfig): () => JSONAndTypeName = {
     val source = s"""
     loadOpenCV  
      
+    implicit val runtimeConfig = ${getSource(runtimeConfig)}
+    
     val results = ${results.toSource}    
     
-    def addRuntime(runtimeConfig: RuntimeConfig): JSONAndTypeName = {
-      implicit val rC = runtimeConfig
-      val summary: ExperimentSummary = results
-      JSONAndTypeName(summary.toJson, instanceToTypeName(summary))
-    }
-    
-    addRuntime _
+    val summary: ExperimentSummary = results
+    JSONAndTypeName(summary.toJson, instanceToTypeName(summary))
     """
 
     // TODO: Move elsewhere    
     GlobalLock.synchronized {
-      typeCheck[RuntimeConfig => JSONAndTypeName](source.addImports)
+      typeCheck[JSONAndTypeName](source.addImports)
     }
   }
 
@@ -132,8 +126,7 @@ trait Distributed {
       implicit imports: Imports,
       runtimeConfig: RuntimeConfig): JSONAndTypeName = {
     println("Getting summary from results.")
-    val needsRuntime = typecheckExperimentResults(results).apply()
-    val summary = needsRuntime(runtimeConfig)
+    val summary = typecheckExperimentResults(results).apply
     println("Done getting summary from results.")
     summary
   }
