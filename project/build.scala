@@ -36,7 +36,7 @@ object BillyBuild extends Build {
       "org.scala-stm" %% "scala-stm" % "0.7",
       "com.chuusai" %% "shapeless" % "1.2.3",
       "org.clapper" %% "grizzled-scala" % "1.1.3",
-      "org.scalanlp" %% "breeze-math" % "0.2-SNAPSHOT",
+      "org.scalanlp" %% "breeze-math" % "0.3-SNAPSHOT",
       "org.spire-math" %% "spire" % "0.3.0",
       "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT",
       "io.spray" %%  "spray-json" % "1.2.3",
