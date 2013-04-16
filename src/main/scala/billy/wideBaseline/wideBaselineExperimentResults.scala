@@ -45,6 +45,7 @@ trait WideBaselineExperimentResults2ExperimentSummary {
       // TODO
 //      Map(
 //        "histogram" -> (Histogram(self, "").render)),
+      Map("precisionRecall" -> SummaryUtil.precisionRecall(self.dmatches)),
       Map())
   }
 

@@ -172,6 +172,7 @@ object NormalizedExtractor {
 
 ///////////////////////////////////////////////////////////
 
+// TODO: Should be automatically mixed into concrete object.
 trait ExtractorJsonProtocol extends DefaultJsonProtocol {
   implicit def normalizedExtractorJsonProtocol[E, N, F1, F2](
     implicit evExtractor: E => Extractor[F1],

@@ -72,3 +72,43 @@ trait PatchExtractorJsonProtocol extends DefaultJsonProtocol {
 }
 
 object PatchExtractor extends PatchExtractor2Extractor with PatchExtractorJsonProtocol
+
+// TODO: Big hack, delete me!!!
+case class LUCIDExtractor(
+  normalizeRotation: Boolean,
+  normalizeScale: Boolean,
+  patchWidth: Int,
+  blurWidth: Int,
+  color: String)
+
+/**
+ * Views to Extractor.
+ */
+trait LUCIDExtractor2Extractor {
+  implicit def LUCIDExtractor2Extractor(
+    self: LUCIDExtractor): Extractor[IndexedSeq[Int]] =
+    Extractor(
+      (image: BufferedImage, keyPoint: KeyPoint) => {
+        val rawPixelsOption = Extractor.rawPixels(
+          self.normalizeRotation,
+          self.normalizeScale,
+          self.patchWidth,
+          self.blurWidth,
+          self.color)(image, keyPoint)
+        for (rawPixels <- rawPixelsOption) yield {
+          val rank =
+            SortDescriptor.fromUnsorted(SortDescriptor.fromUnsorted(rawPixels))
+          rank.values
+        }
+      })
+}
+
+/**
+ * Implementations of JsonProtocol.
+ */
+trait LUCIDExtractorJsonProtocol extends DefaultJsonProtocol {
+  implicit val LUCIDExtractorJsonProtocol =
+    jsonFormat5(LUCIDExtractor.apply).addClassInfo("LUCIDExtractor")
+}
+
+object LUCIDExtractor extends LUCIDExtractor2Extractor with LUCIDExtractorJsonProtocol

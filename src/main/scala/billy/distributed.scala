@@ -19,7 +19,7 @@ import spray.json._
 import billy.DetectorJsonProtocol._
 import billy.ExtractorJsonProtocol._
 import billy.MatcherJsonProtocol._
-import scala.reflect.runtime.universe._
+//import scala.reflect.runtime.universe._
 import org.apache.commons.io.FileUtils
 import shapeless._
 import billy.wideBaseline._
@@ -36,10 +36,10 @@ trait JSONAndTypeNameJsonProtocol extends DefaultJsonProtocol {
 }
 
 object JSONAndTypeName extends JSONAndTypeNameJsonProtocol {
-  def apply[A: JsonFormat: TypeTag](
+  def apply[A: JsonFormat: TypeName](
     experiment: A): JSONAndTypeName = JSONAndTypeName(
     experiment.toJson,
-    instanceToTypeName(experiment))
+    (typeName[A]).name)
 
   implicit class ToSource(self: JSONAndTypeName) {
     def toSource: String = {
@@ -75,13 +75,13 @@ trait Distributed {
     val experiment = ${experiment.toSource}    
     
     val results = experiment.run
-    JSONAndTypeName(results.toJson, instanceToTypeName(results))
+    JSONAndTypeName(results.toJson, StaticTypeName.typeNameFromConcreteInstance(results).name)
     """
 
     // TODO: Move elsewhere
-    GlobalLock.synchronized {
-      typeCheck[JSONAndTypeName](source.addImports)
-    }
+    //    GlobalLock.synchronized {
+    typeCheck[JSONAndTypeName](source.addImports)
+    //    }
   }
 
   /**
@@ -112,13 +112,13 @@ trait Distributed {
     val results = ${results.toSource}    
     
     val summary: ExperimentSummary = results
-    JSONAndTypeName(summary.toJson, instanceToTypeName(summary))
+    JSONAndTypeName(summary.toJson, StaticTypeName.typeNameFromConcreteInstance(summary).name)
     """
 
     // TODO: Move elsewhere    
-    GlobalLock.synchronized {
-      typeCheck[JSONAndTypeName](source.addImports)
-    }
+    //    GlobalLock.synchronized {
+    typeCheck[JSONAndTypeName](source.addImports)
+    //    }
   }
 
   def getSummary(

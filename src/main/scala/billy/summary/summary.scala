@@ -50,10 +50,11 @@ trait BufferedImageJsonProtocol extends DefaultJsonProtocol {
 
 case class ExperimentSummary(
   summaryNumbers: Map[String, Double],
+  summaryCurves: Map[String, Seq[(Double, Double)]],
   summaryImages: Map[String, BufferedImage])
 
 trait ExperimentSummaryJsonProtocol extends DefaultJsonProtocol with BufferedImageJsonProtocol {
-  implicit def jsonExperimentSummary = jsonFormat2(ExperimentSummary.apply)
+  implicit def jsonExperimentSummary = jsonFormat3(ExperimentSummary.apply)
 }
 
 object ExperimentSummary extends ExperimentSummaryJsonProtocol {
@@ -93,6 +94,86 @@ object SummaryUtil {
 
       (errorLeft + errorRight).toDouble / sorted.size
     }
+  }
+
+  /**
+   * The precision-recall curve.
+   */
+  def precisionRecall(dmatches: Seq[DMatch]): Seq[(Double, Double)] = {
+    val sorted = dmatches.sortBy(_.distance)
+
+    def positive(dmatch: DMatch): Boolean = dmatch.queryIdx == dmatch.trainIdx
+
+    def booleanToInt(boolean: Boolean) = boolean match {
+      case false => 0
+      case true => 1
+    }
+
+    val results = sorted map positive map booleanToInt
+
+    val precisions = for (init <- results.inits) yield {
+      if (init.size == 0) 1
+      else MathUtil.mean(init)
+
+    }
+
+    val recalls = for (init <- results.inits) yield {
+      init.sum.toDouble / results.sum
+    }
+
+    val allPoints = recalls.toIndexedSeq zip precisions.toIndexedSeq
+
+    def mkFunction(points: Seq[(Double, Double)]): Seq[(Double, Double)] = {
+      // The mapping from recall to precision should be a function.
+      // Take the max precision for each recall.
+      val groups: Seq[(Double, Seq[(Double, Double)])] =
+        points.groupBy(_._1).toIndexedSeq.sortBy(_._1)
+
+      groups.map(_._2).map {
+        seq => seq.maxBy(_._2)
+      }
+    }
+    
+    val fcn = mkFunction(allPoints)    
+    
+    asserty(fcn.map(_._1).distinct.size == fcn.size)
+    
+    fcn
+    
+//    var smallest = 1.0
+//    val monotonic = for ((recall, precision) <- fcn.sortBy(_._1)) yield {
+//      smallest = Seq(precision, smallest).min
+//      (recall, smallest)
+//    }
+//    monotonic
+    
+//    var lastRecall = -1
+//    monotonic = for ((recall, precision) <- monotonic; if recall > lastRecall) yield {
+//      lastRecall = recall
+//      (recall, precision)
+//    }
+    
+//    def mkFunction(points: Seq[(Double, Double)]): Seq[(Double, Double)] = {
+//      // The mapping from recall to precision should be a function.
+//      // Take the max precision for each recall.
+//      val groups: Seq[(Double, Seq[(Double, Double)])] =
+//        points.groupBy(_._1).toIndexedSeq.sortBy(_._1)
+//
+//      groups.map(_._2).map {
+//        seq => seq.maxBy(_._2)
+//      }
+//    }
+//    
+//    val one = mkFunction(allPoints)
+//    val two = mkFunction(one map (_.swap)) map (_.swap)
+//    mkFunction(two)
+
+    //    val recallGroups: Seq[(Double, Seq[((Double, Double), Int)])] = 
+    //      allPoints.zipWithIndex.groupBy(_._1._1).toIndexedSeq.sortBy(_._1)
+    //      
+    //    recallGroups.map(_._2).map {
+    //      seq => seq.minBy()
+    //    }
   }
 
   def recognitionRate(dmatches: Seq[DMatch]): Double = {

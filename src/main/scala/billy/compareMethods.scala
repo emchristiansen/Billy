@@ -50,9 +50,10 @@ object CompareMethods {
     addRuntime _
     """
 
-    val needsRuntime = GlobalLock.synchronized {
+    val needsRuntime =
+      //      GlobalLock.synchronized {
       typeCheck[RuntimeConfig => Double](source.addImports)
-    }
+    //    }
 
     (needsRuntime.apply).apply(runtimeConfig)
   }
@@ -71,7 +72,8 @@ object CompareMethods {
       "light",
       "wall")
 
-    val otherImages = Seq(2, 3, 4, 5, 6)
+    // We use only a subset of the image pairs to separate train and test.
+    val otherImages = Seq(2, 4, 6)
 
     for (
       imageClass <- imageClasses;
@@ -153,7 +155,7 @@ object CompareMethods {
       val forcedA = a
       forcedA
     }
-        
+
     val experimentSummary: () => ExperimentSummary =
       lazyValue((experiment(runtimeConfig).run)(runtimeConfig))
     val otherSummaries = Seq(
@@ -170,9 +172,9 @@ object CompareMethods {
     val experimentScore :: otherScores = (summaries.par.map { summary =>
       getNumericScore(summary())
     }).toList
-    
-//    val experimentScore = getNumericScore(experimentSummary)
-//    val otherScores = otherSummaries map getNumericScore
+
+    //    val experimentScore = getNumericScore(experimentSummary)
+    //    val otherScores = otherSummaries map getNumericScore
     val meanOtherScore = (otherScores sum) / (otherScores size)
 
     experimentScore / meanOtherScore

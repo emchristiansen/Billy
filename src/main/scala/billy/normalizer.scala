@@ -29,27 +29,27 @@ trait Normalizer[-A, +B] {
 }
 
 /**
- * Normalizations that act on 1D and 2D arrays. 
+ * Normalizations that act on 1D and 2D arrays.
  */
 trait PatchNormalizer {
   /**
    * The identity normalization.
    */
   object Raw
-  
+
   /**
    * Rescales to zero mean and unit norm.
    */
   object NCC
-  
+
   /**
    * Replaces an array of ordered elements with their rank permutation.
    */
   object Rank
-  
-//  object Order
-//  object NormalizeRange
-//  object UniformRank
+
+  //  object Order
+  //  object NormalizeRange
+  //  object UniformRank
 }
 
 object PatchNormalizer extends PatchNormalizer with PatchNormalizerToNormalizer with PatchNormalizerJsonProtocol
@@ -70,7 +70,7 @@ trait PatchNormalizerToNormalizer extends PatchNormalizer {
     override def normalize = data => {
       val doubleData = data.map(_.to[Double])
       val mean = MathUtil.mean(doubleData)
-      val centered = data.toIndexedSeq.map(_ - mean)      
+      val centered = data.toIndexedSeq.map(_ - mean)
       val norm = MathUtil.l2Norm(centered.toArray)
       // If the standard deviation is low, merely center the data.  
       if (norm < 0.001) centered
@@ -100,10 +100,10 @@ trait PatchNormalizerToNormalizer extends PatchNormalizer {
       new DenseMatrix(matrix.rows, normalized.toArray)
     }
   }
-  
+
   // TODO: Scala bug?
   implicit def ncc2NormalizerDenseMatrix[A <% Double](self: NCC.type) = new LiftSeq2DenseMatrix[NCC.type, A, Double](self)
-  
+
   /**
    * Makes any Normalizer on 1D data to SortDescriptor a normalizer on 2D data.
    */
@@ -159,7 +159,7 @@ trait PatchNormalizerJsonProtocol extends DefaultJsonProtocol {
   implicit val patchNormalizerRawJsonProtocol = singletonObject(PatchNormalizer.Raw)
   implicit val patchNormalizerNCCJsonProtocol = singletonObject(PatchNormalizer.NCC)
   implicit val patchNormalizerRankJsonProtocol = singletonObject(PatchNormalizer.Rank)
-//  implicit val patchNormalizerOrderJsonProtocol = singletonObject(PatchNormalizer.Order)  
-//  implicit val patchNormalizerNormalizeRangeJsonProtocol = singletonObject(PatchNormalizer.NormalizeRange)  
-//  implicit val patchNormalizerUniformRankJsonProtocol = singletonObject(PatchNormalizer.UniformRank)
+  //  implicit val patchNormalizerOrderJsonProtocol = singletonObject(PatchNormalizer.Order)  
+  //  implicit val patchNormalizerNormalizeRangeJsonProtocol = singletonObject(PatchNormalizer.NormalizeRange)  
+  //  implicit val patchNormalizerUniformRankJsonProtocol = singletonObject(PatchNormalizer.UniformRank)
 }

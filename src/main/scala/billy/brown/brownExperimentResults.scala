@@ -47,6 +47,7 @@ trait BrownExperimentResults2ExperimentSummary {
         "errorRateAtRecall95" -> (SummaryUtil.errorRateAtRecall(
           0.95,
           self.dmatches))),
+      Map(),
       Map())
   }
 
