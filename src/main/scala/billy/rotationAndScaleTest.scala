@@ -42,20 +42,37 @@ case class RotationAndScaleExperiment[D <% PairDetector, E <% Extractor[F], M <%
   extractor: E,
   matcher: M,
   scaleFactor: Double,
-  theta: Double)
+  theta: Double) {
+  asserty(scaleFactor > 0)
+  asserty(theta >= 0)
+  asserty(theta < 2 * math.Pi)
+}
 
 object RotationAndScaleExperiment {
   implicit class RotationAndScaleExperiment2ExperimentRunner[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: RotationAndScaleExperiment[D, E, M, F]) extends ExperimentRunner[WideBaselineExperimentResults[D, E, M, F]] {
     override def run = {
+      val leftImage: BufferedImage = ImageIO.read(self.imagePath)
+
+      val translationTransform =
+        AffineTransform.getTranslateInstance(
+          -leftImage.getWidth / 2.0,
+          -leftImage.getHeight / 2.0)
+      val inverseTranslationTransform =
+        AffineTransform.getTranslateInstance(
+          leftImage.getWidth / 2.0,
+          leftImage.getHeight / 2.0)
       val scaleTransform =
         AffineTransform.getScaleInstance(self.scaleFactor, self.scaleFactor)
       val rotationTransform =
         AffineTransform.getRotateInstance(self.theta)
       val similarityTransform = {
-        val scaleClone = scaleTransform.clone.asInstanceOf[AffineTransform]
-        scaleClone.concatenate(rotationTransform)
-        scaleClone
+        val identity = new AffineTransform
+        identity.concatenate(inverseTranslationTransform)
+        identity.concatenate(scaleTransform)
+        identity.concatenate(rotationTransform)
+        identity.concatenate(translationTransform)
+        identity
       }
 
       val similarityOp = new AffineTransformOp(
@@ -63,7 +80,7 @@ object RotationAndScaleExperiment {
         AffineTransformOp.TYPE_BILINEAR)
 
       val groundTruth: Homography = {
-        val affineMatrix = Array[Double]()
+        val affineMatrix = Array(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         similarityTransform.getMatrix(affineMatrix)
         asserty(affineMatrix.size == 6)
         val homographyData = new Array2DRowRealMatrix(3, 3)
@@ -79,12 +96,30 @@ object RotationAndScaleExperiment {
         Homography(homographyData)
       }
 
+      println(groundTruth)
+
       //////////////////////
 
-      val leftImage = ImageIO.read(self.imagePath)
-      val rightImage = {
-        similarityOp.filter(leftImage, null)
+      val rightImage: BufferedImage = {
+        val image = new BufferedImage(
+          leftImage.getWidth,
+          leftImage.getHeight,
+          leftImage.getType)
+        similarityOp.filter(leftImage, image)
+        image
+        //        leftImage
       }
+
+//      nebula.TestUtil.dumpImage("imageLeft", leftImage)
+//      nebula.TestUtil.dumpImage("imageRight", rightImage)
+      
+      //      println(leftImage.getType)
+      //      println(rightImage.getType)
+      //      
+      //      println(similarityTransform)
+      //      println(similarityOp)
+      //      println(rightImage.getWidth)
+      //      println(rightImage.getHeight)
 
       val (leftKeyPoints, rightKeyPoints) = self.detector.detectPair(
         groundTruth,
@@ -105,7 +140,7 @@ object RotationAndScaleExperiment {
       val dmatches = self.matcher.doMatch(true, leftDescriptors, rightDescriptors)
 
       val dummyExperiment = WideBaselineExperiment("dummyExperimentDeleteMe", 2, self.detector, self.extractor, self.matcher)
-      
+
       WideBaselineExperimentResults(dummyExperiment, dmatches)
     }
   }

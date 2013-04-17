@@ -73,7 +73,7 @@ object BillyBuild extends Build {
 
   val projectName = "Billy"
   lazy val root = {
-    val settings = libSettings ++ Seq(name := projectName)
+    val settings = libSettings ++ Seq(name := projectName, fork := true)
     Project(id = projectName, base = file("."), settings = settings)
   }
 }
