@@ -58,7 +58,10 @@ trait OpenCVDetector2Detector extends OpenCVDetector2PairDetector {
       val matImage = OpenCVUtil.bufferedImageToMat(image)
       val keyPoints = new MatOfKeyPoint
       FeatureDetector.create(detectorType).detect(matImage, keyPoints)
-      keyPoints.toArray.sortBy(_.response).reverse
+      val reversed = keyPoints.toArray.sortBy { e =>
+        (e.response, e.pt.x, e.pt.y, e.size, e.angle, e.octave, e.class_id)
+      }
+      reversed.reverse
     }
   }
 

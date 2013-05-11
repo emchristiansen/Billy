@@ -39,30 +39,30 @@ import org.scalatest.ConfigMapWrapperSuite
 @WrapWith(classOf[ConfigMapWrapperSuite])
 class TestRotationAndScaleExperiment(
   val configMap: Map[String, Any]) extends ConfigMapFunSuite {
-  val imagePath = getResource("/iSpy.png")
+
 
   test("on sample image", FastTest) {
     loadOpenCV
 
     implicit val runtimeConfig = RuntimeConfig(
-      homeDirectory + "data",
-      homeDirectory + "Dropbox/t/2013_q1/LUCID",
-      None,
-      false,
-      true)
+      dataRoot = homeDirectory + "data",
+      outputRoot = homeDirectory + "mtcOutputRoot",
+      tempDirectory = None,
+      deleteTemporaryFiles = true,
+      skipCompletedExperiments = false)
 
     val detector = BoundedPairDetector(
-      BoundedDetector(OpenCVDetector.SIFT, 5000),
-      100)
+      BoundedDetector(OpenCVDetector.SIFT, 2000),
+      8)
     val extractor = OpenCVExtractor.SIFT
     val matcher = VectorMatcher.L2
 
     for (
-      scaleFactor <- List(0.5);
-      angle <- List(math.Pi / 8)
+      scaleFactor <- List(1);
+      angle <- List(0)
     ) {
       def rotationExperiment = RotationAndScaleExperiment(
-        imagePath,
+        "boat",
         detector,
         extractor,
         matcher,

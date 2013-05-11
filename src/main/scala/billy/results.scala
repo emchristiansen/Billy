@@ -99,7 +99,7 @@ object StorageInfo {
   
     // TODO: Refactor when Scala inference bug is fixed.
   def WTFExperiment2StorageInfo[E <% RuntimeConfig => ExperimentRunner[R]: JsonFormat, R: JsonFormat](
-    experiment: E)(implicit runtimeConfig: RuntimeConfig) = new Experiment2StorageInfo(experiment)(runtimeConfig)    
+    experiment: E)(implicit runtimeConfig: RuntimeConfig) = new Experiment2StorageInfo(experiment)(runtimeConfig) 
 }
 
 

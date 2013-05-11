@@ -50,13 +50,13 @@ trait WideBaselineExperimentResults2ExperimentSummary {
   }
 
   // TODO: Remove when Scala inference bug is fixed.
-  implicit def WTFImplicitExperimentSummary[D, E, M, F](
+  implicit def WTFImplicitWideBaselineExperimentSummary[D, E, M, F](
     self: WideBaselineExperimentResults[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig) = implicitExperimentSummary(self)(runtimeConfig)
 }
 
 trait WideBaselineExperimentResultsJsonProtocol extends DefaultJsonProtocol {
-  implicit def wideBaselineExperimentResults[D, E, M, F](
+  implicit def wideBaselineExperimentResultsJsonProtocol[D, E, M, F](
     implicit evPairDetector: D => PairDetector,
     evExtractor: E => Extractor[F],
     evMatcher: M => Matcher[F],

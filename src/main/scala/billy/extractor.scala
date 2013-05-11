@@ -32,6 +32,7 @@ import spray.json.JsonFormat
 import util.OpenCVUtil
 import util.Util
 import nebula.util._
+import nebula.util.DenseMatrixUtil._
 
 ///////////////////////////////////////////////////////////
 
@@ -47,7 +48,7 @@ object Extractor {
   type ExtractorAction[F] = (BufferedImage, Seq[KeyPoint]) => Seq[Option[F]]
   type ExtractorActionSingle[F] = (BufferedImage, KeyPoint) => Option[F]
 
-  def fromAction[F](extractSeveral: ExtractorAction[F]) = new Extractor[F] {
+  def fromAction[F](extractSeveral: ExtractorAction[F]): Extractor[F] = new Extractor[F] {
     override def extract = extractSeveral
 
     override def extractSingle = (image, keyPoint) =>
@@ -97,6 +98,55 @@ object Extractor {
     }
   }
 
+  object OpenCVLock
+  def doubleExtractorSeveralFromEnum(enum: Int): ExtractorAction[IndexedSeq[Double]] =
+    (image: BufferedImage, keyPoints: Seq[KeyPoint]) => {
+      val extractor = DescriptorExtractor.create(enum)
+      val imageMat = OpenCVUtil.bufferedImageToMat(image)
+      val descriptor = new Mat
+
+      val markedKeyPointsMat = {
+        val marked =
+          for ((keyPoint, index) <- keyPoints.zipWithIndex) yield {
+            new KeyPoint(
+              keyPoint.pt.x.toFloat,
+              keyPoint.pt.y.toFloat,
+              keyPoint.size,
+              keyPoint.angle,
+              keyPoint.response,
+              keyPoint.octave,
+              index)
+          }
+        new MatOfKeyPoint(marked: _*)
+      }
+
+      // Apparent concurrency bug that causes random crashes. Sigh.
+//      OpenCVLock.synchronized {
+        extractor.compute(
+          imageMat,
+          markedKeyPointsMat,
+          descriptor)
+//      }
+
+      val descriptorsOption =
+        DenseMatrixUtil.matToMatrixDoubleSingleChannel(descriptor)
+      if (!descriptorsOption.isDefined) keyPoints.size times None
+      else {
+        val descriptors = descriptorsOption.get.toSeqSeq
+        val markedKeyPoints = markedKeyPointsMat.toArray
+
+        asserty(descriptors.size == markedKeyPoints.size)
+
+        val descriptorOptions =
+          Array[Option[IndexedSeq[Double]]](keyPoints.size times None: _*)
+        for ((descriptor, keyPoint) <- descriptors.zip(markedKeyPoints)) {
+          val index = keyPoint.class_id
+          descriptorOptions(index) = Some(descriptor)
+        }
+        descriptorOptions
+      }
+    }
+
   def doubleExtractorFromEnum(enum: Int): ExtractorActionSingle[IndexedSeq[Double]] =
     (image: BufferedImage, keyPoint: KeyPoint) => {
       val extractor = DescriptorExtractor.create(enum)
@@ -105,37 +155,46 @@ object Extractor {
       extractor.compute(imageMat, new MatOfKeyPoint(keyPoint), descriptor)
 
       DenseMatrixUtil.matToMatrixDoubleSingleChannel(descriptor) map (_.data.toIndexedSeq)
-//      
-//      if (descriptor.rows == 0 || descriptor.cols == 0) None
-//      else {
-//        asserty(descriptor.rows == 1)
-//        asserty(descriptor.cols > 0)
-//        //        asserty(descriptor.`type` == CvType.CV_8UC1)
-//
-//        val doubles = for (c <- 0 until descriptor.cols) yield {
-//          val doubles = descriptor.get(0, c)
-//          asserty(doubles.size == 1)
-//          doubles.head
-//        }
-//
-//        Some(doubles)
-//      }
+      //      
+      //      if (descriptor.rows == 0 || descriptor.cols == 0) None
+      //      else {
+      //        asserty(descriptor.rows == 1)
+      //        asserty(descriptor.cols > 0)
+      //        //        asserty(descriptor.`type` == CvType.CV_8UC1)
+      //
+      //        val doubles = for (c <- 0 until descriptor.cols) yield {
+      //          val doubles = descriptor.get(0, c)
+      //          asserty(doubles.size == 1)
+      //          doubles.head
+      //        }
+      //
+      //        Some(doubles)
+      //      }
     }
 
+  val toInt: Option[IndexedSeq[Double]] => Option[IndexedSeq[Int]] =
+    (seq) => seq.map(_.map(_.round.toInt))
+
   def intExtractorFromEnum(enum: Int): ExtractorActionSingle[IndexedSeq[Int]] = (image, keyPoint) => {
-    val toInt: Option[IndexedSeq[Double]] => Option[IndexedSeq[Int]] =
-      (seq) => seq.map(_.map(_.round.toInt))
+
     // TODO: Why doesn't the following work?
     //    toInt compose doubleExtractorFromEnum(enum)
     toInt(doubleExtractorFromEnum(enum)(image, keyPoint))
   }
 
+  val toBoolean: Option[IndexedSeq[Int]] => Option[IndexedSeq[Boolean]] =
+    (seq) => seq.map(_.flatMap(Util.numToBits(8)))
+
   def booleanExtractorFromEnum(enum: Int): ExtractorActionSingle[IndexedSeq[Boolean]] = (image, keyPoint) => {
-    val toBoolean: Option[IndexedSeq[Int]] => Option[IndexedSeq[Boolean]] =
-      (seq) => seq.map(_.flatMap(Util.numToBits(8)))
+
     // TODO: Why doesn't the following work?      
     //    toBoolean compose intExtractorFromEnum(enum)
     toBoolean(intExtractorFromEnum(enum)(image, keyPoint))
+  }
+
+  def booleanExtractorSeveralFromEnum(enum: Int): ExtractorAction[IndexedSeq[Boolean]] = (image, keyPoints) => {
+    val doubles = doubleExtractorSeveralFromEnum(enum)(image, keyPoints)
+    (doubles map toInt) map toBoolean
   }
 }
 
@@ -148,8 +207,8 @@ trait SingleExtractor[F] extends Extractor[F] {
 ///////////////////////////////////////////////////////////
 
 trait BatchExtractor[F] extends Extractor[F] {
-  override def extractSingle = (image, keyPoint) => 
-    extract(image, Seq(keyPoint)).head 
+  override def extractSingle = (image, keyPoint) =>
+    extract(image, Seq(keyPoint)).head
 }
 
 ///////////////////////////////////////////////////////////

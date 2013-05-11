@@ -52,17 +52,29 @@ trait OpenCVExtractor {
  */
 trait OpenCVExtractor2Extractor {
   implicit def openCVExtractorBrisk2Extractor(self: OpenCVExtractor.BRISK.type) =
-    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.BRISK))
+    Extractor.fromAction(Extractor.booleanExtractorSeveralFromEnum(DescriptorExtractor.BRISK))
   implicit def openCVExtractorFreak2Extractor(self: OpenCVExtractor.FREAK.type) =
-    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.FREAK))
+    Extractor.fromAction(Extractor.booleanExtractorSeveralFromEnum(DescriptorExtractor.FREAK))
   implicit def openCVExtractorBrief2Extractor(self: OpenCVExtractor.BRIEF.type) =
-    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.BRIEF))
+    Extractor.fromAction(Extractor.booleanExtractorSeveralFromEnum(DescriptorExtractor.BRIEF))
   implicit def openCVExtractorOrb2Extractor(self: OpenCVExtractor.ORB.type) =
-    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.ORB))
+    Extractor.fromAction(Extractor.booleanExtractorSeveralFromEnum(DescriptorExtractor.ORB))
   implicit def openCVExtractorSift2Extractor(self: OpenCVExtractor.SIFT.type) =
-    Extractor(Extractor.doubleExtractorFromEnum(DescriptorExtractor.SIFT))
+    Extractor.fromAction(Extractor.doubleExtractorSeveralFromEnum(DescriptorExtractor.SIFT))
   implicit def openCVExtractorSurf2Extractor(self: OpenCVExtractor.SURF.type) =
-    Extractor(Extractor.doubleExtractorFromEnum(DescriptorExtractor.SURF))
+    Extractor.fromAction(Extractor.doubleExtractorSeveralFromEnum(DescriptorExtractor.SURF))
+  //  implicit def openCVExtractorBrisk2Extractor(self: OpenCVExtractor.BRISK.type) =
+  //    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.BRISK))
+  //  implicit def openCVExtractorFreak2Extractor(self: OpenCVExtractor.FREAK.type) =
+  //    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.FREAK))
+  //  implicit def openCVExtractorBrief2Extractor(self: OpenCVExtractor.BRIEF.type) =
+  //    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.BRIEF))
+  //  implicit def openCVExtractorOrb2Extractor(self: OpenCVExtractor.ORB.type) =
+  //    Extractor(Extractor.booleanExtractorFromEnum(DescriptorExtractor.ORB))
+  //  implicit def openCVExtractorSift2Extractor(self: OpenCVExtractor.SIFT.type) =
+  //    Extractor(Extractor.doubleExtractorFromEnum(DescriptorExtractor.SIFT))
+  //  implicit def openCVExtractorSurf2Extractor(self: OpenCVExtractor.SURF.type) =
+  //    Extractor(Extractor.doubleExtractorFromEnum(DescriptorExtractor.SURF))
 }
 
 /**
