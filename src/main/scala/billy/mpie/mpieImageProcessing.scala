@@ -24,7 +24,6 @@ import scala.annotation.elidable
 import scala.annotation.elidable.ASSERTION
 
 import javax.imageio.ImageIO
-import nebula.imageProcessing.ImageUtil
 import nebula.imageProcessing.Pixel
 import nebula.util.Geometry
 import nebula.util.MathUtil
@@ -42,9 +41,9 @@ class LazyImage(
   val padding = 200
 
   lazy val path = {
-    val image = ImageIO.read(new File(originalPath))
+    val image = Image.read(ExistingFile(originalPath))
 
-    def warp(image: BufferedImage): BufferedImage = {
+    def warp(image: Image): Image = {
       // first get the file with the alignment matrix in it
       val pathSegment = mpieProperties.pathSegment
       val filename = "%s_%s_%s_%s_mean_align.txt".format(mpieProperties.id, mpieProperties.session, mpieProperties.expression, mpieProperties.pose)
@@ -59,11 +58,11 @@ class LazyImage(
 
       val transformOp = new AffineTransformOp(transformMatrix, TYPE_BILINEAR);
 
-      val warped = transformOp.filter(image, null)
-      ImageUtil.transparentToGreen(warped)
+      val warped = Image(transformOp.filter(image, null))
+      warped.transparentToGreen
     }
 
-    def scale(image: BufferedImage): BufferedImage = {
+    def scale(image: Image): Image = {
       val scaleMatrix = new AffineTransform(
         runtime.scaleFactor,
         0,
@@ -72,10 +71,10 @@ class LazyImage(
         0,
         0)
       val scaleOp = new AffineTransformOp(scaleMatrix, TYPE_BILINEAR)
-      scaleOp.filter(image, null)
+      Image(scaleOp.filter(image, null))
     }
 
-    def illumination(image: BufferedImage): BufferedImage = {
+    def illumination(image: Image): Image = {
       val illum = condition.illumination
       if (!illum.contains("x")) {
         image
@@ -85,7 +84,7 @@ class LazyImage(
 
         val factor = illum.init.toDouble
 
-        val raw = ImageUtil.toRaw(image)
+        val raw = image.toRaw
         for (
           y <- 0 until raw.getHeight;
           x <- 0 until raw.getWidth
@@ -93,11 +92,11 @@ class LazyImage(
           val pixel = Pixel.scale(Pixel.getPixel(raw, x, y), factor)
           raw.setRGB(x, y, pixel.argb)
         }
-        ImageUtil.fromRaw(raw)
+        Image(raw).fromRaw
       }
     }
 
-    def blur(image: BufferedImage): BufferedImage = {
+    def blur(image: Image): Image = {
       val std = condition.blur.toDouble
       if (std == 0) {
         image
@@ -105,11 +104,11 @@ class LazyImage(
         val kernelData = MathUtil.gaussianKernel(std)
         val kernel = new Kernel(kernelData.size, kernelData.size, kernelData.flatten.toArray.map(_.toFloat))
         val op = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null)
-        op.filter(image, null)
+        Image(op.filter(image, null))
       }
     }
 
-    def noise(image: BufferedImage): BufferedImage = {
+    def noise(image: Image): Image = {
       val std = condition.noise.toDouble
       if (std != 0) {
         for (
@@ -125,7 +124,7 @@ class LazyImage(
       image
     }
 
-    def jpeg(image: BufferedImage): BufferedImage = {
+    def jpeg(image: Image): Image = {
       val quality = condition.jpeg.toFloat
       if (quality == 0) {
         image
@@ -134,7 +133,7 @@ class LazyImage(
       }
     }
 
-    def misalignment(image: BufferedImage): BufferedImage = {
+    def misalignment(image: Image): Image = {
       val std = condition.misalignment.toDouble
 
       if (std == 0) {
@@ -190,11 +189,11 @@ class LazyImage(
 
         asserty(transformed.getWidth == image.getWidth && transformed.getHeight == image.getHeight)
 
-        ImageUtil.transparentToGreen(transformed)
+        Image(transformed).transparentToGreen
       }
     }
 
-    def padImage(image: BufferedImage): BufferedImage = {
+    def padImage(image: Image): Image = {
       val padded = new BufferedImage(2 * padding + image.getWidth, 2 * padding + image.getHeight, image.getType)
       for (
         y <- 0 until image.getHeight;
@@ -202,17 +201,17 @@ class LazyImage(
       ) {
         padded.setRGB(padding + x, padding + y, image.getRGB(x, y))
       }
-      padded
+      Image(padded)
     }
 
-    def background(unpaddedImage: BufferedImage): BufferedImage = {
+    def background(unpaddedImage: Image): Image = {
       val image = padImage(unpaddedImage)
 
       val mask = {
         val pathSegment = mpieProperties.pathSegment
         val filename = "%s_%s_%s_%s_mean_alpha.png".format(mpieProperties.id, mpieProperties.session, mpieProperties.expression, mpieProperties.pose)
         val path = "%s/processed/%s/%s".format(runtime.piSliceRoot, pathSegment, filename)
-        padImage(scale(warp(ImageIO.read(new File(path)))))
+        padImage(scale(warp(Image.read(ExistingFile(path)))))
       }
 
       lazy val syntheticBackground = {
@@ -244,10 +243,10 @@ class LazyImage(
         }
       }
 
-      image
+      Image(image)
     }
 
-    def roi(image: BufferedImage): BufferedImage = {
+    def roi(image: Image): Image = {
       // figure out the path to the mask
       val poseUnderscore = condition.pose match {
         case "240" => "24_0"
@@ -256,9 +255,9 @@ class LazyImage(
       }
 
       val roiPath = runtime.piSliceRoot ++ "/processed/roi/" ++ poseUnderscore ++ "/" ++ roiString ++ ".png"
-      val roiImg = padImage(scale(ImageIO.read(new File(roiPath))))
+      val roiImg = padImage(scale(Image.read(ExistingFile(roiPath))))
 
-      ImageUtil.extractROI(roiImg, image)
+      Image(image.extractROI(Image(roiImg)))
     }
 
     val scaled = scale(warp(image))

@@ -21,10 +21,8 @@ import org.opencv.features2d.KeyPoint
 
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import imageProcessing.ImageUtil
 import imageProcessing.Pixel
 
-import nebula.imageProcessing.RichImage.bufferedImage
 import nebula.util.JSONUtil.AddClassName
 import nebula.util.JSONUtil.singletonObject
 import spray.json.DefaultJsonProtocol

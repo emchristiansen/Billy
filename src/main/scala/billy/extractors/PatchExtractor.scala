@@ -21,10 +21,8 @@ import org.opencv.features2d.KeyPoint
 
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import imageProcessing.ImageUtil
 import imageProcessing.Pixel
 
-import nebula.imageProcessing.RichImage.bufferedImage
 import nebula.util.JSONUtil.AddClassName
 import nebula.util.JSONUtil.singletonObject
 import spray.json.DefaultJsonProtocol
@@ -53,7 +51,7 @@ trait PatchExtractor2Extractor {
   implicit def PatchExtractor2Extractor(
     self: PatchExtractor): Extractor[IndexedSeq[Int]] =
     Extractor(
-      (image: BufferedImage, keyPoint: KeyPoint) => {
+      (image: Image, keyPoint: KeyPoint) => {
         Extractor.rawPixels(
           self.normalizeRotation,
           self.normalizeScale,
@@ -88,7 +86,7 @@ trait LUCIDExtractor2Extractor {
   implicit def LUCIDExtractor2Extractor(
     self: LUCIDExtractor): Extractor[IndexedSeq[Int]] =
     Extractor(
-      (image: BufferedImage, keyPoint: KeyPoint) => {
+      (image: Image, keyPoint: KeyPoint) => {
         val rawPixelsOption = Extractor.rawPixels(
           self.normalizeRotation,
           self.normalizeScale,

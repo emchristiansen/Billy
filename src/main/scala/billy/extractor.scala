@@ -21,10 +21,8 @@ import org.opencv.features2d.KeyPoint
 
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import imageProcessing.ImageUtil
 import imageProcessing.Pixel
 
-import nebula.imageProcessing.RichImage.bufferedImage
 import nebula.util.JSONUtil.AddClassName
 import nebula.util.JSONUtil.singletonObject
 import spray.json.DefaultJsonProtocol
@@ -45,8 +43,8 @@ trait Extractor[F] {
 ///////////////////////////////////////////////////////////
 
 object Extractor {
-  type ExtractorAction[F] = (BufferedImage, Seq[KeyPoint]) => Seq[Option[F]]
-  type ExtractorActionSingle[F] = (BufferedImage, KeyPoint) => Option[F]
+  type ExtractorAction[F] = (Image, Seq[KeyPoint]) => Seq[Option[F]]
+  type ExtractorActionSingle[F] = (Image, KeyPoint) => Option[F]
 
   def fromAction[F](extractSeveral: ExtractorAction[F]): Extractor[F] = new Extractor[F] {
     override def extract = extractSeveral
@@ -56,7 +54,7 @@ object Extractor {
   }
 
   def applySeveral[F](extractSingle: ExtractorActionSingle[F]): ExtractorAction[F] =
-    (image: BufferedImage, keyPoints: Seq[KeyPoint]) =>
+    (image: Image, keyPoints: Seq[KeyPoint]) =>
       keyPoints.map(k => extractSingle(image, k))
 
   def apply[F](single: ExtractorActionSingle[F]): Extractor[F] = new Extractor[F] {
@@ -82,14 +80,14 @@ object Extractor {
     patchWidth: Int,
     blurWidth: Int,
     color: String)(
-      image: BufferedImage,
+      image: Image,
       keyPoint: KeyPoint): Option[IndexedSeq[Int]] = {
     // TODO
     asserty(!normalizeRotation)
     asserty(!normalizeScale)
 
-    val blurred = ImageUtil.boxBlur(blurWidth, image)
-    val patchOption = ImageUtil.extractPatch(blurred, patchWidth, keyPoint)
+    val blurred = image.boxBlur(blurWidth)
+    val patchOption = blurred.extractPatch(patchWidth, keyPoint)
     for (
       patch <- patchOption
     ) yield {
@@ -100,7 +98,7 @@ object Extractor {
 
   object OpenCVLock
   def doubleExtractorSeveralFromEnum(enum: Int): ExtractorAction[IndexedSeq[Double]] =
-    (image: BufferedImage, keyPoints: Seq[KeyPoint]) => {
+    (image: Image, keyPoints: Seq[KeyPoint]) => {
       val extractor = DescriptorExtractor.create(enum)
       val imageMat = OpenCVUtil.bufferedImageToMat(image)
       val descriptor = new Mat
@@ -148,7 +146,7 @@ object Extractor {
     }
 
   def doubleExtractorFromEnum(enum: Int): ExtractorActionSingle[IndexedSeq[Double]] =
-    (image: BufferedImage, keyPoint: KeyPoint) => {
+    (image: Image, keyPoint: KeyPoint) => {
       val extractor = DescriptorExtractor.create(enum)
       val imageMat = OpenCVUtil.bufferedImageToMat(image)
       val descriptor = new Mat
