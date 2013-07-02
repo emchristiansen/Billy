@@ -11,7 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
 import java.io.File
 
 import org.opencv.features2d.DMatch
@@ -28,10 +27,10 @@ import JSONUtil._
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODO: Better place for this
-trait BufferedImageJsonProtocol extends DefaultJsonProtocol {
-  implicit def jsonBufferedImage: RootJsonFormat[BufferedImage] = {
-    object NoScalaClass extends RootJsonFormat[BufferedImage] {
-      override def write(self: BufferedImage) = {
+trait ImageJsonProtocol extends DefaultJsonProtocol {
+  implicit def jsonImage: RootJsonFormat[Image] = {
+    object NoScalaClass extends RootJsonFormat[Image] {
+      override def write(self: Image) = {
         val baos = new ByteArrayOutputStream
         ImageIO.write(self, "png", baos)
         val array: Array[Byte] = baos.toByteArray
@@ -40,20 +39,20 @@ trait BufferedImageJsonProtocol extends DefaultJsonProtocol {
       override def read(value: JsValue) = {
         val array = value.convertTo[Array[Byte]]
         val bois = new ByteArrayInputStream(array)
-        ImageIO.read(bois)
+        Image(ImageIO.read(bois))
       }
     }
 
-    NoScalaClass.addClassInfo("BufferedImage")
+    NoScalaClass.addClassInfo("Image")
   }
 }
 
 case class ExperimentSummary(
   summaryNumbers: Map[String, Double],
   summaryCurves: Map[String, Seq[(Double, Double)]],
-  summaryImages: Map[String, BufferedImage])
+  summaryImages: Map[String, Image])
 
-trait ExperimentSummaryJsonProtocol extends DefaultJsonProtocol with BufferedImageJsonProtocol {
+trait ExperimentSummaryJsonProtocol extends DefaultJsonProtocol with ImageJsonProtocol {
   implicit def jsonExperimentSummary = jsonFormat3(ExperimentSummary.apply)
 }
 

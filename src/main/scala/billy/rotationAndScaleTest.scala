@@ -107,7 +107,7 @@ trait RotationAndScaleExperiment2ExperimentRunner {
           val file = new File(
             runtimeConfig.dataRoot,
             s"oxfordImages/${self.imageClass}/images/img1.bmp").mustExist
-          ImageIO.read(file)
+          Image.read(file)
         }
 
         val translationTransform =
@@ -156,7 +156,7 @@ trait RotationAndScaleExperiment2ExperimentRunner {
 
         //////////////////////
 
-        val rightImage: BufferedImage = {
+        val rightImage: Image = {
           //          if (self.scaleFactor == 1 && self.theta == 0) {
           //            println("here")
           //            leftImage
@@ -167,12 +167,12 @@ trait RotationAndScaleExperiment2ExperimentRunner {
             leftImage.getHeight,
             leftImage.getType)
           similarityOp.filter(leftImage, image)
-          image
+          Image(image)
           //          }
         }
 
         def debug {
-          def saveNoOverwrite(image: BufferedImage, file: File) {
+          def saveNoOverwrite(image: Image, file: File) {
             ImageIO.write(image, "png", file)
           }
 
@@ -186,7 +186,7 @@ trait RotationAndScaleExperiment2ExperimentRunner {
           saveNoOverwrite(rightImage, warpedFile)
         }
 
-//        debug
+        //        debug
 
         //      nebula.TestUtil.dumpImage("imageLeft", leftImage)
         //      nebula.TestUtil.dumpImage("imageRight", rightImage)
@@ -206,24 +206,24 @@ trait RotationAndScaleExperiment2ExperimentRunner {
 
         println(s"Number of KeyPoints: ${leftKeyPoints.size}")
 
-//        (leftKeyPoints zip rightKeyPoints) foreach {
-//          case (left, right) =>
-//            println(left)
-//            println(right)
-//        }
-//
-//        (leftKeyPoints zip rightKeyPoints) foreach {
-//          case (left, right) =>
-//            println(left)
-//            println(right)
-//            assert(left.pt.x == right.pt.x)
-//            assert(left.pt.y == right.pt.y)
-//            assert(left.size == right.size)
-//            assert(left.angle == right.angle)
-//            assert(left.response == right.response)
-//            assert(left.octave == right.octave)
-//            assert(left.class_id == right.class_id)
-//        }
+        //        (leftKeyPoints zip rightKeyPoints) foreach {
+        //          case (left, right) =>
+        //            println(left)
+        //            println(right)
+        //        }
+        //
+        //        (leftKeyPoints zip rightKeyPoints) foreach {
+        //          case (left, right) =>
+        //            println(left)
+        //            println(right)
+        //            assert(left.pt.x == right.pt.x)
+        //            assert(left.pt.y == right.pt.y)
+        //            assert(left.size == right.size)
+        //            assert(left.angle == right.angle)
+        //            assert(left.response == right.response)
+        //            assert(left.octave == right.octave)
+        //            assert(left.class_id == right.class_id)
+        //        }
 
         val (leftDescriptors, rightDescriptors) = {
           val leftDescriptors = self.extractor.extract(leftImage, leftKeyPoints)

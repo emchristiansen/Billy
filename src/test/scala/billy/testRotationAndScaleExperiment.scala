@@ -23,8 +23,7 @@ import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.{ FeatureDetector, KeyPoint }
 import nebula._
 import org.opencv.core.Mat
-import java.awt.Color
-import java.awt.image.BufferedImage
+import java.awt.Color 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix
 import nebula.util.Homography
 import nebula.util.OpenCVUtil

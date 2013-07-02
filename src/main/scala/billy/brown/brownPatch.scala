@@ -11,7 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
 import java.io.File
 
 import scala.annotation.elidable
@@ -27,7 +26,7 @@ import nebula.util.KeyPointUtil
 
 ///////////////////////////////////////////////////////////
 
-case class BrownPatch(image: BufferedImage, id: Int)
+case class BrownPatch(image: Image, id: Int)
 
 case class PatchPair(left: BrownPatch, right: BrownPatch)
 
@@ -35,32 +34,46 @@ object PatchPair {
   implicit class PatchPairOps(self: PatchPair) {
     def corresponds = self.left.id == self.right.id
 
-    def getDistance[E <% Extractor[F], M <% Matcher[F], F](extractor: E, matcher: M): Option[Double] = {
+    def getDistance[E <% Extractor[F], M <% Matcher[F], F](
+      extractor: E,
+      matcher: M): Option[Double] = {
       val PatchPair(left, right) = self
       val leftDescriptor = extractDescriptorAtCenter(extractor, left.image)
       val rightDescriptor = extractDescriptorAtCenter(extractor, right.image)
-      for (l <- leftDescriptor; r <- rightDescriptor) yield matcher.distance(l, r)
+      for (
+        l <- leftDescriptor;
+        r <- rightDescriptor
+      ) yield matcher.distance(l, r)
     }
   }
 
-  def extractDescriptorAtCenter[E <% Extractor[F], F](extractor: E, image: BufferedImage): Option[F] = {
+  def extractDescriptorAtCenter[E <% Extractor[F], F](
+    extractor: E,
+    image: Image): Option[F] = {
     require(image.getWidth == 64)
     require(image.getHeight == 64)
 
     // TODO: Scale down
-//    val scaleFactor = 8
-//    val scaled = ImageUtil.scale(scaleFactor, image)._2
-//    val keyPoint = KeyPointUtil(scaleFactor * 32, scaleFactor * 32)
-//    extractor.extractSingle(scaled, keyPoint)
-    
+    //    val scaleFactor = 8
+    //    val scaled = ImageUtil.scale(scaleFactor, image)._2
+    //    val keyPoint = KeyPointUtil(scaleFactor * 32, scaleFactor * 32)
+    //    extractor.extractSingle(scaled, keyPoint)
+
     val keyPoint = KeyPointUtil(32, 32)
     extractor.extractSingle(image, keyPoint)
   }
 
-  def loadPatchPairs(datasetName: String, numMatches: Int, dataRoot: File): Stream[PatchPair] = {
-    val directory = new File(dataRoot, s"brownImages/${datasetName}").mustExist
+  def loadPatchPairs(
+    datasetName: String,
+    numMatches: Int,
+    dataRoot: File): Stream[PatchPair] = {
+    val directory = ExistingDirectory(new File(
+      dataRoot,
+      s"brownImages/${datasetName}"))
 
-    val manifest = new File(directory, s"m50_${numMatches}_${numMatches}_0.txt").mustExist
+    val manifest = ExistingFile(new File(
+      directory,
+      s"m50_${numMatches}_${numMatches}_0.txt"))
 
     val lines = FileUtils.readFileToString(manifest).split("\n")
     assert(lines.size == numMatches)
@@ -84,7 +97,7 @@ object PatchPair {
     return (leftIndex.toInt, leftID.toInt, rightIndex.toInt, rightID.toInt)
   }
 
-  def loadPatch(directory: File)(index: Int): BufferedImage = {
+  def loadPatch(directory: File)(index: Int): Image = {
     val numPatchesPerFile = 256
 
     val imageIndex = index / numPatchesPerFile
@@ -107,6 +120,6 @@ object PatchPair {
     val patchWidth = 64
     val xBegin = patchWidth * patchColumn
     val yBegin = patchWidth * patchRow
-    image.getSubimage(xBegin, yBegin, patchWidth, patchWidth)
+    Image(image.getSubimage(xBegin, yBegin, patchWidth, patchWidth))
   }
 }

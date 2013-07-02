@@ -1,6 +1,5 @@
 package billy.extractors
-
-import java.awt.image.BufferedImage
+ 
 
 import nebula._
 import nebula.imageProcessing._

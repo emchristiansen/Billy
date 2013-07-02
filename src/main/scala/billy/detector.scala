@@ -11,8 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
-
 import scala.reflect.runtime.universe
 
 import org.opencv.core.MatOfKeyPoint
@@ -35,7 +33,7 @@ trait Detector {
 }
 
 object Detector {
-  type DetectorAction = BufferedImage => Seq[KeyPoint]
+  type DetectorAction = Image => Seq[KeyPoint]
 }
 
 ///////////////////////////////////////////////////////////
@@ -43,7 +41,7 @@ object Detector {
 case class BoundedDetector[D <% Detector](detector: D, maxKeyPoints: Int)
 
 trait BoundedDetectorJsonProtocol extends DefaultJsonProtocol {
-    implicit def boundedDetectorJsonProtocol[D <% Detector: JsonFormat] = 
+  implicit def boundedDetectorJsonProtocol[D <% Detector: JsonFormat] =
     jsonFormat2(BoundedDetector.apply[D])
 }
 
@@ -60,15 +58,15 @@ trait PairDetector extends Detector {
 }
 
 object PairDetector {
-  type PairDetectorAction = (Homography, BufferedImage, BufferedImage) => Seq[Tuple2[KeyPoint, KeyPoint]]
+  type PairDetectorAction = (Homography, Image, Image) => Seq[Tuple2[KeyPoint, KeyPoint]]
 
   implicit class ToPairDetector[D <% Detector](self: D) extends PairDetector {
     override def detect = self.detect
 
     override def detectPair =
       (homography: Homography,
-        leftImage: BufferedImage,
-        rightImage: BufferedImage) => {
+        leftImage: Image,
+        rightImage: Image) => {
         val left = detect(leftImage)
         val right = detect(rightImage)
 
@@ -92,10 +90,10 @@ case class BoundedPairDetector[D <% PairDetector](
   maxKeyPoints: Int)
 
 trait BoundedPairDetectorJsonProtocol extends DefaultJsonProtocol {
-  implicit def boundedPairDetectorJsonProtocol[D <% PairDetector: JsonFormat] = 
-    jsonFormat2(BoundedPairDetector.apply[D])  
+  implicit def boundedPairDetectorJsonProtocol[D <% PairDetector: JsonFormat] =
+    jsonFormat2(BoundedPairDetector.apply[D])
 }
-  
+
 object BoundedPairDetector extends BoundedPairDetectorJsonProtocol {
   implicit class ToPairDetector[D <% PairDetector](
     self: BoundedPairDetector[D]) extends PairDetector {

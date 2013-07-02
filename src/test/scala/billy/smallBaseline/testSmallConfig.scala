@@ -21,7 +21,6 @@ import math._
 import java.io.File
 import breeze.linalg._
 import scala.util._
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -42,7 +41,7 @@ class TestSmallConfig extends FunSuite {
 //    }
 //
 //    val rightImage = {
-//      val rightImage = new BufferedImage(leftImage.getWidth, leftImage.getHeight, leftImage.getType)
+//      val rightImage = new Image(leftImage.getWidth, leftImage.getHeight, leftImage.getType)
 //      for (
 //        sourceY <- 0 until leftImage.getHeight;
 //        sourceX <- 0 until leftImage.getWidth

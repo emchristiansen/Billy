@@ -95,13 +95,13 @@ trait WideBaselineExperiment2ImagePairLike {
       val file = new File(
         runtime.dataRoot,
         s"oxfordImages/${self.imageClass}/images/img1.bmp").mustExist
-      ImageIO.read(file)
+      Image.read(file)
     }
     override def rightImage = {
       val file = new File(
         runtime.dataRoot,
         s"oxfordImages/${self.imageClass}/images/img${self.otherImage}.bmp").mustExist
-      ImageIO.read(file)
+      Image.read(file)
     }
   }
 }

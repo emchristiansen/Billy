@@ -10,7 +10,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
 import java.io.File
 
 import javax.imageio.ImageIO
@@ -34,7 +33,7 @@ case class Histogram(
   }
   
   // TODO: Improve this and the above name.
-  def render: BufferedImage = {
+  def render: Image = {
     val tempContents = "%s\n%s\n%s".format(
       title,
       sameDistances.sorted.mkString(" "),
@@ -48,7 +47,7 @@ case class Histogram(
     val command = "python %s %s %s".format(pythonScript, tempFile, outputFile)
     nebula.util.IO.runSystemCommand(command)
 
-    ImageIO.read(outputFile)
+    Image(ImageIO.read(outputFile))
   }
 
   def path: File = {

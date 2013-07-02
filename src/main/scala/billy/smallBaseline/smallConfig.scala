@@ -11,7 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
 import scala.Option.option2Iterable
 import org.opencv.features2d.{ DMatch, KeyPoint }
 import breeze.linalg.DenseMatrix
@@ -78,8 +77,8 @@ object SmallBaselineExperiment {
     searchRadius: Int,
     extractor: Extractor,
     matcher: Matcher,
-    leftImage: BufferedImage,
-    rightImage: BufferedImage): FlowField = {
+    leftImage: Image,
+    rightImage: Image): FlowField = {
     // TODO: Make parameter
     val numSamples = 100
 

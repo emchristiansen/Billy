@@ -11,8 +11,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import java.awt.image.BufferedImage
-
 import scala.reflect.runtime.universe
 
 import org.opencv.core.MatOfKeyPoint

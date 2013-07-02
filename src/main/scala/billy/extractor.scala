@@ -1,6 +1,4 @@
-package billy
-
-import java.awt.image.BufferedImage
+package billy 
 
 import nebula._
 import nebula.imageProcessing._
@@ -221,7 +219,7 @@ object NormalizedExtractor {
   implicit def toExtractor[E, N, F1, F2](normalizedExtractor: NormalizedExtractor[E, N, F1, F2])(
     implicit evExtractor: E => Extractor[F1],
     evNormalizer: N => Normalizer[F1, F2]): Extractor[F2] = Extractor.fromAction(
-    (image: BufferedImage, keyPoints: Seq[KeyPoint]) => {
+    (image: Image, keyPoints: Seq[KeyPoint]) => {
       val unnormalized = normalizedExtractor.extractor.extract(image, keyPoints)
       unnormalized.map(_.map(normalizedExtractor.normalizer.normalize))
     })

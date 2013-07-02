@@ -9,15 +9,13 @@ import billy.brown._
 import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
-import billy.summary._
-
-import java.awt.image.BufferedImage
+import billy.summary._ 
 
 ///////////////////////////////////////////////////////////
 
 trait HasImagePair {
-  def leftImage: BufferedImage
-  def rightImage: BufferedImage
+  def leftImage: Image
+  def rightImage: Image
 }
 
 ///////////////////////////////////////////////////////////

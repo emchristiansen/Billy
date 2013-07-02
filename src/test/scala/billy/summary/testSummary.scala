@@ -53,7 +53,6 @@ import org.opencv.features2d.{ FeatureDetector, KeyPoint }
 import nebula._
 import org.opencv.core.Mat
 import java.awt.Color
-import java.awt.image.BufferedImage
 import org.apache.commons.math3.linear.Array2DRowRealMatrix
 import nebula.util.Homography
 import nebula.util.OpenCVUtil
@@ -64,7 +63,7 @@ import javax.imageio.ImageIO
 import java.awt.{ Color, Rectangle }
 import java.awt.color.ColorSpace
 import java.awt.geom.AffineTransform
-import java.awt.image.{ AffineTransformOp, BufferedImage, ColorConvertOp, ConvolveOp, DataBufferInt, Kernel }
+import java.awt.image.{ AffineTransformOp, Image, ColorConvertOp, ConvolveOp, DataBufferInt, Kernel }
 
 import scala.Array.{ canBuildFrom, fallbackCanBuildFrom }
 

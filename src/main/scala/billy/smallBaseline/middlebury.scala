@@ -10,8 +10,7 @@ import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
-
-import java.awt.image.BufferedImage
+ 
 import java.io.File
 
 import scala.annotation.elidable
@@ -21,7 +20,7 @@ import javax.imageio.ImageIO
 
 ///////////////////////////////////////////////////////////
 
-case class SmallBaselinePair(left: BufferedImage, right: BufferedImage, flow: FlowField) {
+case class SmallBaselinePair(left: Image, right: Image, flow: FlowField) {
   require(left.getWidth == right.getWidth)
   require(left.getWidth == flow.data.cols)
   require(left.getHeight == right.getHeight)
@@ -45,11 +44,9 @@ object SmallBaselinePair {
       FlowField.apply(file)
     }
 
-    def getImage(format: String): BufferedImage = {
+    def getImage(format: String): Image = {
       val file = getFile(format)
-      val image = ImageIO.read(file)
-      assert(image != null)
-      image
+      Image.read(file)
     }
 
     val left = getImage("/other-data/%s/frame10.png")
