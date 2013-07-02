@@ -13,6 +13,7 @@ import billy.summary._
 
 ///////////////////////////////////////////////////////////
 
+@deprecated("", "")
 trait HasImagePair {
   def leftImage: Image
   def rightImage: Image
@@ -20,12 +21,14 @@ trait HasImagePair {
 
 ///////////////////////////////////////////////////////////
 
+@deprecated("", "")
 trait HasGroundTruth[A] {
   def groundTruth: A
 }
 
 ///////////////////////////////////////////////////////////
 
+@deprecated("", "")
 trait HasEstimate[A] {
   def estimate: A
 }

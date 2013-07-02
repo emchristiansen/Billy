@@ -90,7 +90,7 @@ trait SingleMatcher[F] extends Matcher[F] {
 ///////////////////////////////////////////////////////////
 
 trait BatchMatcher[F] extends Matcher[F] {
-  override def distance = (left, right) => 
+  override def distance = (left, right) =>
     doMatch(true, Seq(left), Seq(right)).head.distance
 }
 
@@ -102,7 +102,8 @@ case class NormalizedMatcher[N <% Normalizer[F1, F2], M <% Matcher[F2], F1, F2](
 
 object NormalizedMatcher {
   // TODO: This implicit isn't picked up, probably a compiler bug.
-  implicit def normalizedMatcher2Matcher[N <% Normalizer[F1, F2], M <% Matcher[F2], F1, F2](self: NormalizedMatcher[N, M, F1, F2]): Matcher[F1] =
+  implicit def normalizedMatcher2Matcher[N <% Normalizer[F1, F2], M <% Matcher[F2], F1, F2](
+    self: NormalizedMatcher[N, M, F1, F2]): Matcher[F1] =
     Matcher[F1]((left: F1, right: F1) => {
       val leftNormalized = self.normalizer.normalize(left)
       val rightNormalized = self.normalizer.normalize(right)

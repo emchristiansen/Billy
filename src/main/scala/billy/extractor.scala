@@ -1,4 +1,4 @@
-package billy 
+package billy
 
 import nebula._
 import nebula.imageProcessing._
@@ -44,24 +44,27 @@ object Extractor {
   type ExtractorAction[F] = (Image, Seq[KeyPoint]) => Seq[Option[F]]
   type ExtractorActionSingle[F] = (Image, KeyPoint) => Option[F]
 
-  def fromAction[F](extractSeveral: ExtractorAction[F]): Extractor[F] = new Extractor[F] {
-    override def extract = extractSeveral
+  def fromAction[F](extractSeveral: ExtractorAction[F]): Extractor[F] =
+    new Extractor[F] {
+      override def extract = extractSeveral
 
-    override def extractSingle = (image, keyPoint) =>
-      extract(image, Seq(keyPoint)).head
-  }
+      override def extractSingle = (image, keyPoint) =>
+        extract(image, Seq(keyPoint)).head
+    }
 
-  def applySeveral[F](extractSingle: ExtractorActionSingle[F]): ExtractorAction[F] =
+  def applySeveral[F](
+    extractSingle: ExtractorActionSingle[F]): ExtractorAction[F] =
     (image: Image, keyPoints: Seq[KeyPoint]) =>
       keyPoints.map(k => extractSingle(image, k))
 
-  def apply[F](single: ExtractorActionSingle[F]): Extractor[F] = new Extractor[F] {
-    override def extract = applySeveral(extractSingle)
+  def apply[F](single: ExtractorActionSingle[F]): Extractor[F] =
+    new Extractor[F] {
+      override def extract = applySeveral(extractSingle)
 
-    override def extractSingle = single
-  }
+      override def extractSingle = single
+    }
 
-  // TODO: These should be enums, not strings.
+  // TODO: These should be types, not strings.
   def interpretColor(color: String)(pixel: Pixel): Seq[Int] = color match {
     case "Gray" => pixel.gray
     case "sRGB" => pixel.sRGB
@@ -117,12 +120,12 @@ object Extractor {
       }
 
       // Apparent concurrency bug that causes random crashes. Sigh.
-//      OpenCVLock.synchronized {
-        extractor.compute(
-          imageMat,
-          markedKeyPointsMat,
-          descriptor)
-//      }
+      //      OpenCVLock.synchronized {
+      extractor.compute(
+        imageMat,
+        markedKeyPointsMat,
+        descriptor)
+      //      }
 
       val descriptorsOption =
         DenseMatrixUtil.matToMatrixDoubleSingleChannel(descriptor)
