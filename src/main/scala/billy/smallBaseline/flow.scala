@@ -57,7 +57,7 @@ case class FlowField(data: DenseMatrix[Option[FlowVector]])
 
 object FlowField {
   def apply(file: File): FlowField = {
-    requirey(file.getName.endsWith(".flo.txt"))
+    require(file.getName.endsWith(".flo.txt"))
 
     val contents = readFileToString(file).split("\n").filter(_.size > 0).toSeq
 
@@ -72,7 +72,7 @@ object FlowField {
     val lines = for (lineString <- contents.tail) yield {
       val LineRegex = """(\d+) (\d+) (\d+) (.+)""".r
       val LineRegex(y, x, channel, value) = lineString
-      asserty(channel.toInt == 0 || channel.toInt == 1)
+      assert(channel.toInt == 0 || channel.toInt == 1)
       Line(
         y.toInt,
         x.toInt,
@@ -84,8 +84,8 @@ object FlowField {
       val groups = lines.groupBy(line => line.y + "_" + line.x).values.toSeq
       groups.map(_.sortBy(_.channel))
     }
-    asserty(groups.size == lines.size / 2)
-    asserty(groups.forall(_.size == 2))
+    assert(groups.size == lines.size / 2)
+    assert(groups.forall(_.size == 2))
 
     val data = DenseMatrix.fill[Option[FlowVector]](height, width)(None)
     for (Seq(channel0, channel1) <- groups; if channel0.value.isDefined && channel1.value.isDefined) {
@@ -101,8 +101,8 @@ object FlowField {
 
   implicit class AddMSE(self: FlowField) {
     def mse(that: FlowField): Double = {
-      requirey(self.data.rows == that.data.rows)
-      requirey(self.data.cols == that.data.cols)
+      require(self.data.rows == that.data.rows)
+      require(self.data.cols == that.data.cols)
 
       val thisIterator = self.data.activeValuesIterator
       val thatIterator = that.data.activeValuesIterator

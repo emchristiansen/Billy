@@ -83,8 +83,8 @@ object Extractor {
       image: Image,
       keyPoint: KeyPoint): Option[IndexedSeq[Int]] = {
     // TODO
-    asserty(!normalizeRotation)
-    asserty(!normalizeScale)
+    assert(!normalizeRotation)
+    assert(!normalizeScale)
 
     val blurred = image.boxBlur(blurWidth)
     val patchOption = blurred.extractPatch(patchWidth, keyPoint)
@@ -133,7 +133,7 @@ object Extractor {
         val descriptors = descriptorsOption.get.toSeqSeq
         val markedKeyPoints = markedKeyPointsMat.toArray
 
-        asserty(descriptors.size == markedKeyPoints.size)
+        assert(descriptors.size == markedKeyPoints.size)
 
         val descriptorOptions =
           Array[Option[IndexedSeq[Double]]](keyPoints.size times None: _*)
@@ -156,13 +156,13 @@ object Extractor {
       //      
       //      if (descriptor.rows == 0 || descriptor.cols == 0) None
       //      else {
-      //        asserty(descriptor.rows == 1)
-      //        asserty(descriptor.cols > 0)
-      //        //        asserty(descriptor.`type` == CvType.CV_8UC1)
+      //        assert(descriptor.rows == 1)
+      //        assert(descriptor.cols > 0)
+      //        //        assert(descriptor.`type` == CvType.CV_8UC1)
       //
       //        val doubles = for (c <- 0 until descriptor.cols) yield {
       //          val doubles = descriptor.get(0, c)
-      //          asserty(doubles.size == 1)
+      //          assert(doubles.size == 1)
       //          doubles.head
       //        }
       //

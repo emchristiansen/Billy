@@ -80,7 +80,7 @@ class LazyImage(
         image
       } else {
         // When doing artificial illumination, we start with neutral.
-        asserty(mpieProperties.illumination == "00")
+        assert(mpieProperties.illumination == "00")
 
         val factor = illum.init.toDouble
 
@@ -161,7 +161,7 @@ class LazyImage(
           } else {
             all
           }
-          asserty(culled.size == 4)
+          assert(culled.size == 4)
           culled.toList
         }
 
@@ -187,7 +187,7 @@ class LazyImage(
         val transformed = new BufferedImage(image.getWidth, image.getHeight, image.getType)
         transformOp.filter(image, transformed)
 
-        asserty(transformed.getWidth == image.getWidth && transformed.getHeight == image.getHeight)
+        assert(transformed.getWidth == image.getWidth && transformed.getHeight == image.getHeight)
 
         Image(transformed).transparentToGreen
       }

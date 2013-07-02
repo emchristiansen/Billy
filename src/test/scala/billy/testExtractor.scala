@@ -41,7 +41,7 @@ class TestExtractor(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
   //  test("uniformRank") {
   //    val pixels = IndexedSeq(2, 2, 3, 3, 3)
   //    val uniformRank = Extractor.uniformRank(pixels)
-  //    asserty(uniformRank === IndexedSeq(1, 1, 3, 3, 3))
+  //    assert(uniformRank === IndexedSeq(1, 1, 3, 3, 3))
   //  }
 
   test("BRISK", FastTest) {

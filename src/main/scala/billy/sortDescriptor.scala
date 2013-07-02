@@ -22,7 +22,7 @@ trait PermutationLike[A] {
 ///////////////////////////////////////////////////////////
 
 case class SortDescriptor(values: IndexedSeq[Int]) {
-  asserty(values.sorted == (0 until values.size))
+  assert(values.sorted == (0 until values.size))
 }
 
 object SortDescriptor {

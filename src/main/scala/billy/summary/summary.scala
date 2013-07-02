@@ -69,8 +69,8 @@ object SummaryUtil {
    * The error rate for a given recall.
    */
   def errorRateAtRecall(recall: Double, dmatches: Seq[DMatch]): Double = {
-    requirey(recall >= 0)
-    requirey(recall <= 1)
+    require(recall >= 0)
+    require(recall <= 1)
 
     val sorted = dmatches.sortBy(_.distance)
 
@@ -136,7 +136,7 @@ object SummaryUtil {
     
     val fcn = mkFunction(allPoints)    
     
-    asserty(fcn.map(_._1).distinct.size == fcn.size)
+    assert(fcn.map(_._1).distinct.size == fcn.size)
     
     fcn
     

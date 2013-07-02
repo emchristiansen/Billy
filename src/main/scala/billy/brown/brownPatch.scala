@@ -44,8 +44,8 @@ object PatchPair {
   }
 
   def extractDescriptorAtCenter[E <% Extractor[F], F](extractor: E, image: BufferedImage): Option[F] = {
-    requirey(image.getWidth == 64)
-    requirey(image.getHeight == 64)
+    require(image.getWidth == 64)
+    require(image.getHeight == 64)
 
     // TODO: Scale down
 //    val scaleFactor = 8
@@ -63,7 +63,7 @@ object PatchPair {
     val manifest = new File(directory, s"m50_${numMatches}_${numMatches}_0.txt").mustExist
 
     val lines = FileUtils.readFileToString(manifest).split("\n")
-    asserty(lines.size == numMatches)
+    assert(lines.size == numMatches)
 
     lines.toStream.map(manifestLineToPatchPair(directory))
   }
@@ -88,20 +88,20 @@ object PatchPair {
     val numPatchesPerFile = 256
 
     val imageIndex = index / numPatchesPerFile
-    asserty(imageIndex >= 0)
+    assert(imageIndex >= 0)
     val imageFile = new File(directory, f"patches${imageIndex}%04d.bmp").mustExist
     val image = ImageIO.read(imageFile)
 
     val patchIndex = index - numPatchesPerFile * imageIndex
-    asserty(patchIndex >= 0)
-    asserty(patchIndex < numPatchesPerFile)
+    assert(patchIndex >= 0)
+    assert(patchIndex < numPatchesPerFile)
     val numPatchesPerRow = 16
     val patchRow = patchIndex / numPatchesPerRow
-    asserty(patchRow >= 0)
-    asserty(patchRow < numPatchesPerFile / numPatchesPerRow)
+    assert(patchRow >= 0)
+    assert(patchRow < numPatchesPerFile / numPatchesPerRow)
     val patchColumn = patchIndex - numPatchesPerRow * patchRow
-    asserty(patchColumn >= 0)
-    asserty(patchColumn < numPatchesPerRow)
+    assert(patchColumn >= 0)
+    assert(patchColumn < numPatchesPerRow)
 
     // Patches are square.
     val patchWidth = 64

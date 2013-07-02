@@ -34,7 +34,7 @@ object ResultsData {
 //object MPIEExperimentResults {
 //  def fromCompletedExperiment(
 //    experiment: MPIEExperiment): MPIEExperimentResults = {
-//    asserty(experiment.alreadyRun)
+//    assert(experiment.alreadyRun)
 //    val Some(file) = experiment.existingResultsFile
 //    IO.fromJSONFile[MPIEExperimentResults](file)
 //  }

@@ -46,9 +46,9 @@ case class RotationAndScaleExperiment[D <% PairDetector, E <% Extractor[F], M <%
   matcher: M,
   scaleFactor: Double,
   theta: Double) {
-  asserty(scaleFactor > 0)
-  asserty(theta >= 0)
-  asserty(theta < 2 * math.Pi)
+  assert(scaleFactor > 0)
+  assert(theta >= 0)
+  assert(theta < 2 * math.Pi)
 }
 
 trait RotationAndScaleExperiment2StorageInfo {
@@ -138,7 +138,7 @@ trait RotationAndScaleExperiment2ExperimentRunner {
         val groundTruth: Homography = {
           val affineMatrix = Array(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
           similarityTransform.getMatrix(affineMatrix)
-          asserty(affineMatrix.size == 6)
+          assert(affineMatrix.size == 6)
           val homographyData = new Array2DRowRealMatrix(3, 3)
           homographyData.setEntry(0, 0, affineMatrix(0))
           homographyData.setEntry(1, 0, affineMatrix(1))
@@ -216,13 +216,13 @@ trait RotationAndScaleExperiment2ExperimentRunner {
 //          case (left, right) =>
 //            println(left)
 //            println(right)
-//            asserty(left.pt.x == right.pt.x)
-//            asserty(left.pt.y == right.pt.y)
-//            asserty(left.size == right.size)
-//            asserty(left.angle == right.angle)
-//            asserty(left.response == right.response)
-//            asserty(left.octave == right.octave)
-//            asserty(left.class_id == right.class_id)
+//            assert(left.pt.x == right.pt.x)
+//            assert(left.pt.y == right.pt.y)
+//            assert(left.size == right.size)
+//            assert(left.angle == right.angle)
+//            assert(left.response == right.response)
+//            assert(left.octave == right.octave)
+//            assert(left.class_id == right.class_id)
 //        }
 
         val (leftDescriptors, rightDescriptors) = {

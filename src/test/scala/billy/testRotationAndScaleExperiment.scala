@@ -70,7 +70,7 @@ class TestRotationAndScaleExperiment(
         angle)
 
       val summary: ExperimentSummary = rotationExperiment.run
-      asserty(summary.summaryNumbers.size == 1)
+      assert(summary.summaryNumbers.size == 1)
       val recognitionRate = summary.summaryNumbers("recognitionRate")
       println(scaleFactor)
       println(angle)

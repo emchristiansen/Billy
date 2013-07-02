@@ -164,7 +164,7 @@ object CompareMethods {
       lazyValue(briskExperiment.run: ExperimentSummary))
 
     def getNumericScore(summary: ExperimentSummary): Double = {
-      asserty(summary.summaryNumbers.size == 1)
+      assert(summary.summaryNumbers.size == 1)
       summary.summaryNumbers.values.head
     }
 
@@ -231,7 +231,7 @@ object CompareMethods {
   //        briskExperiment(imageClass, otherImage).run: ExperimentSummary)
   //
   //      def getNumericScore(summary: ExperimentSummary): Double = {
-  //        asserty(summary.summaryNumbers.size == 1)
+  //        assert(summary.summaryNumbers.size == 1)
   //        summary.summaryNumbers.values.head
   //      }
   //

@@ -135,7 +135,7 @@ object SmallBaselineExperiment {
           rightKeyPoints.zip(rightDescriptors).filter(_._2.isDefined).unzip
         }
         val dmatches = matcher.doMatch(true, Seq(leftDescriptor), rightDescriptors.flatten)
-        asserty(dmatches.size == rightDescriptors.size)
+        assert(dmatches.size == rightDescriptors.size)
         (remainingRightKeyPoints, dmatches.map(_.distance))
       }
 

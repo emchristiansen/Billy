@@ -22,21 +22,21 @@ import javax.imageio.ImageIO
 ///////////////////////////////////////////////////////////
 
 case class SmallBaselinePair(left: BufferedImage, right: BufferedImage, flow: FlowField) {
-  requirey(left.getWidth == right.getWidth)
-  requirey(left.getWidth == flow.data.cols)
-  requirey(left.getHeight == right.getHeight)
-  requirey(left.getHeight == flow.data.rows)
+  require(left.getWidth == right.getWidth)
+  require(left.getWidth == flow.data.cols)
+  require(left.getHeight == right.getHeight)
+  require(left.getHeight == flow.data.rows)
 }
 
 object SmallBaselinePair {
   def apply(directoryRoot: File, name: String): SmallBaselinePair = {
-    requirey(directoryRoot.isDirectory)
+    require(directoryRoot.isDirectory)
 
     def getFile(format: String): File = {
       val filename = format.format(name)
       val file = new File(directoryRoot, filename)
-//      asserty(file.isFile, "not a file: %s".format(file.toString))
-      asserty(file.isFile)
+//      assert(file.isFile, "not a file: %s".format(file.toString))
+      assert(file.isFile)
       file
     }
 
@@ -48,7 +48,7 @@ object SmallBaselinePair {
     def getImage(format: String): BufferedImage = {
       val file = getFile(format)
       val image = ImageIO.read(file)
-      asserty(image != null)
+      assert(image != null)
       image
     }
 

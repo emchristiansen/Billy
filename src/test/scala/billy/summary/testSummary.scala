@@ -90,7 +90,7 @@ class TestSummary extends FunSuite {
     val union = SummaryUtil.mapUnion(maps)
     val golden = Map(1 -> Set(12, 10), 2 -> Set(13), 3 -> Set(10))
 
-    asserty(union == golden)
+    assert(union == golden)
   }
 
   test("changingFields", InstantTest) {
@@ -100,7 +100,7 @@ class TestSummary extends FunSuite {
 
     val changing = SummaryUtil.changingFields(maps)
     val golden = Seq(Map(2 -> 20), Map(2 -> 30))
-    asserty(changing == golden)
+    assert(changing == golden)
   }
 
   test("summarizeStructure", InstantTest) {
@@ -108,7 +108,7 @@ class TestSummary extends FunSuite {
     val map2 = Map("a" -> "aa", "b" -> "cc")
     val summary = SummaryUtil.summarizeStructure(Set(map1, map2))
     val golden = "a-aa_b-*"
-    asserty(summary == golden)
+    assert(summary == golden)
   }
   
   test("errorRateAtRecall", InstantTest) {
@@ -127,12 +127,12 @@ class TestSummary extends FunSuite {
       dmatch5,
       dmatch0)
       
-    asserty(SummaryUtil.errorRateAtRecall(0, dmatches) == 3 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(0.1, dmatches) == 2 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(0.4, dmatches) == 2 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(0.5, dmatches) == 2 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(0.7, dmatches) == 3 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(0.9, dmatches) == 3 / 6.0)
-    asserty(SummaryUtil.errorRateAtRecall(1, dmatches) == 3 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0, dmatches) == 3 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0.1, dmatches) == 2 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0.4, dmatches) == 2 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0.5, dmatches) == 2 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0.7, dmatches) == 3 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(0.9, dmatches) == 3 / 6.0)
+    assert(SummaryUtil.errorRateAtRecall(1, dmatches) == 3 / 6.0)
   }
 }
