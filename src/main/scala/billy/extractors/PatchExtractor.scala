@@ -21,10 +21,6 @@ import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 import imageProcessing.Pixel
 
-import nebula.util.JSONUtil.AddClassName
-import nebula.util.JSONUtil.singletonObject
-import spray.json.DefaultJsonProtocol
-import spray.json.JsonFormat
 import util.OpenCVUtil
 import util.Util
 import nebula.util._
@@ -59,15 +55,7 @@ trait PatchExtractor2Extractor {
       })
 }
 
-/**
- * Implementations of JsonProtocol.
- */
-trait PatchExtractorJsonProtocol extends DefaultJsonProtocol {
-  implicit val patchExtractorJsonProtocol =
-    jsonFormat5(PatchExtractor.apply).addClassInfo("PatchExtractor")
-}
-
-object PatchExtractor extends PatchExtractor2Extractor with PatchExtractorJsonProtocol
+object PatchExtractor extends PatchExtractor2Extractor
 
 // TODO: Big hack, delete me!!!
 case class LUCIDExtractor(
@@ -99,12 +87,4 @@ trait LUCIDExtractor2Extractor {
       })
 }
 
-/**
- * Implementations of JsonProtocol.
- */
-trait LUCIDExtractorJsonProtocol extends DefaultJsonProtocol {
-  implicit val LUCIDExtractorJsonProtocol =
-    jsonFormat5(LUCIDExtractor.apply).addClassInfo("LUCIDExtractor")
-}
-
-object LUCIDExtractor extends LUCIDExtractor2Extractor with LUCIDExtractorJsonProtocol
+object LUCIDExtractor extends LUCIDExtractor2Extractor

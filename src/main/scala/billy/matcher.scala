@@ -19,10 +19,6 @@ import org.opencv.features2d.DMatch
 
 import breeze.linalg.DenseMatrix
 import billy.SortDescriptor.implicitIndexedSeq
-import nebula.util.JSONUtil
-import nebula.util.JSONUtil.AddClassName
-import spray.json.DefaultJsonProtocol
-import spray.json.JsonFormat
 
 ///////////////////////////////////////////////////////////
 
@@ -111,12 +107,3 @@ object NormalizedMatcher {
     })
 
 }
-
-///////////////////////////////////////////////////////////
-
-trait MatcherJsonProtocol extends DefaultJsonProtocol {
-  implicit def normalizedMatcherJsonProtocol[N <% Normalizer[F1, F2]: JsonFormat, M <% Matcher[F2]: JsonFormat, F1, F2] =
-    jsonFormat2(NormalizedMatcher.apply[N, M, F1, F2]).addClassInfo("NormalizedMatcher")
-}
-
-object MatcherJsonProtocol extends MatcherJsonProtocol

@@ -23,10 +23,6 @@ import nebula.PimpFile
 import billy.RuntimeConfig
 import nebula.util.DenseMatrixUtil.DenseMatrixToSeqSeq
 import nebula.util.DenseMatrixUtil.SeqSeqToDenseMatrix
-import nebula.util.JSONUtil
-import spray.json.JsValue
-import spray.json.JsonFormat
-import spray.json.pimpAny
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,35 +34,35 @@ case class TableTitles(
   columnLabels: IndexedSeq[String])
 
 object TableTitles {
-  def title(experiments: Seq[JsValue]): String = {
-    val maps = experiments.map(JSONUtil.getParametersFromJson).toSet
-    summarizeStructure(maps)
-  }
+//  def title(experiments: Seq[JsValue]): String = {
+//    val maps = experiments.map(JSONUtil.getParametersFromJson).toSet
+//    summarizeStructure(maps)
+//  }
 
-  def entryTitles(experiments: Seq[JsValue]): IndexedSeq[String] = {
-    val experimentMaps = experiments.map(JSONUtil.getParametersFromJson)
-    val union = mapUnion(experimentMaps.toSet)
-    val variableKeys = union.filter(_._2.size > 1).keys.toSet
-
-    def entryTitle(experimentMap: Map[String, String]): String = {
-      experimentMap.filterKeys(variableKeys).toSeq.map({ 
-        case (k, v) => "%s-%s".format(k, v) }).mkString("_")
-    }
-
-    experimentMaps.map(entryTitle).toIndexedSeq
-  }  
+//  def entryTitles(experiments: Seq[JsValue]): IndexedSeq[String] = {
+//    val experimentMaps = experiments.map(JSONUtil.getParametersFromJson)
+//    val union = mapUnion(experimentMaps.toSet)
+//    val variableKeys = union.filter(_._2.size > 1).keys.toSet
+//
+//    def entryTitle(experimentMap: Map[String, String]): String = {
+//      experimentMap.filterKeys(variableKeys).toSeq.map({ 
+//        case (k, v) => "%s-%s".format(k, v) }).mkString("_")
+//    }
+//
+//    experimentMaps.map(entryTitle).toIndexedSeq
+//  }  
   
-  def apply(experiments: Seq[Seq[JsValue]]): TableTitles = {
-    // TODO: Replace with |everywhere| from shapeless when Scala 2.10 comes out.
-    val experimentsFirstRow = experiments.head
-    val experimentsFirstColumn = experiments.map(_.head)
-
-    val tableTitle = title(experiments.flatten)
-    val rowLabels = entryTitles(experimentsFirstColumn)
-    val columnLabels = entryTitles(experimentsFirstRow)
-
-    TableTitles(tableTitle, rowLabels, columnLabels)
-  }
+//  def apply(experiments: Seq[Seq[JsValue]]): TableTitles = {
+//    // TODO: Replace with |everywhere| from shapeless when Scala 2.10 comes out.
+//    val experimentsFirstRow = experiments.head
+//    val experimentsFirstColumn = experiments.map(_.head)
+//
+//    val tableTitle = title(experiments.flatten)
+//    val rowLabels = entryTitles(experimentsFirstColumn)
+//    val columnLabels = entryTitles(experimentsFirstRow)
+//
+//    TableTitles(tableTitle, rowLabels, columnLabels)
+//  }
 }
   
 case class Table[A](
@@ -103,25 +99,27 @@ object Table {
       new File(runtime.outputRoot, s"summary/${self.unixEpoch}_${self.title}.csv").parentMustExist 
   }
 
-  def title[E: JsonFormat](experiments: Seq[E]): String = {
-    val maps = experiments.map(_.toJson).map(JSONUtil.getParametersFromJson).toSet
-    summarizeStructure(maps)
+  def title[E](experiments: Seq[E]): String = {
+    ???
+//    val maps = experiments.map(_.toJson).map(JSONUtil.getParametersFromJson).toSet
+//    summarizeStructure(maps)
   }
 
-  def entryTitles[E: JsonFormat](experiments: Seq[E]): IndexedSeq[String] = {
-    val experimentMaps = experiments.map(_.toJson).map(JSONUtil.getParametersFromJson)
-    val union = mapUnion(experimentMaps.toSet)
-    val variableKeys = union.filter(_._2.size > 1).keys.toSet
-
-    def entryTitle(experimentMap: Map[String, String]): String = {
-      experimentMap.filterKeys(variableKeys).toSeq.map({ 
-        case (k, v) => "%s-%s".format(k, v) }).mkString("_")
-    }
-
-    experimentMaps.map(entryTitle).toIndexedSeq
+  def entryTitles[E](experiments: Seq[E]): IndexedSeq[String] = {
+    ???
+//    val experimentMaps = experiments.map(_.toJson).map(JSONUtil.getParametersFromJson)
+//    val union = mapUnion(experimentMaps.toSet)
+//    val variableKeys = union.filter(_._2.size > 1).keys.toSet
+//
+//    def entryTitle(experimentMap: Map[String, String]): String = {
+//      experimentMap.filterKeys(variableKeys).toSeq.map({ 
+//        case (k, v) => "%s-%s".format(k, v) }).mkString("_")
+//    }
+//
+//    experimentMaps.map(entryTitle).toIndexedSeq
   }  
   
-  def apply[E: JsonFormat : ClassTag](experiments: IndexedSeq[IndexedSeq[E]]): Table[E] = {
+  def apply[E: ClassTag](experiments: IndexedSeq[IndexedSeq[E]]): Table[E] = {
     // TODO: Replace with |everywhere| from shapeless when Scala 2.10 comes out.
     val experimentsFirstRow = experiments.head
     val experimentsFirstColumn = experiments.map(_.head)

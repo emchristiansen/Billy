@@ -22,11 +22,6 @@ import breeze.linalg.DenseMatrix
 import grizzled.math.stats
 import nebula.util.DenseMatrixUtil.DenseMatrixToSeqSeq
 import nebula.util.DenseMatrixUtil.SeqSeqToDenseMatrix
-import nebula.util.JSONUtil.AddClassName
-import spray.json.DefaultJsonProtocol
-import spray.json.JsValue
-import spray.json.RootJsonFormat
-import spray.json.pimpAny
 
 ///////////////////////////////////////////////////////////
 
@@ -41,14 +36,6 @@ object FlowVector {
       math.sqrt(math.pow(dX, 2) + math.pow(dY, 2))
     }
   }
-}
-
-///////////////////////////////////////////////////////////
-
-object FlowVectorJsonProtocol extends DefaultJsonProtocol {
-  implicit val flowVector =
-    jsonFormat2(FlowVector.apply).addClassInfo(
-      "FlowVector")
 }
 
 ///////////////////////////////////////////////////////////
@@ -114,23 +101,5 @@ object FlowField {
       //      math.sqrt(distances.map(d => math.pow(d, 2)).sum)
       stats.mean(distances.map(d => math.pow(d, 2)): _*)
     }
-  }
-}
-
-///////////////////////////////////////////////////////////
-
-object FlowFieldJsonProtocol extends DefaultJsonProtocol {
-  import FlowVectorJsonProtocol._
-
-  implicit val flowField = new RootJsonFormat[FlowField] {
-    case class FlowSeqSeq(data: IndexedSeq[IndexedSeq[Option[FlowVector]]])
-    implicit val flowSeqSeq = jsonFormat1(
-      FlowSeqSeq.apply).addClassInfo(
-        "FlowField")
-
-    override def write(self: FlowField) = FlowSeqSeq(self.data.toSeqSeq).toJson
-
-    override def read(value: JsValue) =
-      FlowField(value.convertTo[FlowSeqSeq].data.toMatrix)
   }
 }

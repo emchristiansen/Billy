@@ -21,10 +21,6 @@ import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 import imageProcessing.Pixel
 
-import nebula.util.JSONUtil.AddClassName
-import nebula.util.JSONUtil.singletonObject
-import spray.json.DefaultJsonProtocol
-import spray.json.JsonFormat
 import util.OpenCVUtil
 import util.Util
 import nebula.util._
@@ -227,17 +223,3 @@ object NormalizedExtractor {
       unnormalized.map(_.map(normalizedExtractor.normalizer.normalize))
     })
 }
-
-///////////////////////////////////////////////////////////
-
-// TODO: Should be automatically mixed into concrete object.
-trait ExtractorJsonProtocol extends DefaultJsonProtocol {
-  implicit def normalizedExtractorJsonProtocol[E, N, F1, F2](
-    implicit evExtractor: E => Extractor[F1],
-    evNormalizer: N => Normalizer[F1, F2],
-    evEJson: JsonFormat[E],
-    evNJson: JsonFormat[N]) =
-    jsonFormat2(NormalizedExtractor.apply[E, N, F1, F2])
-}
-
-object ExtractorJsonProtocol extends ExtractorJsonProtocol 

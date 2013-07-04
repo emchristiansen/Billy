@@ -18,45 +18,18 @@ import org.opencv.features2d.DMatch
 import nebula.PimpFile
 import billy.RuntimeConfig
 import billy.wideBaseline.WideBaselineExperiment
-import spray.json._
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 import javax.imageio.ImageIO
-import JSONUtil._
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: Better place for this
-trait ImageJsonProtocol extends DefaultJsonProtocol {
-  implicit def jsonImage: RootJsonFormat[Image] = {
-    object NoScalaClass extends RootJsonFormat[Image] {
-      override def write(self: Image) = {
-        val baos = new ByteArrayOutputStream
-        ImageIO.write(self, "png", baos)
-        val array: Array[Byte] = baos.toByteArray
-        array.toJson
-      }
-      override def read(value: JsValue) = {
-        val array = value.convertTo[Array[Byte]]
-        val bois = new ByteArrayInputStream(array)
-        Image(ImageIO.read(bois))
-      }
-    }
-
-    NoScalaClass.addClassInfo("Image")
-  }
-}
 
 case class ExperimentSummary(
   summaryNumbers: Map[String, Double],
   summaryCurves: Map[String, Seq[(Double, Double)]],
   summaryImages: Map[String, Image])
 
-trait ExperimentSummaryJsonProtocol extends DefaultJsonProtocol with ImageJsonProtocol {
-  implicit def jsonExperimentSummary = jsonFormat3(ExperimentSummary.apply)
-}
-
-object ExperimentSummary extends ExperimentSummaryJsonProtocol {
+object ExperimentSummary {
   implicit class ExperimentSummaryOps(self: ExperimentSummary) {
     def outDirectory(implicit runtime: RuntimeConfig) =
       new File(runtime.outputRoot, "summary").mustExist

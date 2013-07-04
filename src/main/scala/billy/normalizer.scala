@@ -12,9 +12,7 @@ import billy.wideBaseline._
 import billy.summary._
 
 import grizzled.math.stats
-import spray.json._
 import nebula.util._
-import nebula.util.JSONUtil._
 import SortDescriptor._
 import breeze.linalg._
 import reflect._
@@ -52,7 +50,7 @@ trait PatchNormalizer {
   //  object UniformRank
 }
 
-object PatchNormalizer extends PatchNormalizer with PatchNormalizerToNormalizer with PatchNormalizerJsonProtocol
+object PatchNormalizer extends PatchNormalizer with PatchNormalizerToNormalizer
 
 ///////////////////////////////////////////////////////////
 
@@ -148,18 +146,4 @@ trait PatchNormalizerToNormalizer extends PatchNormalizer {
   //      rank.toIndexedSeq
   //    }
   //  }  
-}
-
-///////////////////////////////////////////////////////////
-
-/**
- * Implicits for JSON serialization.
- */
-trait PatchNormalizerJsonProtocol extends DefaultJsonProtocol {
-  implicit val patchNormalizerRawJsonProtocol = singletonObject(PatchNormalizer.Raw)
-  implicit val patchNormalizerNCCJsonProtocol = singletonObject(PatchNormalizer.NCC)
-  implicit val patchNormalizerRankJsonProtocol = singletonObject(PatchNormalizer.Rank)
-  //  implicit val patchNormalizerOrderJsonProtocol = singletonObject(PatchNormalizer.Order)  
-  //  implicit val patchNormalizerNormalizeRangeJsonProtocol = singletonObject(PatchNormalizer.NormalizeRange)  
-  //  implicit val patchNormalizerUniformRankJsonProtocol = singletonObject(PatchNormalizer.UniformRank)
 }

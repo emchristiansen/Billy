@@ -15,11 +15,6 @@ import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
 
-import nebula.util.JSONUtil
-import spray.json.JsonFormat
-import spray.json.pimpAny
-import spray.json.pimpString
-
 ///////////////////////////////////////////////////////////
 
 trait ExperimentRunner[R] {
@@ -36,7 +31,7 @@ trait StorageInfo[R] {
 
 object StorageInfo {
   // TODO: Refactor when Scala inference bug is fixed.
-  class Experiment2StorageInfo[E <% RuntimeConfig => ExperimentRunner[R]: JsonFormat, R: JsonFormat](
+  class Experiment2StorageInfo[E <% RuntimeConfig => ExperimentRunner[R], R](
     experiment: E)(runtimeConfig: RuntimeConfig) extends StorageInfo[R] {
     private implicit val iRC = runtimeConfig
     
@@ -46,16 +41,17 @@ object StorageInfo {
 
     override def save = results => {
       println(s"Saving to ${currentPath}")
-      val json = results.toJson
-      currentPath.compressedWriteString(json.prettyPrint)
-//      currentPath.writeString(json.prettyPrint)
+      ???
+//      val json = results.toJson
+//      currentPath.compressedWriteString(json.prettyPrint)
     }
 
     override def load = mostRecentPath map { file =>
       println(s"Loading ${file}")
       val jsonString = file.compressedReadString
 //      val jsonString = file.readString
-      jsonString.asJson.convertTo[R]
+      ???
+//      jsonString.asJson.convertTo[R]
     }
 
     override def name = unixEpoch + "_" + nameNoTime
@@ -65,10 +61,10 @@ object StorageInfo {
     val unixEpoch = System.currentTimeMillis / 1000L
 
     def nameNoTime: String = {
-      val fullString = JSONUtil.flattenJson(experiment.toJson)
+      ???
       //      // Unfortunately, this string is too long to be part of a filename.
       //      fullString.take(100) + "_" + fullString.hashCode
-      fullString
+//      fullString
     }
 
     def filenameNoTime: String = nameNoTime + ".json.gz"
@@ -98,7 +94,7 @@ object StorageInfo {
   }
   
     // TODO: Refactor when Scala inference bug is fixed.
-  def WTFExperiment2StorageInfo[E <% RuntimeConfig => ExperimentRunner[R]: JsonFormat, R: JsonFormat](
+  def WTFExperiment2StorageInfo[E <% RuntimeConfig => ExperimentRunner[R], R](
     experiment: E)(implicit runtimeConfig: RuntimeConfig) = new Experiment2StorageInfo(experiment)(runtimeConfig) 
 }
 

@@ -22,10 +22,6 @@ import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 import imageProcessing.Pixel
 
-import nebula.util.JSONUtil.AddClassName
-import nebula.util.JSONUtil.singletonObject
-import spray.json.DefaultJsonProtocol
-import spray.json.JsonFormat
 import util.OpenCVUtil
 import util.Util
 import nebula.util._
@@ -74,22 +70,4 @@ trait OpenCVExtractor2Extractor {
   //    Extractor(Extractor.doubleExtractorFromEnum(DescriptorExtractor.SURF))
 }
 
-/**
- * Implementations of JsonFormat.
- */
-trait OpenCVExtractorJsonProtocol extends DefaultJsonProtocol {
-  implicit val openCVExtractorBriskJsonProtocol =
-    singletonObject(OpenCVExtractor.BRISK)
-  implicit val openCVExtractorFreakJsonProtocol =
-    singletonObject(OpenCVExtractor.FREAK)
-  implicit val openCVExtractorBriefJsonProtocol =
-    singletonObject(OpenCVExtractor.BRIEF)
-  implicit val openCVExtractorOrbJsonProtocol =
-    singletonObject(OpenCVExtractor.ORB)
-  implicit val openCVExtractorSiftJsonProtocol =
-    singletonObject(OpenCVExtractor.SIFT)
-  implicit val openCVExtractorSurfJsonProtocol =
-    singletonObject(OpenCVExtractor.SURF)
-}
-
-object OpenCVExtractor extends OpenCVExtractor with OpenCVExtractor2Extractor with OpenCVExtractorJsonProtocol
+object OpenCVExtractor extends OpenCVExtractor with OpenCVExtractor2Extractor

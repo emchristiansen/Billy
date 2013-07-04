@@ -21,12 +21,6 @@ import nebula.util.Homography
 import nebula.util.JSONUtil
 import nebula.util.Logging
 import nebula.util.Memoize
-import spray.json.JsonFormat
-import spray.json.pimpAny
-import spray.json.pimpString
-import spray.json._
-import nebula.util.JSONUtil._
-import nebula.util.DMatchJsonProtocol._
 
 ///////////////////////////////////////////////////////////
 
@@ -58,7 +52,7 @@ trait WideBaselineExperiment2ExperimentRunner {
   // TODO: JsonFormat should not be required to run experiments.
   // TODO: Remote workers should get their data over the wire, and thus not
   // take a RuntimeConfig.
-  implicit class WideBaselineExperiment2ExperimentRunner[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit class WideBaselineExperiment2ExperimentRunner[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: WideBaselineExperiment[D, E, M, F])(
       runtimeConfig: RuntimeConfig) extends ExperimentRunner[WideBaselineExperimentResults[D, E, M, F]] {
     private implicit val iRC = runtimeConfig
@@ -67,7 +61,7 @@ trait WideBaselineExperiment2ExperimentRunner {
   }
 
   // TODO: Refactor when Scala inference bug is fixed.
-  implicit def WTFWideBaselineExperiment2ExperimentRunner[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFWideBaselineExperiment2ExperimentRunner[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: WideBaselineExperiment[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig) =
     new WideBaselineExperiment2ExperimentRunner(self)(runtimeConfig)
@@ -75,13 +69,13 @@ trait WideBaselineExperiment2ExperimentRunner {
 
 trait WideBaselineExperiment2StorageInfo {
   // TODO: Refactor when Scala type inference bug is fixed. 
-  implicit def WTFWideBaselineExperiment2StorageInfo[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFWideBaselineExperiment2StorageInfo[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: WideBaselineExperiment[D, E, M, F])(
       runtimeConfig: RuntimeConfig) =
     new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
 
   // TODO: Refactor when Scala type inference bug is fixed.      
-  implicit def WTFWideBaselineExperiment2StorageInfoImplicit[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFWideBaselineExperiment2StorageInfoImplicit[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: WideBaselineExperiment[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig) =
     new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
@@ -106,11 +100,4 @@ trait WideBaselineExperiment2ImagePairLike {
   }
 }
 
-trait WideBaselineExperimentJsonProtocol extends DefaultJsonProtocol {
-  implicit def jsonWideBaselineExperiment[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F] =
-    jsonFormat5(
-      WideBaselineExperiment.apply[D, E, M, F]).addClassInfo(
-        "WideBaselineExperiment")
-}
-
-object WideBaselineExperiment extends WideBaselineExperiment2HasGroundTruth with WideBaselineExperiment2ExperimentRunner with WideBaselineExperiment2StorageInfo with WideBaselineExperiment2ImagePairLike with WideBaselineExperimentJsonProtocol
+object WideBaselineExperiment extends WideBaselineExperiment2HasGroundTruth with WideBaselineExperiment2ExperimentRunner with WideBaselineExperiment2StorageInfo with WideBaselineExperiment2ImagePairLike

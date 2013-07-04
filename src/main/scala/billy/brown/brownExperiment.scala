@@ -14,7 +14,6 @@ import billy.summary._
 import org.opencv.features2d.DMatch
 import nebula.util._
 import billy.summary._
-import spray.json._
 import billy.ExperimentRunner
 import billy.Extractor
 import billy.Matcher
@@ -22,8 +21,6 @@ import billy.Matcher
 import billy.RuntimeConfig
 import billy.StorageInfo
 import scala.Option.option2Iterable
-import spray.json._
-import nebula.util.JSONUtil.AddClassName
 
 ///////////////////////////////////////////////////////////
 
@@ -55,22 +52,11 @@ trait BrownExperiment2ExperimentRunner {
 }
 
 /**
- * Implementations of JsonProtocol.
- */
-trait BrownExperimentJsonProtocol extends DefaultJsonProtocol {
-  // Scala bug? This file only builds when this block is above the StorageInfo
-  // views.
-  implicit def brownExperimentJsonProtocol[E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F] =
-    jsonFormat4(BrownExperiment.apply[E, M, F]).addClassInfo(
-      "BrownExperiment")
-}
-
-/**
  * Views to StorageInfo.
  */
 trait BrownExperiment2StorageInfo { 
   // TODO: Refactor when Scala type inference bug is fixed. 
-  implicit def WTFBrownExperiment2StorageInfo[E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFBrownExperiment2StorageInfo[E <% Extractor[F], M <% Matcher[F], F](
     self: BrownExperiment[E, M, F])(
       runtimeConfig: RuntimeConfig) =
     new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
@@ -82,4 +68,4 @@ trait BrownExperiment2StorageInfo {
 //    new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
 }
 
-object BrownExperiment extends BrownExperiment2ExperimentRunner with BrownExperiment2StorageInfo with BrownExperimentJsonProtocol
+object BrownExperiment extends BrownExperiment2ExperimentRunner with BrownExperiment2StorageInfo

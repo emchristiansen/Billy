@@ -14,7 +14,6 @@ import billy.summary._
 import org.opencv.features2d.DMatch
 import nebula.util._
 import billy.summary._
-import spray.json._
 import billy.ExperimentRunner
 import billy.Extractor
 import billy.Matcher
@@ -22,9 +21,6 @@ import billy.Matcher
 import billy.RuntimeConfig
 import billy.StorageInfo
 import scala.Option.option2Iterable
-import spray.json._
-import nebula.util.JSONUtil.AddClassName
-import DMatchJsonProtocol._
 
 ///////////////////////////////////////////////////////////
 
@@ -57,16 +53,7 @@ trait BrownExperimentResults2ExperimentSummary {
     brownExperimentResults2ExperimentSummary(self)(runtimeConfig)
 }
 
-/**
- * Implementations of JsonProtocol.
- */
-trait BrownExperimentResultsJsonProtocol extends DefaultJsonProtocol {
-  implicit def brownExperimentResultsJsonProtocol[E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F] =
-    jsonFormat2(BrownExperimentResults.apply[E, M, F]).addClassInfo(
-      "BrownExperimentResults")
-}
-
-object BrownExperimentResults extends BrownExperimentResults2ExperimentSummary with BrownExperimentResultsJsonProtocol {
+object BrownExperimentResults extends BrownExperimentResults2ExperimentSummary {
   /**
    * Creates a BrownExperimentResults from a BrownExperiment by running the
    * experiment.

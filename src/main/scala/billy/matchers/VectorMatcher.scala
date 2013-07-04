@@ -19,10 +19,6 @@ import org.opencv.features2d.DMatch
 
 import breeze.linalg.DenseMatrix
 import billy.SortDescriptor.implicitIndexedSeq
-import nebula.util.JSONUtil
-import nebula.util.JSONUtil.AddClassName
-import spray.json.DefaultJsonProtocol
-import spray.json.JsonFormat
 
 ///////////////////////////////////////////////////////////
 
@@ -81,18 +77,4 @@ trait VectorMatcher2Matcher {
     Matcher[SortDescriptor](kendallTau)
 }
 
-/**
- * Implementations of JsonProtocol.
- */
-trait VectorMatcherJsonProtocol extends DefaultJsonProtocol {
-  implicit val vectorMatcherL0JsonProtocol = 
-    JSONUtil.singletonObject(VectorMatcher.L0)
-  implicit val vectorMatcherL1JsonProtocol = 
-    JSONUtil.singletonObject(VectorMatcher.L1)
-  implicit val vectorMatcherL2JsonProtocol = 
-    JSONUtil.singletonObject(VectorMatcher.L2)
-  implicit val vectorMatcherKendallTauJsonProtocol = 
-    JSONUtil.singletonObject(VectorMatcher.KendallTau)
-}
-
-object VectorMatcher extends VectorMatcher with VectorMatcher2Matcher with VectorMatcherJsonProtocol
+object VectorMatcher extends VectorMatcher with VectorMatcher2Matcher

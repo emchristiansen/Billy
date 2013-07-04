@@ -18,15 +18,8 @@ import org.opencv.features2d.DMatch
 import javax.imageio.ImageIO
 
 import nebula.util.Homography
-import nebula.util.JSONUtil
 import nebula.util.Logging
 import nebula.util.Memoize
-import spray.json.JsonFormat
-import spray.json.pimpAny
-import spray.json.pimpString
-import spray.json._
-import nebula.util.JSONUtil._
-import nebula.util.DMatchJsonProtocol._
 
 ///////////////////////////////////////////////////////////
 
@@ -55,20 +48,8 @@ trait WideBaselineExperimentResults2ExperimentSummary {
       implicit runtimeConfig: RuntimeConfig) = implicitExperimentSummary(self)(runtimeConfig)
 }
 
-trait WideBaselineExperimentResultsJsonProtocol extends DefaultJsonProtocol {
-  implicit def wideBaselineExperimentResultsJsonProtocol[D, E, M, F](
-    implicit evPairDetector: D => PairDetector,
-    evExtractor: E => Extractor[F],
-    evMatcher: M => Matcher[F],
-    evDJson: JsonFormat[D],
-    evEJson: JsonFormat[E],
-    evMJson: JsonFormat[M]): RootJsonFormat[WideBaselineExperimentResults[D, E, M, F]] =
-    jsonFormat2(WideBaselineExperimentResults.apply[D, E, M, F]).addClassInfo(
-      "WideBaselineExperimentResults")
-}
-
-object WideBaselineExperimentResults extends WideBaselineExperimentResults2ExperimentSummary with WideBaselineExperimentResultsJsonProtocol {
-  def apply[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+object WideBaselineExperimentResults extends WideBaselineExperimentResults2ExperimentSummary {
+  def apply[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     experiment: WideBaselineExperiment[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig): WideBaselineExperimentResults[D, E, M, F] = {
     if (runtimeConfig.skipCompletedExperiments && 

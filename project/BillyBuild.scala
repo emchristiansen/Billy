@@ -39,7 +39,6 @@ object BillyBuild extends Build {
       "org.scalanlp" %% "breeze-math" % "0.4-SNAPSHOT",
       "org.spire-math" %% "spire" % "0.6.0-M1",
       "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
-      "io.spray" %% "spray-json" % "1.2.3",
       "org.rogach" %% "scallop" % "0.9.2",
       "junit" % "junit" % "4.11" % "test",
       "org.imgscalr" % "imgscalr-lib" % "4.2"))

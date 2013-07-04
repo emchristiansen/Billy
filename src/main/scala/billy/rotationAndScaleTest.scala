@@ -21,15 +21,8 @@ import org.opencv.features2d.DMatch
 import javax.imageio.ImageIO
 
 import nebula.util.Homography
-import nebula.util.JSONUtil
 import nebula.util.Logging
 import nebula.util.Memoize
-import spray.json.JsonFormat
-import spray.json.pimpAny
-import spray.json.pimpString
-import spray.json._
-import nebula.util.JSONUtil._
-import nebula.util.DMatchJsonProtocol._
 
 import java.awt.image.AffineTransformOp.TYPE_BILINEAR
 import java.awt.geom.AffineTransform
@@ -53,48 +46,26 @@ case class RotationAndScaleExperiment[D <% PairDetector, E <% Extractor[F], M <%
 
 trait RotationAndScaleExperiment2StorageInfo {
   // TODO: Refactor when Scala type inference bug is fixed.      
-  implicit def WTFRotationAndScaleExperiment2StorageInfoImplicit[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFRotationAndScaleExperiment2StorageInfoImplicit[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: RotationAndScaleExperiment[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig): StorageInfo[RotationAndScaleExperimentResults[D, E, M, F]] =
     new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
 
   // TODO: Refactor when Scala type inference bug is fixed. 
-  implicit def WTFRotationAndScaleExperiment2StorageInfo[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFRotationAndScaleExperiment2StorageInfo[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: RotationAndScaleExperiment[D, E, M, F])(
       runtimeConfig: RuntimeConfig): StorageInfo[RotationAndScaleExperimentResults[D, E, M, F]] =
     new StorageInfo.Experiment2StorageInfo(self)(runtimeConfig)
 }
 
-trait RotationAndScaleExperimentJsonProtocol extends DefaultJsonProtocol {
-  implicit def rotationAndScaleExperimentJsonProtocol[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F]: JsonFormat[RotationAndScaleExperiment[D, E, M, F]] =
-    jsonFormat6(
-      RotationAndScaleExperiment.apply[D, E, M, F]).addClassInfo(
-        "RotationAndScaleExperiment")
-
-  //  val detector = BoundedPairDetector(
-  //    BoundedDetector(OpenCVDetector.SIFT, 5000),
-  //    200)
-  //  val extractor = OpenCVExtractor.SIFT
-  //  val matcher = VectorMatcher.L2
-  //  val experiment = RotationAndScaleExperiment(
-  //    "",
-  //    detector,
-  //    extractor,
-  //    matcher,
-  //    1,
-  //    0)
-  //    
-  //  experiment.toJson
-}
-
 trait RotationAndScaleExperiment2ExperimentRunner {
   // TODO: Refactor when Scala inference bug is fixed.
-  implicit def WTFRotationAndScaleExperiment2ExperimentRunner[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit def WTFRotationAndScaleExperiment2ExperimentRunner[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: RotationAndScaleExperiment[D, E, M, F])(
       implicit runtimeConfig: RuntimeConfig) =
     new RotationAndScaleExperiment2ExperimentRunner(self)(runtimeConfig)
 
-  implicit class RotationAndScaleExperiment2ExperimentRunner[D <% PairDetector: JsonFormat, E <% Extractor[F]: JsonFormat, M <% Matcher[F]: JsonFormat, F](
+  implicit class RotationAndScaleExperiment2ExperimentRunner[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
     self: RotationAndScaleExperiment[D, E, M, F])(
       runtimeConfig: RuntimeConfig) extends ExperimentRunner[RotationAndScaleExperimentResults[D, E, M, F]] {
     implicit val iRC = runtimeConfig
@@ -250,7 +221,7 @@ trait RotationAndScaleExperiment2ExperimentRunner {
   }
 }
 
-object RotationAndScaleExperiment extends RotationAndScaleExperiment2StorageInfo with RotationAndScaleExperiment2ExperimentRunner with RotationAndScaleExperimentJsonProtocol
+object RotationAndScaleExperiment extends RotationAndScaleExperiment2StorageInfo with RotationAndScaleExperiment2ExperimentRunner
 
 //////////////////////////////////////
 
@@ -258,17 +229,7 @@ case class RotationAndScaleExperimentResults[D, E, M, F](
   experiment: RotationAndScaleExperiment[D, E, M, F],
   dmatches: Seq[DMatch])
 
-object RotationAndScaleExperimentResults extends DefaultJsonProtocol {
-  implicit def rotationAndScaleExperimentResultsJsonProtocol[D, E, M, F](
-    implicit evPairDetector: D => PairDetector,
-    evExtractor: E => Extractor[F],
-    evMatcher: M => Matcher[F],
-    evDJson: JsonFormat[D],
-    evEJson: JsonFormat[E],
-    evMJson: JsonFormat[M]): RootJsonFormat[RotationAndScaleExperimentResults[D, E, M, F]] =
-    jsonFormat2(RotationAndScaleExperimentResults.apply[D, E, M, F]).addClassInfo(
-      "RotationAndScaleExperimentResults")
-
+object RotationAndScaleExperimentResults {
   implicit def implicitExperimentSummary[D, E, M, F](
     self: RotationAndScaleExperimentResults[D, E, M, F])(
       runtimeConfig: RuntimeConfig) = {

@@ -18,8 +18,7 @@ import org.opencv.features2d.FeatureDetector
 import org.opencv.features2d.KeyPoint
 
 import nebula._
-import nebula.util.JSONUtil.singletonObject
-import spray.json._
+
 import util.Homography
 import util.KeyPointUtil
 import util.OpenCVUtil
@@ -97,22 +96,4 @@ trait OpenCVDetector2PairDetector {
     self: OpenCVDetector.ORB.type) = self.to[Detector].to[PairDetector]
 }
 
-/**
- * Implementations of JsonFormat.
- */
-trait OpenCVDetectorJsonProtocol extends DefaultJsonProtocol {
-  implicit val openCVDetectorDenseJsonProtocol =
-    singletonObject(OpenCVDetector.DENSE)
-  implicit val openCVDetectorFastJsonProtocol =
-    singletonObject(OpenCVDetector.FAST)
-  implicit val openCVDetectorBriskJsonProtocol =
-    singletonObject(OpenCVDetector.BRISK)
-  implicit val openCVDetectorSiftJsonProtocol =
-    singletonObject(OpenCVDetector.SIFT)
-  implicit val openCVDetectorSurfJsonProtocol =
-    singletonObject(OpenCVDetector.SURF)
-  implicit val openCVDetectorOrbJsonProtocol =
-    singletonObject(OpenCVDetector.ORB)
-}
-
-object OpenCVDetector extends OpenCVDetector with OpenCVDetector2Detector with OpenCVDetectorJsonProtocol
+object OpenCVDetector extends OpenCVDetector with OpenCVDetector2Detector
