@@ -35,11 +35,15 @@ object Detector {
 
 ///////////////////////////////////////////////////////////
 
-case class BoundedDetector[D <% Detector](detector: D, maxKeyPoints: Int)
+case class BoundedDetector[D <% Detector](
+  detector: D,
+  maxKeyPoints: Int)
 
 object BoundedDetector {
-  implicit class ToDetector[D <% Detector](self: BoundedDetector[D]) extends Detector {
-    override def detect = image => self.detector.detect(image).take(self.maxKeyPoints)
+  implicit class ToDetector[D <% Detector](
+    self: BoundedDetector[D]) extends Detector {
+    override def detect = 
+      image => self.detector.detect(image).take(self.maxKeyPoints)
   }
 }
 

@@ -22,24 +22,15 @@ import org.opencv.features2d.{ FeatureDetector, KeyPoint }
 import nebula._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
-import nebula.util.JSONUtil
-import spray.json.DefaultJsonProtocol
-import spray.json.JsArray
-import spray.json.RootJsonFormat
-import spray.json.JsValue
-import spray.json.JsNumber
-import spray.json.JsString
 
-import spray.json._
+
 
 import nebula.util.Memoize._
 import nebula.util._
 
 import breeze.linalg._
 
-import DetectorJsonProtocol._
-import ExtractorJsonProtocol._
-import MatcherJsonProtocol._
+
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -63,7 +54,7 @@ import javax.imageio.ImageIO
 import java.awt.{ Color, Rectangle }
 import java.awt.color.ColorSpace
 import java.awt.geom.AffineTransform
-import java.awt.image.{ AffineTransformOp, Image, ColorConvertOp, ConvolveOp, DataBufferInt, Kernel }
+import java.awt.image.{ AffineTransformOp, BufferedImage, ColorConvertOp, ConvolveOp, DataBufferInt, Kernel }
 
 import scala.Array.{ canBuildFrom, fallbackCanBuildFrom }
 

@@ -19,9 +19,11 @@ import java.io.File
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import nebula.util._
-import spray.json._
 import com.sun.xml.internal.bind.v2.model.runtime.RuntimeClassInfo
 import billy.testing.BillyTestUtil
+
+import scala.pickling._
+import scala.pickling.json._
 
 ///////////////////////////////////////////////////////////
 
@@ -38,7 +40,7 @@ class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
       val sideBySide = GraphicsUtil.drawSideBySide(patchPair.left.image, patchPair.right.image)
       sideBySide.getGraphics.drawString(patchPair.corresponds.toString, 5, 20)
 
-      TestUtil.dumpImage(s"${index}", sideBySide)
+//      TestUtil.dumpImage(s"${index}", sideBySide)
     }
   }
 
@@ -57,13 +59,13 @@ class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
 //    Distributed.unsafeCapstone(experiment)
   }
 
-  test("brown toJson", InstantTest) {
+  test("brown pickle", InstantTest) {
     val experiment = BrownExperiment(
       "liberty",
       1000,
       OpenCVExtractor.SIFT,
       VectorMatcher.L2)
 
-    experiment.toJson
+//    experiment.pickle
   }
 }
