@@ -31,49 +31,48 @@ import nebula.util.KeyPointUtil
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.ConfigMapWrapperSuite
+import scalatestextra._
 
 ///////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-@WrapWith(classOf[ConfigMapWrapperSuite])
-class TestRotationAndScaleExperiment(
-  val configMap: Map[String, Any]) extends ConfigMapFunSuite {
+class TestRotationAndScaleExperiment extends FunGeneratorSuite {
 
 
-  test("on sample image", FastTest) {
-    loadOpenCV
-
-    implicit val runtimeConfig = RuntimeConfig(
-      dataRoot = homeDirectory + "data",
-      outputRoot = homeDirectory + "mtcOutputRoot",
-      tempDirectory = None,
-      deleteTemporaryFiles = true,
-      skipCompletedExperiments = false)
-
-    val detector = BoundedPairDetector(
-      BoundedDetector(OpenCVDetector.SIFT, 2000),
-      8)
-    val extractor = OpenCVExtractor.SIFT
-    val matcher = VectorMatcher.L2
-
-    for (
-      scaleFactor <- List(1);
-      angle <- List(0)
-    ) {
-      def rotationExperiment = RotationAndScaleExperiment(
-        "boat",
-        detector,
-        extractor,
-        matcher,
-        scaleFactor,
-        angle)
-
-      val summary: ExperimentSummary = rotationExperiment.run
-      assert(summary.summaryNumbers.size == 1)
-      val recognitionRate = summary.summaryNumbers("recognitionRate")
-      println(scaleFactor)
-      println(angle)
-      println(recognitionRate)
-    }
-  }
+//  test("on sample image", FastTest) {
+//    loadOpenCV
+//
+//    implicit val runtimeConfig = RuntimeConfig(
+//      dataRoot = homeDirectory + "data",
+//      outputRoot = homeDirectory + "mtcOutputRoot",
+//      tempDirectory = None,
+//      deleteTemporaryFiles = true,
+//      skipCompletedExperiments = false)
+//
+//    val detector = BoundedPairDetector(
+//      BoundedDetector(OpenCVDetector.SIFT, 2000),
+//      8)
+//    val extractor = OpenCVExtractor.SIFT
+//    val matcher = VectorMatcher.L2
+//
+//    for (
+//      scaleFactor <- List(1);
+//      angle <- List(0)
+//    ) {
+//      def rotationExperiment = RotationAndScaleExperiment(
+//        "boat",
+//        detector,
+//        extractor,
+//        matcher,
+//        scaleFactor,
+//        angle)
+//
+//      val summary: ExperimentSummary = rotationExperiment.run
+//      assert(summary.summaryNumbers.size == 1)
+//      val recognitionRate = summary.summaryNumbers("recognitionRate")
+//      println(scaleFactor)
+//      println(angle)
+//      println(recognitionRate)
+//    }
+//  }
 }

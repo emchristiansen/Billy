@@ -13,7 +13,6 @@ import billy.detectors._
 import billy.extractors._
 import billy.matchers._
 import nebula._
-import org.scalatest._
 import javax.imageio.ImageIO
 import java.io.File
 import org.junit.runner.RunWith
@@ -25,47 +24,56 @@ import billy.testing.BillyTestUtil
 import scala.pickling._
 import scala.pickling.json._
 
+import org.scalatest.fixture
+import nebula.testing._
+import scalatestextra._
+
 ///////////////////////////////////////////////////////////
 
-@RunWith(classOf[JUnitRunner])
-@WrapWith(classOf[ConfigMapWrapperSuite])
-class TestBrown(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
-  test("loadPatchPairs should return reasonable pairs", SlowTest, InteractiveTest, DatasetTest) {
-    val datasetName = "liberty"
-    val numMatches = 1000
-
-    val patchPairs = PatchPair.loadPatchPairs(datasetName, numMatches, datasetRoot)
-
-    for ((patchPair, index) <- patchPairs.zipWithIndex) {
-      val sideBySide = GraphicsUtil.drawSideBySide(patchPair.left.image, patchPair.right.image)
-      sideBySide.getGraphics.drawString(patchPair.corresponds.toString, 5, 20)
-
-//      TestUtil.dumpImage(s"${index}", sideBySide)
-    }
-  }
-
-  ignore("ensure implicits are found") {
-    val experiment = BrownExperiment(
-      "liberty",
-      1000,
-      OpenCVExtractor.SIFT,
-      VectorMatcher.L2)
-
-    implicit val runtimeConfig: RuntimeConfig = BillyTestUtil.runtimeConfig
-
-    val results = experiment.run
-    val summary = results.to[ExperimentSummary]  
-
-//    Distributed.unsafeCapstone(experiment)
-  }
-
-  test("brown pickle", InstantTest) {
-    val experiment = BrownExperiment(
-      "liberty",
-      1000,
-      OpenCVExtractor.SIFT,
-      VectorMatcher.L2)
-
-//    experiment.pickle
-  }
+class TestBrown extends FunGeneratorConfigSuite {
+//  ignore(
+//    "loadPatchPairs should return reasonable pairs",
+//    SlowTest,
+//    InteractiveTest,
+//    DatasetTest) {
+//      val datasetName = "liberty"
+//      val numMatches = 1000
+//
+//      val patchPairs = PatchPair.loadPatchPairs(
+//        datasetName,
+//        numMatches,
+//        datasetRoot)
+//
+//      for ((patchPair, index) <- patchPairs.zipWithIndex) {
+//        val sideBySide = GraphicsUtil.drawSideBySide(
+//            patchPair.left.image, 
+//            patchPair.right.image)
+//        sideBySide.getGraphics.drawString(patchPair.corresponds.toString, 5, 20)
+//
+//        //      TestUtil.dumpImage(s"${index}", sideBySide)
+//      }
+//    }
+//
+//  ignore("ensure implicits are found") {
+//    val experiment = BrownExperiment(
+//      "liberty",
+//      1000,
+//      OpenCVExtractor.SIFT,
+//      VectorMatcher.L2)
+//
+//    implicit val runtimeConfig: RuntimeConfig = BillyTestUtil.runtimeConfig
+//
+//    val results = experiment.run
+//    val summary = results.to[ExperimentSummary]
+//
+//    //    Distributed.unsafeCapstone(experiment)
+//  }
+//
+//  test("brown pickle", InstantTest) {
+//    val experiment = BrownExperiment(
+//      "liberty",
+//      1000,
+//      OpenCVExtractor.SIFT,
+//      VectorMatcher.L2)
+//  }
 }

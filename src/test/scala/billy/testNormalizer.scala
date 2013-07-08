@@ -19,6 +19,7 @@ import org.scalatest.junit.JUnitRunner
 import scala.util.Random
 import breeze.linalg.DenseMatrix
 import nebula.util._
+import scalatestextra._
 
 ///////////////////////////////////////////////////////////
 

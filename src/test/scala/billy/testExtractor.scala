@@ -31,12 +31,12 @@ import nebula.util.KeyPointUtil
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.ConfigMapWrapperSuite
+import scalatestextra._
 
 ///////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-@WrapWith(classOf[ConfigMapWrapperSuite])
-class TestExtractor(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
+class TestExtractor extends FunGeneratorSuite {
   //  test("uniformRank") {
   //    val pixels = IndexedSeq(2, 2, 3, 3, 3)
   //    val uniformRank = Extractor.uniformRank(pixels)

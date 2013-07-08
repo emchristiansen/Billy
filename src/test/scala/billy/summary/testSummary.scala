@@ -67,6 +67,7 @@ import breeze.linalg.DenseMatrix
 import org.opencv.features2d.{ DMatch, KeyPoint }
 
 import DenseMatrixUtil._
+import scalatestextra._
 
 ///////////////////////////////////////////////////////////
 

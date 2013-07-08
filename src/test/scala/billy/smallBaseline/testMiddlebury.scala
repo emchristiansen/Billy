@@ -21,28 +21,33 @@ import math._
 import java.io.File
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import scalatestextra._
 
 ///////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-@WrapWith(classOf[ConfigMapWrapperSuite])
-class TestMiddlebury(val configMap: Map[String, Any]) extends ConfigMapFunSuite {
+class TestMiddlebury extends FunGeneratorConfigSuite with Dataset {
   test("construct FlowField from file", SlowTest, DatasetTest) {
-    val file = (datasetRoot: File) + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt" 
-    FlowField(file)
+    implicit configMap =>
+      val path = ExistingFile(
+        datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
+      FlowField(path)
   }
 
   test("construct SmallBaselinePair from file", FastTest, DatasetTest) {
-    val rootDirectory = (datasetRoot: File) + "middleburyImages"
-    SmallBaselinePair(rootDirectory, "Dimetrodon")
+    implicit configMap =>
+      val directory = ExistingDirectory(datasetRoot + "middleburyImages")
+      SmallBaselinePair(directory, "Dimetrodon")
   }
 
   test("the distance from a FlowField to itself should be zero", FastTest, DatasetTest) {
-    val flow = {
-      val file = (datasetRoot: File) + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt"
-      FlowField(file)
-    }
-    
-    assert(flow.mse(flow).abs == 0)
+    implicit configMap =>
+      val flow = {
+        val file = ExistingFile(
+          datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
+        FlowField(file)
+      }
+
+      assert(flow.mse(flow).abs == 0)
   }
 }
