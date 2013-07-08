@@ -26,17 +26,17 @@ import scalatestextra._
 ///////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestMiddlebury extends FunGeneratorConfigSuite with Dataset {
+class TestMiddlebury extends FunGeneratorConfigSuite with DataTest {
   test("construct FlowField from file", SlowTest, DatasetTest) {
     implicit configMap =>
       val path = ExistingFile(
-        datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
+        dataRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
       FlowField(path)
   }
 
   test("construct SmallBaselinePair from file", FastTest, DatasetTest) {
     implicit configMap =>
-      val directory = ExistingDirectory(datasetRoot + "middleburyImages")
+      val directory = ExistingDirectory(dataRoot + "middleburyImages")
       SmallBaselinePair(directory, "Dimetrodon")
   }
 
@@ -44,7 +44,7 @@ class TestMiddlebury extends FunGeneratorConfigSuite with Dataset {
     implicit configMap =>
       val flow = {
         val file = ExistingFile(
-          datasetRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
+          dataRoot + "middleburyImages/other-gt-flow/Dimetrodon/flow10.flo.txt")
         FlowField(file)
       }
 
