@@ -74,12 +74,9 @@ object StorageInfo {
 
     def outDirectory: File = {
       val experimentDataRoot = 
-        (runtimeConfig.outputRoot + "results/experiment_data/") mustExist
+        ExistingDirectory(runtimeConfig.outputRoot + "results/experiment_data/")
       val outDirectory = experimentDataRoot + nameNoTime
-      if (!outDirectory.exists) {
-        outDirectory.mkdir
-      }
-      outDirectory
+      ExistingFile.mkIfNeeded(outDirectory)
     }
       
       new File(

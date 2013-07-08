@@ -19,25 +19,22 @@ import java.io.File
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import nebula.util._
-import billy.testing.BillyTestUtil
+import scalatestextra._
+import billy.testing._
 
 ///////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestWideConfig extends FunSuite {
-  ignore("ensure implicits are found") {
+class TestWideConfig extends FunGeneratorConfigSuite with RuntimeConfigTest {
+  ignore("ensure implicits are found") { implicit configMap =>
     val experiment = WideBaselineExperiment(
       "wall",
       2,
       OpenCVDetector.FAST,
       OpenCVExtractor.SIFT,
       VectorMatcher.L2)
-      
-    implicit val runtimeConfig = BillyTestUtil.runtimeConfig
     
     val results = experiment.run
     val summary = results.to[ExperimentSummary]
-    
-//    Distributed.unsafeCapstone(experiment)
   }
 }

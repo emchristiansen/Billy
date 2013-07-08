@@ -20,7 +20,7 @@ object IO {
     prefix: String,
     suffix: String)(
       implicit runtime: RuntimeConfig) = {
-    val file = runtime.tempDirectory match {
+    val file = runtime.tempRoot match {
       case Some(file) => File.createTempFile(prefix, suffix, file)
       case None => File.createTempFile(prefix, suffix)
     }

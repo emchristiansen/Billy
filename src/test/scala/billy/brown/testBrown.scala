@@ -19,7 +19,6 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import nebula.util._
 import com.sun.xml.internal.bind.v2.model.runtime.RuntimeClassInfo
-import billy.testing.BillyTestUtil
 
 import scala.pickling._
 import scala.pickling.json._
