@@ -1,7 +1,7 @@
 package billy
 
 import nebula._
-import nebula.imageProcessing._
+import com.sksamuel.scrimage.Image
 import nebula.util._
 
 import billy._

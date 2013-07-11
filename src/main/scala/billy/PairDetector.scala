@@ -2,9 +2,9 @@ package billy
 
 import nebula.util.Homography
 import org.opencv.features2d.KeyPoint
-import nebula.imageProcessing._
 import nebula.util._
 import nebula.util.Util
+import com.sksamuel.scrimage.Image
 
 ///////////////////////////////////////////////////////////
 

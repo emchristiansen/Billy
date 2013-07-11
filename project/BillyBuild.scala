@@ -12,7 +12,7 @@ object BillyBuild extends Build {
       //     "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/",
       //      "repo.codahale.com" at "http://repo.codahale.com",
       "Akka Repository" at "http://repo.akka.io/releases/",
-      "spray-io" at "http://repo.spray.io/",
+//      "spray-io" at "http://repo.spray.io/",
       "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
       "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + "/.m2/repository"))
 
@@ -24,8 +24,8 @@ object BillyBuild extends Build {
       "scalatest-extra" %% "scalatest-extra" % "0.1-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
-      "com.sksamuel.scrimage" % "scrimage-core" % "1.3.0",
-      "com.sksamuel.scrimage" % "scrimage-filters" % "1.3.0",
+      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.1",
+      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.0",
       "nebula" %% "nebula" % "0.1-SNAPSHOT",
       "commons-lang" % "commons-lang" % "2.6",
       "org.scala-lang" % "scala-reflect" % scalaVersionString,

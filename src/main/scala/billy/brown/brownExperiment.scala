@@ -1,7 +1,6 @@
 package billy.brown
 
 import nebula._
-import nebula.imageProcessing._
 import nebula.util._
 
 import billy._
@@ -21,6 +20,7 @@ import billy.Matcher
 import billy.RuntimeConfig
 import billy.StorageInfo
 import scala.Option.option2Iterable
+import com.sksamuel.scrimage.Image
 
 ///////////////////////////////////////////////////////////
 

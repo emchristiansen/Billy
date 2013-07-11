@@ -1,26 +1,22 @@
 package billy.summary
 
 import nebula._
-import nebula.imageProcessing._
 import nebula.util._
-
 import billy._
 import billy.brown._
 import billy.mpie._
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
-
 import java.io.File
-
 import org.opencv.features2d.DMatch
-
 import nebula.PimpFile
 import billy.RuntimeConfig
 import billy.wideBaseline.WideBaselineExperiment
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 import javax.imageio.ImageIO
+import com.sksamuel.scrimage.Image
 
 ///////////////////////////////////////////////////////////////////////////////
 

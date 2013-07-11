@@ -1,7 +1,7 @@
 package billy
 
 import nebula._
-import nebula.imageProcessing._
+import com.sksamuel.scrimage._
 import nebula.util._
 
 import billy._
@@ -19,7 +19,6 @@ import org.opencv.features2d.KeyPoint
 
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import imageProcessing.Pixel
 
 import util.OpenCVUtil
 import util.Util
@@ -61,13 +60,13 @@ object Extractor {
     }
 
   // TODO: These should be types, not strings.
-  def interpretColor(color: String)(pixel: Pixel): Seq[Int] = color match {
-    case "Gray" => pixel.gray
-    case "sRGB" => pixel.sRGB
-    case "lRGB" => pixel.lRGB
-    case "HSB" => pixel.hsb
-    case "Lab" => pixel.lab
-    case "XYZ" => pixel.xyz
+  def interpretColor(color: String)(pixel: Int): Seq[Int] = color match {
+    case "Gray" => PixelTools.gray(pixel)
+//    case "sRGB" => pixel.sRGB
+//    case "lRGB" => pixel.lRGB
+//    case "HSB" => pixel.hsb
+//    case "Lab" => pixel.lab
+//    case "XYZ" => pixel.xyz
     case _ => sys.error("Color not supported. Do you have a typo?")
   }
 

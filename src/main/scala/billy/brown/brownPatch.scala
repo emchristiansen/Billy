@@ -1,7 +1,7 @@
 package billy.brown
 
 import nebula._
-import nebula.imageProcessing._
+import com.sksamuel.scrimage.Image
 import nebula.util._
 
 import billy._
@@ -50,8 +50,8 @@ object PatchPair {
   def extractDescriptorAtCenter[E <% Extractor[F], F](
     extractor: E,
     image: Image): Option[F] = {
-    require(image.getWidth == 64)
-    require(image.getHeight == 64)
+    require(image.width == 64)
+    require(image.height == 64)
 
     // TODO: Scale down
     //    val scaleFactor = 8

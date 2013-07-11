@@ -1,8 +1,8 @@
 package billy.detectors
 
 import nebula._
-import nebula.imageProcessing._
 import nebula.util._
+import com.sksamuel.scrimage.Image
 
 import billy._
 import billy.brown._
@@ -52,7 +52,7 @@ trait OpenCVDetector2Detector extends OpenCVDetector2PairDetector {
    */
   def detectorFromEnum(detectorType: Int): Detector = new Detector {
     override def detect = image => {
-      val matImage = OpenCVUtil.bufferedImageToMat(image)
+      val matImage = OpenCVUtil.bufferedImageToMat(image.awt)
       val keyPoints = new MatOfKeyPoint
       FeatureDetector.create(detectorType).detect(matImage, keyPoints)
       val reversed = keyPoints.toArray.sortBy { e =>

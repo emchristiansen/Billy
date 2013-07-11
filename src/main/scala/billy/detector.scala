@@ -1,8 +1,7 @@
 package billy
 
 import org.opencv.features2d.KeyPoint
-
-import nebula.imageProcessing.Image
+import com.sksamuel.scrimage.Image
 
 ///////////////////////////////////////////////////////////
 
