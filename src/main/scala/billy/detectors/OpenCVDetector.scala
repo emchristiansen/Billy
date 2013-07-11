@@ -6,7 +6,7 @@ import com.sksamuel.scrimage.Image
 
 import billy._
 import billy.brown._
-import billy.mpie._
+
 import billy.smallBaseline._
 import billy.wideBaseline._
 import billy.summary._
