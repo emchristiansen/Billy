@@ -9,11 +9,9 @@ import org.opencv.features2d.DMatch
  *  Can either return the distance between a pair of descriptors, of match
  *  sets of descriptors to each other.
  */
-trait Matcher[F] {
-  type DescriptorDistance[F] = (F, F) => Double
-  def distance: DescriptorDistance[F]
+trait Matcher[F] { 
+  def distance: (F, F) => Double
   
-  type Match[F] = (Boolean, Seq[F], Seq[F]) => Seq[DMatch]
   /** Matches two collections of descriptors against each other, and returns
    *  the results as a collection of DMatch.
    *  
@@ -22,5 +20,5 @@ trait Matcher[F] {
    *  matched.
    *  In this case, the sequences must be the same length.
    */
-  def doMatch: Match[F]
+  def doMatch: (Boolean, Seq[F], Seq[F]) => Seq[DMatch]
 }
