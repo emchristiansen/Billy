@@ -1,4 +1,6 @@
-package billy
+package billy.detectors
+
+import billy.Detector
 
 ///////////////////////////////////////////////////////////
 

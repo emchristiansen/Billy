@@ -1,24 +1,12 @@
 package billy
 
-import java.io.File
-
 import nebula._
-import nebula.imageProcessing._
 import nebula.util._
-
-import billy._
-import billy.brown._
-
-import billy.smallBaseline._
-import billy.wideBaseline._
-import billy.summary._
 
 ///////////////////////////////////////////////////////////
 
-// TODO rename RuntimeConfig.scala
-
 /**
- * Contains information necessary for the runtime operation of the program.
+ * Contains information necessary for the runtime operation of Billy.
  */
 case class RuntimeConfig(
   /**
@@ -34,7 +22,7 @@ case class RuntimeConfig(
   outputRoot: ExistingDirectory,
   /**
    * Billy sometimes needs to create temporary files.
-   * By default, the system-wide temp directory is used (/tmp) in Linux.
+   * By default, the system-wide temp directory is used (/tmp in Linux).
    * You can optionally set a different temp directory.
    */
   tempRoot: Option[ExistingDirectory],

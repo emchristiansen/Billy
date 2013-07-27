@@ -1,4 +1,4 @@
-package billy
+package billy.normalizers
 
 import nebula._
 import nebula.imageProcessing._

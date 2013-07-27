@@ -17,10 +17,6 @@ import billy.summary._
 
 ///////////////////////////////////////////////////////////
 
-trait ExperimentRunner[R] {
-  def run: R
-}
-
 trait StorageInfo[R] {
   def currentPath: File
   def mostRecentPath: Option[File]
