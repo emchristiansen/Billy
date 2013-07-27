@@ -1,4 +1,4 @@
-package billy.smallBaseline
+package billy.experiments.smallBaseline
 
 import nebula._
 import nebula.imageProcessing._

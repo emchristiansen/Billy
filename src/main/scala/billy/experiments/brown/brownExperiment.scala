@@ -1,4 +1,4 @@
-package billy.brown
+package billy.experiments.brown
 
 import nebula._
 import nebula.util._
