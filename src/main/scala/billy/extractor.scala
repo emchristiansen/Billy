@@ -61,7 +61,7 @@ object Extractor {
 
   // TODO: These should be types, not strings.
   def interpretColor(color: String)(pixel: Int): Seq[Int] = color match {
-    case "Gray" => PixelTools.gray(pixel)
+    case "Gray" => Seq(PixelTools.gray(pixel))
 //    case "sRGB" => pixel.sRGB
 //    case "lRGB" => pixel.lRGB
 //    case "HSB" => pixel.hsb
