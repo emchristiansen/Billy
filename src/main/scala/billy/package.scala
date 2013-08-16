@@ -1,4 +1,4 @@
-package object billy  {
+package object billy extends RichKeyPointImplicits {
   // TODO: Uncomment this function and change the relevant constructors.
   // Currently this is impossible due to a probable Scala bug.
   //  implicit def experimentRunnerInsertRuntime[A <% RuntimeConfig => ExperimentRunner[B], B](
