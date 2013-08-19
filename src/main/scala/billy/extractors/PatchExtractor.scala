@@ -3,23 +3,20 @@ package billy.extractors
 import nebula._
 import nebula.imageProcessing._
 import nebula.util._
-
 import billy._
-
 import nebula._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
 import org.opencv.features2d.KeyPoint
-
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-
 import util.OpenCVUtil
 import util.Util
 import nebula.util._
 import com.sksamuel.scrimage._
 import com.sksamuel.scrimage.filter._
+import scala.util.Try
 
 ///////////////////////////////////////////////////////////
 
@@ -27,56 +24,54 @@ import com.sksamuel.scrimage.filter._
  * Represents an extractor that blurs a region, possibly normalizes it up
  * to similarity, and then extracts a square patch of given size and color.
  */
-case class PatchExtractor[A: ColorEncoder](
-  colorCoding: A,
+case class PatchExtractor(
+  color: Color,
   patchWidth: Int,
-  blurWidth: Int) extends ExtractorSingle[ColorEncoder[A]#ColorCoding] {
-  import PatchExtractor._
-
+  blurWidth: Int) extends ExtractorSingle[DenseMatrix[IndexedSeq[Int]]] {
   override def extractSingle = (image: Image, keyPoint: KeyPoint) => {
-    rawPixels(
-      colorCoding,
-      patchWidth,
-      blurWidth)(image, keyPoint)
-  }
-}
-
-object PatchExtractor {
-  def rawPixels[A: ColorEncoder](
-    colorCoding: A,
-    patchWidth: Int,
-    blurWidth: Int)(
-      image: Image,
-      keyPoint: KeyPoint): Option[ColorEncoder[A]#ColorCoding] = {
-
     val blurred = image.filter(GaussianBlurFilter(blurWidth))
-    val patchOption: Option[Image] = ???
-    //      blurred.extractPatch(patchWidth, keyPoint)
+    val patchOption: Option[Image] = Try(blurred.subpixelSubimage(
+      keyPoint.pt.x,
+      keyPoint.pt.y,
+      patchWidth,
+      patchWidth)).toOption
     for (
       patch <- patchOption
     ) yield {
-      //      val values = Pixel.getPixelsOriginal(patch).flatMap(interpretColor(color))
-      //      values
-      ???
+      def extract(x: Int, y: Int): IndexedSeq[Int] = {
+        val pixel = patch.pixel(x, y)
+        color match {
+          case Gray => IndexedSeq(PixelTools.gray(pixel))
+          case RGB => IndexedSeq(
+            PixelTools.red(pixel),
+            PixelTools.green(pixel),
+            PixelTools.blue(pixel))
+        }
+      }
+
+      val matrix = DenseMatrix.fill(patchWidth, patchWidth)(IndexedSeq[Int]())
+      for (
+        y <- 0 until patchWidth;
+        x <- 0 until patchWidth
+      ) {
+        matrix(x, y) = extract(x, y)
+      }
+
+      matrix
     }
   }
 }
 
-///**
-// * Views to Extractor.
-// */
-//trait PatchExtractor2Extractor {
-//  implicit def PatchExtractor2Extractor(
-//    self: PatchExtractor): Extractor[IndexedSeq[Int]] =
-//    Extractor(
-//      (image: Image, keyPoint: KeyPoint) => {
-//        Extractor.rawPixels(
-//          self.normalizeRotation,
-//          self.normalizeScale,
-//          self.patchWidth,
-//          self.blurWidth,
-//          self.color)(image, keyPoint)
-//      })
+//object PatchExtractor {
+//  def rawPixels(
+//    color: Color,
+//    patchWidth: Int,
+//    blurWidth: Int)(
+//      image: Image,
+//      keyPoint: KeyPoint): Option[DenseMatrix[IndexedSeq[Int]]] = {
+//
+//  }
+//}
 //}
 //
 //object PatchExtractor extends PatchExtractor2Extractor
