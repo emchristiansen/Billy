@@ -5,6 +5,7 @@ import org.opencv.features2d.FeatureDetector
 
 import billy.Detector
 import nebula.util.OpenCVUtil
+import billy._
 
 ///////////////////////////////////////////////////////////
 
@@ -20,10 +21,8 @@ object OpenCVDetector {
   
   class DetectorFromEnum(detectorType: Int) extends Detector {
     override def detect = image => {
-      // TODO: Move util method.
-      val matImage = OpenCVUtil.bufferedImageToMat(image.awt)
       val keyPoints = new MatOfKeyPoint
-      FeatureDetector.create(detectorType).detect(matImage, keyPoints)
+      FeatureDetector.create(detectorType).detect(image.toMat, keyPoints)
       val reversed = keyPoints.toArray.sortBy { e =>
         (e.response, e.pt.x, e.pt.y, e.size, e.angle, e.octave, e.class_id)
       }

@@ -27,38 +27,27 @@ import com.sksamuel.scrimage.filter._
  * Represents an extractor that blurs a region, possibly normalizes it up
  * to similarity, and then extracts a square patch of given size and color.
  */
-case class PatchExtractor(
+case class PatchExtractor[A: ColorEncoder](
+  colorCoding: A,
   patchWidth: Int,
-  blurWidth: Int,
-  color: String) extends ExtractorSingle[IndexedSeq[Int]] {
+  blurWidth: Int) extends ExtractorSingle[ColorEncoder[A]#ColorCoding] {
   import PatchExtractor._
 
   override def extractSingle = (image: Image, keyPoint: KeyPoint) => {
     rawPixels(
+      colorCoding,
       patchWidth,
-      blurWidth,
-      color)(image, keyPoint)
+      blurWidth)(image, keyPoint)
   }
 }
 
 object PatchExtractor {
-  // TODO: These should be types, not strings.
-  def interpretColor(color: String)(pixel: Int): Seq[Int] = color match {
-    case "Gray" => Seq(PixelTools.gray(pixel))
-    //    case "sRGB" => pixel.sRGB
-    //    case "lRGB" => pixel.lRGB
-    //    case "HSB" => pixel.hsb
-    //    case "Lab" => pixel.lab
-    //    case "XYZ" => pixel.xyz
-    case _ => sys.error("Color not supported. Do you have a typo?")
-  }
-
-  def rawPixels(
+  def rawPixels[A: ColorEncoder](
+    colorCoding: A,
     patchWidth: Int,
-    blurWidth: Int,
-    color: String)(
+    blurWidth: Int)(
       image: Image,
-      keyPoint: KeyPoint): Option[IndexedSeq[Int]] = {
+      keyPoint: KeyPoint): Option[ColorEncoder[A]#ColorCoding] = {
 
     val blurred = image.filter(GaussianBlurFilter(blurWidth))
     val patchOption: Option[Image] = ???
