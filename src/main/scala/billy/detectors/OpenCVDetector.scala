@@ -4,7 +4,6 @@ import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.FeatureDetector
 
 import billy.Detector
-import nebula.util.OpenCVUtil
 import billy._
 
 ///////////////////////////////////////////////////////////

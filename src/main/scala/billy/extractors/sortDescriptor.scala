@@ -1,8 +1,5 @@
 //package billy
 //
-//import nebula._
-//import nebula.imageProcessing._
-//import nebula.util._
 //
 //import billy._
 //import billy.brown._
@@ -12,7 +9,7 @@
 //import billy.summary._
 //
 /////////////////////////////////////////////////////////////
-//
+// TODO
 //trait PermutationLike[A] {
 //  def invert: A
 //  def compose(otherPermutation: A): A

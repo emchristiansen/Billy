@@ -4,9 +4,6 @@ import org.opencv.features2d.KeyPoint
 
 import com.sksamuel.scrimage.Image
 
-import nebula.util.KeyPointUtil
-import nebula.util.Util
-
 ///////////////////////////////////////////////////////////
 
 /**
@@ -35,7 +32,7 @@ object PairDetector {
           threshold,
           homography,
           left,
-          right).sortBy(KeyPointUtil.pairQuality).reverse
+          right).sortBy(pairResponse).reverse
       }
   }
 
@@ -60,7 +57,7 @@ object PairDetector {
   /**
    * The quality of a pair of keypoints.
    */
-  def pairQuality(left: KeyPoint, right: KeyPoint): Double = {
+  def pairResponse(left: KeyPoint, right: KeyPoint): Double = {
     require(left.response >= 0)
     require(right.response >= 0)
     left.response * right.response
@@ -69,8 +66,8 @@ object PairDetector {
   /**
    * The quality of a pair of keypoints.
    */
-  def pairQuality(pair: Tuple2[KeyPoint, KeyPoint]): Double = 
-    pairQuality(pair._1, pair._2)
+  def pairResponse(pair: Tuple2[KeyPoint, KeyPoint]): Double = 
+    pairResponse(pair._1, pair._2)
 
   /**
    * Ensures the homography is a bijection between the keypoints on the left
@@ -109,7 +106,7 @@ object PairDetector {
 
     // Sort all the putative pairs by their quality.
     // The best pairs will be _at the end_.
-    val sorted = culled.sortBy(KeyPointUtil.pairQuality)
+    val sorted = culled.sortBy(pairResponse)
 
     // Now the tricky bit; we flip the map, making keys into values and
     // vice-versa.
@@ -121,6 +118,6 @@ object PairDetector {
     val noDuplicates = sorted.map(_.swap).toMap.toSeq.map(_.swap)
 
     // The toMap step destroyed the sort, so we have to recreate it.
-    noDuplicates.sortBy(KeyPointUtil.pairQuality).reverse
+    noDuplicates.sortBy(pairResponse).reverse
   }
 }

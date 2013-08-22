@@ -1,19 +1,12 @@
 package billy.extractors
 
-import nebula._
-import nebula.imageProcessing._
-import nebula.util._
 import billy._
-import nebula._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
 import org.opencv.features2d.KeyPoint
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import util.OpenCVUtil
-import util.Util
-import nebula.util._
 import com.sksamuel.scrimage._
 import com.sksamuel.scrimage.filter._
 import scala.util.Try
@@ -61,20 +54,6 @@ case class PatchExtractor(
     }
   }
 }
-
-//object PatchExtractor {
-//  def rawPixels(
-//    color: Color,
-//    patchWidth: Int,
-//    blurWidth: Int)(
-//      image: Image,
-//      keyPoint: KeyPoint): Option[DenseMatrix[IndexedSeq[Int]]] = {
-//
-//  }
-//}
-//}
-//
-//object PatchExtractor extends PatchExtractor2Extractor
 
 //// TODO: Big hack, delete me!!!
 //case class LUCIDExtractor(
