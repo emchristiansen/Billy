@@ -1,4 +1,7 @@
-package object billy extends RichKeyPointImplicits with RichImageImplicits {
+package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits {
+  lazy val loadOpenCV =
+    System.load("/usr/local/share/OpenCV/java/libopencv_java.so")
+
   // TODO: Uncomment this function and change the relevant constructors.
   // Currently this is impossible due to a probable Scala bug.
   //  implicit def experimentRunnerInsertRuntime[A <% RuntimeConfig => ExperimentRunner[B], B](

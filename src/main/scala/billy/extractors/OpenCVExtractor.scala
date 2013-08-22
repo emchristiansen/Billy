@@ -1,12 +1,7 @@
 package billy.extractors
 
-import nebula._
-import nebula.imageProcessing._
-import nebula.util._
-
 import billy._
 
-import nebula._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
@@ -15,9 +10,8 @@ import org.opencv.features2d.KeyPoint
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 
-import util.OpenCVUtil
-import util.Util
-import nebula.util._
+import scalatestextra._
+
 import com.sksamuel.scrimage._
 
 ///////////////////////////////////////////////////////////
@@ -33,11 +27,17 @@ object OpenCVExtractor {
   object SIFT extends DoubleExtractorFromEnum(DescriptorExtractor.SIFT)
   object SURF extends DoubleExtractorFromEnum(DescriptorExtractor.SURF)
 
+  /**
+   * An extractor backed by a call to OpenCV, which returns descriptors which
+   * are vectors of Doubles.
+   * 
+   * User must have called loadOpenCV before using this class.
+   */
   class DoubleExtractorFromEnum(
     extractorType: Int) extends ExtractSeveral[IndexedSeq[Double]] {
     override def extract = (image: Image, keyPoints: Seq[KeyPoint]) => {
       val extractor = DescriptorExtractor.create(extractorType)
-      val imageMat = OpenCVUtil.bufferedImageToMat(image.awt)
+      val imageMat = image.toMat
       val descriptor = new Mat
 
       val markedKeyPointsMat = {
@@ -56,19 +56,19 @@ object OpenCVExtractor {
       }
 
       // Apparent concurrency bug that causes random crashes. Sigh.
-      //      OpenCVLock.synchronized {
-      extractor.compute(
-        imageMat,
-        markedKeyPointsMat,
-        descriptor)
-      //      }
+      // TODO: See if this is still an issue with newer versions of OpenCV.
+      OpenCVExtractor.synchronized {
+        extractor.compute(
+          imageMat,
+          markedKeyPointsMat,
+          descriptor)
+      }
 
-      val descriptorsOption =
-        DenseMatrixUtil.matToMatrixDoubleSingleChannel(descriptor)
+      val descriptorsOption = descriptor.toMatrixDouble
       if (!descriptorsOption.isDefined) keyPoints.size times None
       else {
-        val descriptors: IndexedSeq[IndexedSeq[Double]] = ???
-        //        descriptorsOption.get.toSeqSeq
+        val descriptors = descriptorsOption.get.toSeqSeq
+        
         val markedKeyPoints = markedKeyPointsMat.toArray
 
         assert(descriptors.size == markedKeyPoints.size)
@@ -84,6 +84,12 @@ object OpenCVExtractor {
     }
   }
 
+  /**
+   * An extractor backed by a call to OpenCV, which returns descriptors which
+   * are vectors of Booleans.
+   * 
+   * User must have called loadOpenCV before using this class.
+   */
   class BooleanExtractorFromEnum(
     extractorType: Int) extends ExtractSeveral[IndexedSeq[Boolean]] {
     override def extract = (image, keyPoints) => {
@@ -93,7 +99,7 @@ object OpenCVExtractor {
         x =>
           assert(x == 0 || x == 1)
           if (x == 0) false
-          else true        
+          else true
       }))
     }
   }
