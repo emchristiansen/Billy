@@ -1,4 +1,4 @@
-package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits {
+package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits with RichSeqSeqImplicits {
   lazy val loadOpenCV =
     System.load("/usr/local/share/OpenCV/java/libopencv_java.so")
 

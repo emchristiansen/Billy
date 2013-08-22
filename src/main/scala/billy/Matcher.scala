@@ -20,7 +20,7 @@ trait Matcher[F] {
    * 
    * The two sequences must be the same length. 
    */
-  def matchCorresponding: (Seq[F], Seq[F]) => IndexedSeq[Double]
+  def matchCorresponding: (Seq[F], Seq[F]) => Seq[Double]
   
   /**
    * The distances between all the descriptors.
