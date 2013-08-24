@@ -5,7 +5,7 @@ import billy._
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
-import org.opencv.features2d.KeyPoint
+import org.opencv.core.KeyPoint
 
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector

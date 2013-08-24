@@ -1,6 +1,6 @@
 package billy
 
-import org.opencv.features2d.KeyPoint
+import org.opencv.core.KeyPoint
 
 import com.sksamuel.scrimage.Image
 

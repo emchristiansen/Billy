@@ -1,6 +1,6 @@
 package billy
 
-import org.opencv.features2d.DMatch
+import org.opencv.core.DMatch
 import breeze.linalg.DenseMatrix
 
 ///////////////////////////////////////////////////////////

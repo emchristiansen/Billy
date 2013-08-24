@@ -1,6 +1,6 @@
 package billy
 
-import org.opencv.features2d.KeyPoint
+import org.opencv.core.KeyPoint
 import breeze.linalg._
 import java.io.File
 import scalatestextra._

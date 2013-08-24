@@ -15,7 +15,7 @@
 //import scala.reflect.runtime.universe
 //import scala.runtime.ZippedTraversable2.zippedTraversable2ToTraversable
 //
-//import org.opencv.features2d.DMatch
+//import org.opencv.core.DMatch
 //
 //import breeze.linalg.DenseMatrix
 //import billy.SortDescriptor.implicitIndexedSeq
