@@ -55,6 +55,7 @@ object BillyBuild extends Build {
       "-deprecation",
       "-feature",
       "-language:implicitConversions",
+      "-language:higherKinds",
       // "-language:reflectiveCalls",
       "-language:postfixOps",
       "-Yinline-warnings"))

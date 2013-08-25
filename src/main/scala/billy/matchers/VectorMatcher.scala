@@ -50,6 +50,7 @@ object VectorMatcher {
    * Turn a distance on IndexedSeq[A] to a distance on
    * DenseMatrix[IndexedSeq[A]].
    */
+  // TODO: Replace with implicit views to IndexedSeq.
   def liftToMatrixIndexedSeq[A](
     distance: DescriptorDistance[IndexedSeq[A]]): DescriptorDistance[DenseMatrix[IndexedSeq[A]]] =
     (left, right) =>

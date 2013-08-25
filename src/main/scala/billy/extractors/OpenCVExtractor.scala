@@ -34,7 +34,7 @@ object OpenCVExtractor {
    * User must have called loadOpenCV before using this class.
    */
   class DoubleExtractorFromEnum(
-    extractorType: Int) extends ExtractSeveral[IndexedSeq[Double]] {
+    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Double]] {
     override def extract = (image: Image, keyPoints: Seq[KeyPoint]) => {
       val extractor = DescriptorExtractor.create(extractorType)
       val imageMat = image.toMat
@@ -91,7 +91,7 @@ object OpenCVExtractor {
    * User must have called loadOpenCV before using this class.
    */
   class BooleanExtractorFromEnum(
-    extractorType: Int) extends ExtractSeveral[IndexedSeq[Boolean]] {
+    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Boolean]] {
     override def extract = (image, keyPoints) => {
       val doubles =
         new DoubleExtractorFromEnum(extractorType).extract(image, keyPoints)
