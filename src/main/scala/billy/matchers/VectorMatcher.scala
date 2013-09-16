@@ -36,7 +36,7 @@ object VectorMatcher {
   /**
    * Turn a distance on IndexedSeq[Int] into a distance on SortDescriptor.
    */
-  private def lift: DescriptorDistance[IndexedSeq[Int]] => DescriptorDistance[PermutationDescriptor] =
+  private def lift: DescriptorDistance[IndexedSeq[Int]] => DescriptorDistance[Permutation] =
     distance => (left, right) => distance(left.data, right.data)
 
   /**
@@ -133,7 +133,7 @@ object VectorMatcher {
   }
 
   implicit class KendallTau2MatcherIndexedSeq(
-    self: KendallTau.type) extends MatcherSingle[PermutationDescriptor] {
+    self: KendallTau.type) extends MatcherSingle[Permutation] {
     override def distance = (left, right) => kendallTau(left.data, right.data)
   }
   

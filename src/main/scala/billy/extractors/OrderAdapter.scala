@@ -8,17 +8,20 @@ import scalatestextra._
 ////////////////////////////////////////////////
 
 /**
- * Returns the ordering PermutationDescriptor.
+ * An `Extractor` which returns an ordering permutation.
+ * 
+ * This wraps around an existing `Extractor`, which must extract something
+ * which can be sorted.
  */
-case class OrderNormalizer[F: Ordering, C[F], E <% Extractor[C[F]]](
+case class OrderAdapter[F: Ordering, C[F], E <% Extractor[C[F]]](
   extractor: E)(
-    implicit toSeq: C[F] => IndexedSeq[F]) extends ExtractorSeveral[PermutationDescriptor] {
+    implicit toSeq: C[F] => IndexedSeq[F]) extends ExtractorSeveral[Permutation] {
   override def extract = (image, keyPoints) => {
     extractor.extract(image, keyPoints) map {
       _ map { container =>
         val unsorted = toSeq(container)
         
-        PermutationDescriptor(unsorted.zipWithIndex.sortBy(_._1).map(_._2))
+        Permutation(unsorted.zipWithIndex.sortBy(_._1).map(_._2))
       }
     }
   }

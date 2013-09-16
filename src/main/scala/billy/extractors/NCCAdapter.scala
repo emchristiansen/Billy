@@ -21,7 +21,7 @@ import scalatestextra._
 /**
  * Normalizes vector-like descriptors so they have zero mean and unit norm.
  */
-case class NCCNormalizer[F <% Double, C[F], E <% Extractor[C[F]]](
+case class NCCAdapter[F <% Double, C[F], E <% Extractor[C[F]]](
   extractor: E)(
     implicit toSeq: C[F] => IndexedSeq[F]) extends ExtractorSeveral[IndexedSeq[Double]] {
   override def extract = (image, keyPoints) => {
