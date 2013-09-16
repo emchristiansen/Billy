@@ -37,7 +37,7 @@ object BillyBuild extends Build {
       "org.scala-stm" %% "scala-stm" % "0.7",
       "com.chuusai" %% "shapeless" % "1.2.4",
       "org.clapper" %% "grizzled-scala" % "1.1.4",
-      "org.scalanlp" %% "breeze-math" % "0.4-SNAPSHOT",
+      "org.scalanlp" %% "breeze-math" % "0.5-SNAPSHOT",
       "org.spire-math" %% "spire" % "0.5.0",
       "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
       "org.rogach" %% "scallop" % "0.9.2",
@@ -58,6 +58,7 @@ object BillyBuild extends Build {
       "-language:higherKinds",
       // "-language:reflectiveCalls",
       "-language:postfixOps",
+      "-Xlog-implicits",
       "-Yinline-warnings"))
 
   def libSettings =
