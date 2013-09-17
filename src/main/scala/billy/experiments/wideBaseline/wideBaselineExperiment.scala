@@ -17,12 +17,12 @@ import binary._
 /**
  * Represents experiments on the Oxford image dataset.
  */
-case class WideBaselineExperiment[D, E, M, F](
+case class WideBaselineExperiment[F](
   imageClass: String,
   otherImage: Int,
-  detector: D,
-  extractor: E,
-  matcher: M) {
+  detector: Detector,
+  extractor: Extractor[F],
+  matcher: Matcher[F]) {
 //  (
 //    implicit runtimeConfig: RuntimeConfig)
 //  def groundTruthHomography = Homography.fromFile(ExistingFile(new File(
