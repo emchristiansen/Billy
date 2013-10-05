@@ -16,28 +16,30 @@ object BillyBuild extends Build {
       "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
       "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + "/.m2/repository"))
 
-  val scalaVersionString = "2.10.2"
+  val scalaVersionString = "2.10.3"
 
   def extraLibraryDependencies = Seq(
     libraryDependencies ++= Seq(
-      "opencv" % "opencv" % "2.4.9",
-      "emchristiansen" %% "scalatest-extra" % "0.2-SNAPSHOT",
+      "opencv" % "opencv" % "3.0.0",
+      "emchristiansen" %% "scalatest-extra" % "0.3-SNAPSHOT",
+      "st.sparse" %% "persistent-map" % "0.1-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
-      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.5-SNAPSHOT",
-      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.5-SNAPSHOT",
+      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.6-SNAPSHOT",
+      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.6-SNAPSHOT",
 //      "nebula" %% "nebula" % "0.1-SNAPSHOT",
       "commons-lang" % "commons-lang" % "2.6",
       "org.scala-lang" % "scala-reflect" % scalaVersionString,
       "org.scala-lang" % "scala-compiler" % scalaVersionString,
       "org.apache.commons" % "commons-math3" % "3.2",
       "commons-io" % "commons-io" % "2.4",
+      "com.typesafe.slick" %% "slick" % "1.0.1",
       "org.scalatest" %% "scalatest" % "1.9.1" % "test",
 //      "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
       "org.scala-stm" %% "scala-stm" % "0.7",
       "com.chuusai" %% "shapeless" % "1.2.4",
       "org.clapper" %% "grizzled-scala" % "1.1.4",
-      "org.scalanlp" %% "breeze-math" % "0.5-SNAPSHOT",
+      "org.scalanlp" %% "breeze-math" % "0.4",
       "org.spire-math" %% "spire" % "0.5.0",
       "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
       "org.rogach" %% "scallop" % "0.9.2",
@@ -58,7 +60,8 @@ object BillyBuild extends Build {
       "-language:higherKinds",
       // "-language:reflectiveCalls",
       "-language:postfixOps",
-      "-Xlog-implicits",
+      "-language:existentials",
+//      "-Xlog-implicits",
       "-Yinline-warnings"))
 
   def libSettings =
