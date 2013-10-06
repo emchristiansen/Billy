@@ -1,0 +1,8 @@
+project/project/
+project/target/
+.cache
+.classpath
+.project
+.settings/
+target/
+*~

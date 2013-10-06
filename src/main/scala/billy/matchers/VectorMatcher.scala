@@ -57,6 +57,9 @@ object VectorMatcher {
         l0Distance(left: IndexedSeq[A], right: IndexedSeq[A])
     }
 
+  
+  
+  
   //  private type DescriptorDistance[F] = (F, F) => Double
   //
   //  /**
