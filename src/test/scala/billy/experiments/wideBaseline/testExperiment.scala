@@ -97,8 +97,10 @@ class TestWideBaselineExperiment extends FunGeneratorSuite {
       OpenCVExtractor.SIFT,
       MyMatcher("hi"))
     val pickle = experiment.pickle
-    pickle.unpickle[Experiment[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, MyMatcher, IndexedSeq[Double]]]
+    val unpickled = pickle.unpickle[Experiment[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, MyMatcher, IndexedSeq[Double]]]
 
+    assert(experiment == unpickled)
+    
     //        pickle.unpickle[WideBaselineExperiment[DenseMatrix[IndexedSeq[Int]]]]
   }
 
