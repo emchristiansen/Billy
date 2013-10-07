@@ -1,18 +1,17 @@
-//package billy.experiments.wideBaseline
-//
-//import billy._
-//
-//import billy.experiments._
-//
-//import breeze.linalg._
-//
-//import java.io.File
-//
-//import scalatestextra._
-//
-//import java.util.Date
-//
+package billy.experiments.wideBaseline
+
+import billy._
+
+import breeze.linalg._
+
+import java.io.File
+
+import scalatestextra._
+
 /////////////////////////////////////////////////////////////
+
+case class Results(distances: DenseMatrix[Double])
+
 //
 //case class WideBaselineExperimentResults[D, E, M, F](
 //  experiment: WideBaselineExperiment[D, E, M, F],

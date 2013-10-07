@@ -25,6 +25,10 @@ before_script:
   - sudo make -j4 install
   - mvn install:install-file -Dfile=/usr/local/share/OpenCV/java/opencv-300.jar -DgroupId=opencv -DartifactId=opencv -Dversion=3.0.0 -Dpackaging=jar
   - cd ../..
+  - git clone https://github.com/emchristiansen/scrimage.git
+  - cd scrimage
+  - sbt publishLocal
+  - cd ..
 
 
 

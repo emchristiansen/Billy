@@ -25,7 +25,38 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   detector: D,
   extractor: E,
   matcher: M) {
-//  (
+  def run(implicit runtimeConfig: RuntimeConfig): Results = {
+    ???
+//    // TODO: Use a logger.
+//    println(s"Running ${experiment}")
+//
+//    val leftImage = experiment.leftImage
+//    val rightImage = experiment.rightImage
+//
+//    val (leftKeyPoints, rightKeyPoints) = experiment.detector.detectPair(
+//      experiment.groundTruthHomography,
+//      leftImage,
+//      rightImage) unzip
+//
+//    println(s"Number of KeyPoints: ${leftKeyPoints.size}")
+//
+//    val (leftDescriptors, rightDescriptors) = {
+//      val leftDescriptors = experiment.extractor.extract(leftImage, leftKeyPoints)
+//      val rightDescriptors = experiment.extractor.extract(rightImage, rightKeyPoints)
+//
+//      for ((Some(left), Some(right)) <- leftDescriptors.zip(rightDescriptors)) yield (left, right)
+//    } unzip
+//
+//    println(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
+//
+//    val distances = experiment.matcher.matchAll(
+//      leftDescriptors,
+//      rightDescriptors)
+//
+//    WideBaselineExperimentResults(experiment, distances)
+  }
+}
+  
 //    implicit runtimeConfig: RuntimeConfig)
 //  def groundTruthHomography = Homography.fromFile(ExistingFile(new File(
 //    runtimeConfig.dataRoot,
@@ -38,7 +69,7 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
 //  def rightImage = Image(ExistingFile(new File(
 //    runtimeConfig.dataRoot,
 //    s"oxfordImages/${imageClass}/images/img${otherImage}.bmp")))
-}
+
 
 //trait WideBaselineExperiment2HasGroundTruth {
 //  implicit def wideBaselineExperiment2HasGroundTruth(

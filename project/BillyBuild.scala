@@ -4,8 +4,10 @@ import Keys._
 object BillyBuild extends Build {
   def extraResolvers = Seq(
     resolvers ++= Seq(
-      "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
-      "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
+        Resolver.sonatypeRepo("releases"),
+        Resolver.sonatypeRepo("snapshots"),
+//      "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
+//      "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
       //     "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/",
       //      "repo.codahale.com" at "http://repo.codahale.com",
       "Akka Repository" at "http://repo.akka.io/releases/",
@@ -22,8 +24,8 @@ object BillyBuild extends Build {
       "st.sparse" %% "persistent-map" % "0.1-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
-      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.6-SNAPSHOT",
-      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.6-SNAPSHOT",
+      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.6",
+      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.6",
 //      "nebula" %% "nebula" % "0.1-SNAPSHOT",
       "commons-lang" % "commons-lang" % "2.6",
       "org.scala-lang" % "scala-reflect" % scalaVersionString,
