@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/emchristiansen/Billy.png)](https://travis-ci.org/emchristiansen/Billy)
+
 This is a framework for testing local visual descriptors, eg SIFT, SURF, and BRIEF. 
 It is similar to [VLBenchmarks](http://www.vlfeat.org/benchmarks/index.html) except it is written in Scala, plays well with OpenCV, and can run seamlessly on a desktop or a cluster.
 
