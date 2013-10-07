@@ -1,6 +1,6 @@
 package billy.experiments
 
-import scalatestextra._
+import st.sparse.sundry._
 
 import scala.slick.session.Database
 

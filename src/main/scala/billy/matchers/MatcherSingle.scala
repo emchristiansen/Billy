@@ -1,7 +1,7 @@
 package billy.matchers
 
 import billy._
-import scalatestextra._
+import st.sparse.sundry._
 import breeze.linalg.DenseMatrix
 
 ///////////////////////////////////////////////

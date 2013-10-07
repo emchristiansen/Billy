@@ -10,7 +10,7 @@ import org.scalatest.junit.JUnitRunner
 import scala.pickling._
 import scala.pickling.binary._
 
-import scalatestextra._
+import st.sparse.sundry._
 
 ////////////////////////////////////////////////////////////////////////////////
 

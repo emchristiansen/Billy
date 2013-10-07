@@ -6,7 +6,7 @@ import breeze.linalg._
 
 import java.io.File
 
-import scalatestextra._
+import st.sparse.sundry._
 
 /////////////////////////////////////////////////////////////
 

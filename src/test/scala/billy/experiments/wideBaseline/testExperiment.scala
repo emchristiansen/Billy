@@ -16,7 +16,7 @@ import org.scalatest.junit.JUnitRunner
 import scala.pickling._
 import scala.pickling.binary._
 
-import scalatestextra._
+import st.sparse.sundry._
 import breeze.linalg._
 import scala.reflect.ClassTag
 

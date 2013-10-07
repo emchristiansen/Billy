@@ -20,7 +20,7 @@ object BillyBuild extends Build {
   def extraLibraryDependencies = Seq(
     libraryDependencies ++= Seq(
       "opencv" % "opencv" % "3.0.0",
-      "emchristiansen" %% "scalatest-extra" % "0.3-SNAPSHOT",
+      "st.sparse" %% "sundry" % "0.1-SNAPSHOT",
       "st.sparse" %% "persistent-map" % "0.1-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",

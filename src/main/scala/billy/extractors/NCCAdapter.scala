@@ -3,7 +3,7 @@ package billy.extractors
 import billy._
 import breeze.linalg._
 import grizzled.math.stats
-import scalatestextra._
+import st.sparse.sundry._
 
 ////////////////////////////////////////////////
 

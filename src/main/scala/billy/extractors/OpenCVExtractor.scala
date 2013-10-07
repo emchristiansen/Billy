@@ -10,7 +10,7 @@ import org.opencv.core.KeyPoint
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 
-import scalatestextra._
+import st.sparse.sundry._
 
 import com.sksamuel.scrimage._
 
