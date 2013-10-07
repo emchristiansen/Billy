@@ -3,7 +3,7 @@ package billy
 import org.opencv.core.KeyPoint
 import breeze.linalg._
 import java.io.File
-import scalatestextra._
+import st.sparse.sundry._
 import org.apache.commons.io.FileUtils
 import com.sksamuel.scrimage.Image
 import org.opencv.core.Mat
