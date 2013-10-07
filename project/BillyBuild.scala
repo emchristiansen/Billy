@@ -40,7 +40,7 @@ object BillyBuild extends Build {
       "com.chuusai" %% "shapeless" % "1.2.4",
       "org.clapper" %% "grizzled-scala" % "1.1.4",
       "org.scalanlp" %% "breeze-math" % "0.4",
-      "org.spire-math" %% "spire" % "0.5.0",
+      "org.spire-math" %% "spire" % "0.6.0",
       "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
       "org.rogach" %% "scallop" % "0.9.2",
       "junit" % "junit" % "4.11" % "test",

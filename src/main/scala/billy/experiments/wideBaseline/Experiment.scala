@@ -40,12 +40,6 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
 //    s"oxfordImages/${imageClass}/images/img${otherImage}.bmp")))
 }
 
-object Bar {
-//  def foo[D: SPickler: Unpickler: FastTypeTag, E: SPickler: Unpickler: FastTypeTag, M: SPickler: Unpickler: FastTypeTag, F: SPickler: Unpickler: FastTypeTag](experiment: WideBaselineExperiment[D, E, M, F]) {
-//    experiment.pickle
-//  }
-}
-
 //trait WideBaselineExperiment2HasGroundTruth {
 //  implicit def wideBaselineExperiment2HasGroundTruth(
 //    self: WideBaselineExperiment[_, _, _, _])(

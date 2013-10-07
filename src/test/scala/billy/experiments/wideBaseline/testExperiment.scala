@@ -23,8 +23,8 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestWideBaselineExperiment extends FunGeneratorSuite {
-  test("pickling", InstantTest) {
+class TestExperiment extends FunGeneratorSuite {
+  test("pickling FAST SIFT L0", InstantTest) {
     val experiment = Experiment(
       "bikes",
       4,
@@ -37,14 +37,55 @@ class TestWideBaselineExperiment extends FunGeneratorSuite {
     assert(experiment == unpickled)
   }
 
-  //  test("acts like a map", InstantTest) {
-  //
-  //  }
-  //
-  //  test("a generator driven test", InstantTest) {
-  //    val evenInts = for (n <- Gen.choose(-1000, 1000)) yield 2 * n
-  //    forAll(evenInts) { x =>
-  //      assert(x % 2 == 0)
-  //    }
-  //  }
+  test("pickling SIFT PatchExtractor L0", InstantTest) {
+    val experiment = Experiment(
+      "bikes",
+      4,
+      OpenCVDetector.SIFT,
+      PatchExtractor(Gray, 2, 3),
+      VectorMatcher.L0)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Experiment[OpenCVDetector.SIFT.type, PatchExtractor, VectorMatcher.L0.type, DenseMatrix[IndexedSeq[Int]]]]
+
+    assert(experiment == unpickled)
+  }
+
+  test("pickling SIFT PatchExtractor L1", InstantTest) {
+    val experiment = Experiment(
+      "bikes",
+      4,
+      OpenCVDetector.SIFT,
+      PatchExtractor(Gray, 2, 3),
+      VectorMatcher.L1)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Experiment[OpenCVDetector.SIFT.type, PatchExtractor, VectorMatcher.L1.type, DenseMatrix[IndexedSeq[Int]]]]
+
+    assert(experiment == unpickled)
+  }
+
+  test("pickling FAST SIFT L2", InstantTest) {
+    val experiment = Experiment(
+      "bikes",
+      4,
+      OpenCVDetector.FAST,
+      OpenCVExtractor.SIFT,
+      VectorMatcher.L2)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Experiment[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L2.type, IndexedSeq[Double]]]
+
+    assert(experiment == unpickled)
+  }
+
+  test("pickling FAST SIFT KendallTau", InstantTest) {
+    val experiment = Experiment(
+      "bikes",
+      4,
+      OpenCVDetector.FAST,
+      OpenCVExtractor.SIFT,
+      VectorMatcher.KendallTau)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Experiment[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.KendallTau.type, IndexedSeq[Double]]]
+
+    assert(experiment == unpickled)
+  }
 }
