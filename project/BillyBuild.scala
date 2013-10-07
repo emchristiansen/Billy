@@ -1,9 +1,6 @@
 import sbt._
 import Keys._
 
-import sbtassembly.Plugin._
-import AssemblyKeys._
-
 object BillyBuild extends Build {
   def extraResolvers = Seq(
     resolvers ++= Seq(
@@ -69,7 +66,6 @@ object BillyBuild extends Build {
       extraResolvers ++
       extraLibraryDependencies ++
       scalaSettings ++
-      assemblySettings ++
       updateOnDependencyChange
 
   val projectName = "Billy"
