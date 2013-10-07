@@ -27,7 +27,7 @@ before_script:
   - cd ../..
   - git clone https://github.com/sksamuel/scrimage.git
   - cd scrimage
-  - sbt publishLocal
+  - sbt publish-local
   - cd ..
 
 
