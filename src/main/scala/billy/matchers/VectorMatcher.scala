@@ -6,6 +6,15 @@ import scala.reflect.ClassTag
 
 ///////////////////////////////////////////////////////////
 
+case class MyMatcher(string: String)
+
+object MyMatcher {
+  implicit def myMatcherToMatcher(myMatcher: MyMatcher): Matcher[IndexedSeq[Double]] =
+    new MatcherSingle[IndexedSeq[Double]] {
+      override def distance = ???
+    }
+}
+
 /**
  * Represents distances on vectors or vector-like objects.
  */
@@ -57,9 +66,6 @@ object VectorMatcher {
         l0Distance(left: IndexedSeq[A], right: IndexedSeq[A])
     }
 
-  
-  
-  
   //  private type DescriptorDistance[F] = (F, F) => Double
   //
   //  /**

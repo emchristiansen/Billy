@@ -61,7 +61,7 @@ object BillyBuild extends Build {
       // "-language:reflectiveCalls",
       "-language:postfixOps",
       "-language:existentials",
-//      "-Xlog-implicits",
+      "-Xlog-implicits",
       "-Yinline-warnings"))
 
   def libSettings =
