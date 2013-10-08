@@ -26,7 +26,7 @@ import scala.reflect.ClassTag
 class TestExperiment extends FunGeneratorSuite {
   test("pickling FAST SIFT L0", InstantTest) {
     val experiment = Experiment(
-      "bikes",
+      "boat",
       4,
       OpenCVDetector.FAST,
       OpenCVExtractor.SIFT,
@@ -39,7 +39,7 @@ class TestExperiment extends FunGeneratorSuite {
 
   test("pickling SIFT PatchExtractor L0", InstantTest) {
     val experiment = Experiment(
-      "bikes",
+      "boat",
       4,
       OpenCVDetector.SIFT,
       PatchExtractor(Gray, 2, 3),
@@ -52,7 +52,7 @@ class TestExperiment extends FunGeneratorSuite {
 
   test("pickling SIFT PatchExtractor L1", InstantTest) {
     val experiment = Experiment(
-      "bikes",
+      "boat",
       4,
       OpenCVDetector.SIFT,
       PatchExtractor(Gray, 2, 3),
@@ -65,7 +65,7 @@ class TestExperiment extends FunGeneratorSuite {
 
   test("pickling FAST SIFT L2", InstantTest) {
     val experiment = Experiment(
-      "bikes",
+      "boat",
       4,
       OpenCVDetector.FAST,
       OpenCVExtractor.SIFT,
@@ -78,7 +78,7 @@ class TestExperiment extends FunGeneratorSuite {
 
   test("pickling FAST SIFT KendallTau", InstantTest) {
     val experiment = Experiment(
-      "bikes",
+      "boat",
       4,
       OpenCVDetector.FAST,
       OpenCVExtractor.SIFT,
@@ -87,5 +87,24 @@ class TestExperiment extends FunGeneratorSuite {
     val unpickled = pickle.unpickle[Experiment[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.KendallTau.type, IndexedSeq[Double]]]
 
     assert(experiment == unpickled)
+  }
+
+  test("run FAST SIFT L1", MediumTest) {
+    loadOpenCV
+    
+    val experiment = Experiment(
+      "boat",
+      2,
+      OpenCVDetector.FAST,
+      OpenCVExtractor.SIFT,
+      VectorMatcher.L1)
+      
+    implicit val runtimeConfig = billy.experiments.TestUtil.runtimeConfigMock
+    
+    experiment.groundTruthHomography
+    experiment.leftImage
+    experiment.rightImage
+    
+    experiment.run
   }
 }
