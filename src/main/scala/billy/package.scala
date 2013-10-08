@@ -2,6 +2,16 @@ package object billy extends RichKeyPointImplicits with RichImageImplicits with 
   lazy val loadOpenCV =
     System.load("/usr/local/share/OpenCV/java/libopencv_java.so")
 
+//  lazy val configureLogger = {
+//    // Must be one of: "trace", "debug", "info", "warn", or "error".
+//    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+//  }
+
+  lazy val init = {
+    loadOpenCV
+//    configureLogger
+  }
+
   // TODO: Uncomment this function and change the relevant constructors.
   // Currently this is impossible due to a probable Scala bug.
   //  implicit def experimentRunnerInsertRuntime[A <% RuntimeConfig => ExperimentRunner[B], B](

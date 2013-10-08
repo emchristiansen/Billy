@@ -89,7 +89,7 @@ class TestExperiment extends FunGeneratorSuite {
     assert(experiment == unpickled)
   }
 
-  test("run FAST SIFT L1", MediumTest) {
+  ignore("run FAST SIFT L1", MediumTest) {
     loadOpenCV
     
     val experiment = Experiment(

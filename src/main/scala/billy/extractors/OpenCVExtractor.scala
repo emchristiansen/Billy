@@ -1,18 +1,16 @@
 package billy.extractors
 
 import billy._
-
 import org.opencv.core.Mat
 import org.opencv.core.MatOfKeyPoint
 import org.opencv.features2d.DescriptorExtractor
 import org.opencv.core.KeyPoint
-
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-
 import st.sparse.sundry._
-
 import com.sksamuel.scrimage._
+import com.typesafe.scalalogging.slf4j.Logging
+
 
 ///////////////////////////////////////////////////////////
 
@@ -30,11 +28,11 @@ object OpenCVExtractor {
   /**
    * An extractor backed by a call to OpenCV, which returns descriptors which
    * are vectors of Doubles.
-   * 
+   *
    * User must have called loadOpenCV before using this class.
    */
   class DoubleExtractorFromEnum(
-    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Double]] {
+    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Double]] with Logging {
     override def extract = (image: Image, keyPoints: Seq[KeyPoint]) => {
       val extractor = DescriptorExtractor.create(extractorType)
       val imageMat = image.toMat
@@ -68,7 +66,8 @@ object OpenCVExtractor {
       if (!descriptorsOption.isDefined) keyPoints.size times None
       else {
         val descriptors = descriptorsOption.get.toSeqSeq
-        
+        logger.debug(s"descriptors: $descriptors")
+
         val markedKeyPoints = markedKeyPointsMat.toArray
 
         assert(descriptors.size == markedKeyPoints.size)
@@ -87,19 +86,22 @@ object OpenCVExtractor {
   /**
    * An extractor backed by a call to OpenCV, which returns descriptors which
    * are vectors of Booleans.
-   * 
+   *
    * User must have called loadOpenCV before using this class.
    */
   class BooleanExtractorFromEnum(
-    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Boolean]] {
+    extractorType: Int) extends ExtractorSeveral[IndexedSeq[Boolean]] with Logging {
     override def extract = (image, keyPoints) => {
       val doubles =
         new DoubleExtractorFromEnum(extractorType).extract(image, keyPoints)
-      doubles.map(_.map(_.map {
+      doubles.map(_.map(_.flatMap {
         x =>
-          assert(x == 0 || x == 1)
-          if (x == 0) false
-          else true
+          logger.debug(s"x: $x")
+          
+          // The bits are packed into unsigned bytes.
+          assert(x >= 0 && x <= 255)
+          assert(x.round == x)
+          Integer.toBinaryString(x.toInt).map(_ == '1')
       }))
     }
   }

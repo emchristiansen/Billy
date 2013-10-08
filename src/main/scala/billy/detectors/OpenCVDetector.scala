@@ -11,7 +11,7 @@ import billy._
 /** Represents keypoint detection algorithms available in OpenCV.
  */
 object OpenCVDetector {
-  object DENSE extends DetectorFromEnum(FeatureDetector.DENSE)
+  object DENSE extends DetectorFromEnum(FeatureDetector.DENSE) 
   object FAST extends DetectorFromEnum(FeatureDetector.FAST)
   object BRISK extends DetectorFromEnum(FeatureDetector.BRISK)
   object SIFT extends DetectorFromEnum(FeatureDetector.SIFT)
