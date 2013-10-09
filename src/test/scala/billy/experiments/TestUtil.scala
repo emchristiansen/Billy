@@ -6,16 +6,16 @@ import scala.slick.session.Database
 
 import st.sparse.sundry._
 
-object TestUtil {
-  def databaseMock: Database = {
+trait TestUtil extends billy.TestUtil {
+  val database: Database = {
     val tempFile = File.createTempFile("TestBilly", "sqlite")
     tempFile.deleteOnExit
     Database.forURL(s"jdbc:sqlite:$tempFile", driver = "org.sqlite.JDBC")
   }
 
-  def runtimeConfigMock = RuntimeConfig(
-    ExistingDirectory(new File(billy.TestUtil.resourceRoot, "/data")),
-    databaseMock,
+  implicit val runtimeConfig = RuntimeConfig(
+    ExistingDirectory(new File(resourceRoot, "/data")),
+    database,
     ExistingDirectory(Files.createTempDirectory("TestBillyOutputRoot").toFile),
     None,
     false,

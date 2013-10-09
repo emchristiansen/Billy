@@ -23,7 +23,7 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestExperiment extends FunGeneratorSuite {
+class TestExperiment extends FunGeneratorSuite with billy.experiments.TestUtil  {
   test("pickling FAST SIFT L0", InstantTest) {
     val experiment = Experiment(
       "boat",
@@ -89,17 +89,13 @@ class TestExperiment extends FunGeneratorSuite {
     assert(experiment == unpickled)
   }
 
-  ignore("run FAST SIFT L1", MediumTest) {
-    loadOpenCV
-    
+  test("run FAST SIFT L1", MediumTest) {   
     val experiment = Experiment(
       "boat",
       2,
-      OpenCVDetector.FAST,
+      BoundedDetector(OpenCVDetector.FAST, 100),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
-      
-    implicit val runtimeConfig = billy.experiments.TestUtil.runtimeConfigMock
     
     experiment.groundTruthHomography
     experiment.leftImage

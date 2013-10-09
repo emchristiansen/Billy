@@ -23,11 +23,12 @@ case class PatchExtractor(
   blurWidth: Int) extends ExtractorSingle[DenseMatrix[IndexedSeq[Int]]] {
   override def extractSingle = (image: Image, keyPoint: KeyPoint) => {
     val blurred = image.filter(GaussianBlurFilter(blurWidth))
-    val patchOption: Option[Image] = Try(blurred.subpixelSubimage(
-      keyPoint.pt.x,
-      keyPoint.pt.y,
-      patchWidth,
-      patchWidth)).toOption
+    val patchOption: Option[Image] =
+      Try(blurred.subpixelSubimageCenteredAtPoint(
+        keyPoint.pt.x,
+        keyPoint.pt.y,
+        patchWidth.toDouble / 2,
+        patchWidth.toDouble / 2)).toOption
     for (
       patch <- patchOption
     ) yield {

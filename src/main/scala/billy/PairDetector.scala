@@ -4,6 +4,7 @@ import org.opencv.core.KeyPoint
 
 import com.sksamuel.scrimage.Image
 
+
 ///////////////////////////////////////////////////////////
 
 /**
@@ -19,14 +20,16 @@ trait PairDetector {
   def detectPair: (Homography, Image, Image) => Seq[Tuple2[KeyPoint, KeyPoint]]
 }
 
-object PairDetector {
+object PairDetector extends Logging {
   def apply[D <% Detector](threshold: Double, detector: D) = new PairDetector {
     override def detectPair =
       (homography: Homography,
         leftImage: Image,
         rightImage: Image) => {
         val left = detector.detect(leftImage)
+        logger.debug(s"left.size: ${left.size}")
         val right = detector.detect(rightImage)
+        logger.debug(s"right.size: ${right.size}")
 
         createBijectionWithNearestUnderWarp(
           threshold,
@@ -47,9 +50,12 @@ object PairDetector {
     homography: Homography,
     rightKeyPoints: Seq[KeyPoint])(leftKeyPoint: KeyPoint): Option[KeyPoint] = {
     val leftWarped = homography.transformXYOnly(leftKeyPoint)
+    logger.debug(s"leftKeyPoint: $leftKeyPoint")
+    logger.debug(s"leftWarped: $leftWarped")
     val rightWithDistances = rightKeyPoints zip rightKeyPoints.map(
       leftWarped.l2Distance)
     val (nearest, distance) = rightWithDistances.minBy(_._2)
+    logger.debug(s"distance: $distance")
     if (distance < threshold) Some(nearest)
     else None
   }

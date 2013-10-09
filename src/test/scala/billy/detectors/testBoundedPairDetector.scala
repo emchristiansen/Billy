@@ -20,35 +20,35 @@ import st.sparse.sundry._
 import breeze.linalg._
 import scala.reflect.ClassTag
 
-
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestOpenCVDetector extends FunGeneratorSuite with billy.TestUtil { 
+class TestBoundedPairDetector extends FunGeneratorSuite with billy.TestUtil {
   val image = goldfishGirl
-   
+
   test("FAST", FastTest) {
     val detector = OpenCVDetector.FAST
-    assert(detector.detect(image).size > 0)
+
+    val pairs = BoundedPairDetector(
+      PairDetector(2, BoundedDetector(detector, 100)),
+      10).detectPair(
+        boat12Homography,
+        boat1,
+        boat2)
+
+    assert(pairs.size > 0)
   }
-  
-  test("BRISK", FastTest) {
-    val detector = OpenCVDetector.BRISK
-    assert(detector.detect(image).size > 0)
-  }
-  
+
   test("SIFT", FastTest) {
     val detector = OpenCVDetector.SIFT
-    assert(detector.detect(image).size > 0)
-  }
-  
-  test("SURF", FastTest) {
-    val detector = OpenCVDetector.SURF
-    assert(detector.detect(image).size > 0)
-  }
-  
-  test("ORB", FastTest) {
-    val detector = OpenCVDetector.ORB
-    assert(detector.detect(image).size > 0)
+
+    val pairs = BoundedPairDetector(
+      PairDetector(2, BoundedDetector(detector, 100)),
+      10).detectPair(
+        boat12Homography,
+        boat1,
+        boat2)
+
+    assert(pairs.size > 0)
   }
 }

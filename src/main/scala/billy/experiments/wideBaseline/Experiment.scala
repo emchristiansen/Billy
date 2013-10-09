@@ -22,7 +22,7 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   otherImage: Int,
   detector: D,
   extractor: E,
-  matcher: M) {
+  matcher: M) extends Logging {
   def groundTruthHomography(implicit runtimeConfig: RuntimeConfig) =
     Homography.fromFile(ExistingFile(new File(
       runtimeConfig.dataRoot,
@@ -39,8 +39,7 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
       s"oxfordImages/${imageClass}/images/img${otherImage}.bmp")))
 
   def run(implicit runtimeConfig: RuntimeConfig): Results = {
-    // TODO: Use a logger.
-    println(s"Running ${this}")
+    logger.info(s"Running ${this}")
 
     val pairDetector = PairDetector(2, detector)
     val (leftKeyPoints, rightKeyPoints) = pairDetector.detectPair(
@@ -48,7 +47,7 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
       leftImage,
       rightImage) unzip
 
-    println(s"Number of KeyPoints: ${leftKeyPoints.size}")
+    logger.info(s"Number of KeyPoints: ${leftKeyPoints.size}")
 
     val (leftDescriptors, rightDescriptors) = {
       val leftDescriptors = extractor.extract(leftImage, leftKeyPoints)
@@ -59,7 +58,7 @@ case class Experiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
       ) yield (left, right)
     } unzip
 
-    println(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
+    logger.info(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
 
     val distances = matcher.matchAll(
       leftDescriptors,

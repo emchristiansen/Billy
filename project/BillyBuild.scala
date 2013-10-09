@@ -72,9 +72,7 @@ object BillyBuild extends Build {
       extraResolvers ++
       extraLibraryDependencies ++
       scalaSettings ++
-      updateOnDependencyChange ++
-      Seq(
-        javaOptions += "-Dorg.slf4j.simpleLogger.defaultLogLevel=info")
+      updateOnDependencyChange
 
   val projectName = "Billy"
   lazy val root = {
