@@ -43,7 +43,7 @@ object BillyBuild extends Build {
 //      "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
 //      "org.rogach" %% "scallop" % "0.9.2",
       "junit" % "junit" % "4.11" % "test",
-//      "org.xerial" % "sqlite-jdbc" % "3.7.2",
+      "org.xerial" % "sqlite-jdbc" % "3.7.2",
       "org.slf4j" % "slf4j-simple" % "1.7.5",
 //      "org.apache.logging.log4j" % "log4j-core" % "2.0-beta8",
       "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
