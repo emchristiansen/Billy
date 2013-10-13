@@ -2,7 +2,7 @@ import com.typesafe.scalalogging.slf4j.Logging
 
 package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits with RichSeqSeqImplicits {
   lazy val loadOpenCV =
-    System.load("/usr/local/share/OpenCV/java/libopencv_java.so")
+    System.load("/usr/local/share/OpenCV/java/libopencv_java300.so")
   
   private[billy] type Logging = com.typesafe.scalalogging.slf4j.Logging
 
