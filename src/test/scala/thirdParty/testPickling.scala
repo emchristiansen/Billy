@@ -1,24 +1,24 @@
 package thirdParty
 
-import scala.pickling._
-import scala.pickling.json._
+import org.scalatest.fixture
+import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalacheck.Gen
 import org.junit.runner.RunWith
-import org.scalatest.WrapWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
-import org.scalatest.ConfigMap
 
-import nebula.testing._
+import scala.pickling._
+import scala.pickling.binary._
 
-import scalatestextra._
-import org.scalatest._
+import st.sparse.sundry._
 
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 object bar {
   val foo = 42
 }
 
+@RunWith(classOf[JUnitRunner])
 class TestPickling extends FunGeneratorSuite {
   test("pickling on a primitive", InstantTest) { 
     val obj = 2.0

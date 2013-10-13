@@ -1,18 +1,11 @@
-import nebula._
-import nebula.imageProcessing._
-import nebula.util._
+import com.typesafe.scalalogging.slf4j.Logging
 
-import billy._
-import billy.brown._
-import billy.mpie._
-import billy.smallBaseline._
-import billy.wideBaseline._
-import billy.summary._
-import billy.detectors._
-import billy.extractors._
-import billy.matchers._
+package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits with RichSeqSeqImplicits {
+  lazy val loadOpenCV =
+    System.load("/usr/local/share/OpenCV/java/libopencv_java300.so")
+  
+  private[billy] type Logging = com.typesafe.scalalogging.slf4j.Logging
 
-package object billy  {
   // TODO: Uncomment this function and change the relevant constructors.
   // Currently this is impossible due to a probable Scala bug.
   //  implicit def experimentRunnerInsertRuntime[A <% RuntimeConfig => ExperimentRunner[B], B](

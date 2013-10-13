@@ -1,18 +1,13 @@
 package billy
 
-import org.opencv.features2d.KeyPoint
+import org.opencv.core.KeyPoint
 
-import nebula.imageProcessing.Image
+import com.sksamuel.scrimage.Image
 
 ///////////////////////////////////////////////////////////
 
-/**
- * Something which finds keypoints in a given image.
+/** Finds keypoints in a given image.
  */
 trait Detector {
-  def detect: Detector.DetectorAction
-}
-
-object Detector {
-  type DetectorAction = Image => Seq[KeyPoint]
+  def detect: Image => Seq[KeyPoint]
 }
