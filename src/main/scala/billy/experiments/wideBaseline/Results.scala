@@ -10,7 +10,10 @@ import st.sparse.sundry._
 
 /////////////////////////////////////////////////////////////
 
-case class Results(distances: DenseMatrix[Double])
+case class Results(distances: DenseMatrix[Double]) {
+  require(distances.rows == distances.cols)
+  require(distances.min >= 0)
+}
 
 //
 //case class WideBaselineExperimentResults[D, E, M, F](
