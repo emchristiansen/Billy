@@ -15,6 +15,47 @@ object BillyBuild extends Build {
       "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
       "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + "/.m2/repository"))
 
+  val projectName = "Billy"
+  val mavenName = "billy"
+
+  val publishSettings = Seq(
+    name := mavenName,
+
+    version := "0.1-SNAPSHOT",
+
+    organization := "st.sparse",
+
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (version.value.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+
+    publishMavenStyle := true,
+
+    publishArtifact in Test := false,
+
+    pomIncludeRepository := { _ => false },
+
+    licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+
+    homepage := Some(url("https://github.com/emchristiansen/Billy")),
+
+    pomExtra := (
+      <scm>
+        <url>git@github.com:emchristiansen/Billy.git</url>
+        <connection>scm:git:git@github.com:emchristiansen/Billy.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>emchristiansen</id>
+          <name>Eric Christiansen</name>
+          <url>http://sparse.st</url>
+        </developer>
+      </developers>))      
+      
   val scalaVersionString = "2.10.3"
 
   def extraLibraryDependencies = Seq(
@@ -74,7 +115,6 @@ object BillyBuild extends Build {
       scalaSettings ++
       updateOnDependencyChange
 
-  val projectName = "Billy"
   lazy val root = {
     val settings = libSettings ++ Seq(name := projectName, fork := true)
     Project(id = projectName, base = file("."), settings = settings)
