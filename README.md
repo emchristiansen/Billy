@@ -1,7 +1,5 @@
 #Billy
 
-[![Build Status](https://travis-ci.org/emchristiansen/Billy.png)](https://travis-ci.org/emchristiansen/Billy)
-
 This is a framework for testing local visual descriptors, eg SIFT, SURF, and BRIEF. 
 It is similar to [VLBenchmarks](http://www.vlfeat.org/benchmarks/index.html) except it is written in Scala, plays well with OpenCV, and can run seamlessly on a desktop or a cluster.
 
@@ -18,3 +16,21 @@ When they are, I'll re-enable the cluster computation.
 
 This project is under development. 
 Stay tuned for documentation.
+
+##Installation
+
+You can use PersistentMap in your SBT project by simply adding the
+following dependency to your build file:
+
+```scala
+libraryDependencies += "st.sparse" %% "persistent-map" % "0.1-SNAPSHOT"
+```
+
+You also need to add the Sonatype "snapshots" repository resolver to
+your build file:
+
+```scala
+resolvers += Resolver.sonatypeRepo("snapshots")
+```
+
+[![Build Status](https://travis-ci.org/emchristiansen/Billy.png)](https://travis-ci.org/emchristiansen/Billy)

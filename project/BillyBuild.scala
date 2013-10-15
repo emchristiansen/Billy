@@ -113,7 +113,8 @@ object BillyBuild extends Build {
       extraResolvers ++
       extraLibraryDependencies ++
       scalaSettings ++
-      updateOnDependencyChange
+      updateOnDependencyChange ++
+      publishSettings
 
   lazy val root = {
     val settings = libSettings ++ Seq(name := projectName, fork := true)
