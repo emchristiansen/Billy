@@ -19,11 +19,11 @@ Stay tuned for documentation.
 
 ##Installation
 
-You can use PersistentMap in your SBT project by simply adding the
+You can use Billy in your SBT project by simply adding the
 following dependency to your build file:
 
 ```scala
-libraryDependencies += "st.sparse" %% "persistent-map" % "0.1-SNAPSHOT"
+libraryDependencies += "st.sparse" %% "billy" % "0.1-SNAPSHOT"
 ```
 
 You also need to add the Sonatype "snapshots" repository resolver to
