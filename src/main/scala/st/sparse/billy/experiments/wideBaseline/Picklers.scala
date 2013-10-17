@@ -30,10 +30,10 @@ trait Picklers {
     value
   }
 
-  class ExperimentPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
-    implicit val format: PickleFormat) extends SPickler[Experiment[D, E, M, F]] with Unpickler[Experiment[D, E, M, F]] {
+  class OxfordExperimentPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
+    implicit val format: PickleFormat) extends SPickler[OxfordExperiment[D, E, M, F]] with Unpickler[OxfordExperiment[D, E, M, F]] {
     override def pickle(
-      picklee: Experiment[D, E, M, F],
+      picklee: OxfordExperiment[D, E, M, F],
       builder: PBuilder) {
       builder.beginEntry(picklee)
 
@@ -48,17 +48,17 @@ trait Picklers {
 
     override def unpickle(
       tag: => FastTypeTag[_],
-      reader: PReader): Experiment[D, E, M, F] = {
+      reader: PReader): OxfordExperiment[D, E, M, F] = {
       val imageClass = readField[String](reader)
       val otherImage = readField[Int](reader)
       val detector = readField[D](reader)
       val extractor = readField[E](reader)
       val matcher = readField[M](reader)
 
-      Experiment(imageClass, otherImage, detector, extractor, matcher)
+      OxfordExperiment(imageClass, otherImage, detector, extractor, matcher)
     }
   }
 
   implicit def customExperimentPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
-    implicit format: PickleFormat) = new ExperimentPickler[D, E, M, F]()
+    implicit format: PickleFormat) = new OxfordExperimentPickler[D, E, M, F]()
 }

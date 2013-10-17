@@ -105,6 +105,8 @@ object BillyBuild extends Build {
       // "-language:reflectiveCalls",
       "-language:postfixOps",
       "-language:existentials",
+      "-Xlint",
+      "–Xcheck-null",
       //      "-Xlog-implicits",
       "-Yinline-warnings"))
 
