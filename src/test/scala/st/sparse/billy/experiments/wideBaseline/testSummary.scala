@@ -24,7 +24,7 @@ import scala.reflect.ClassTag
 @RunWith(classOf[JUnitRunner])
 class TestSummary extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
   test("matching an image to itself should yield a perfect recognition rate", MediumTest) {
-    val experiment = OxfordExperiment(
+    val experiment = Oxford(
       "boat",
       1,
       BoundedDetector(OpenCVDetector.BRISK, 20),

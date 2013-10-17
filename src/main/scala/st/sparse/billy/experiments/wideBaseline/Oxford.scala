@@ -17,7 +17,7 @@ import binary._
 /**
  * Represents experiments on the Oxford image dataset.
  */
-case class OxfordExperiment[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
+case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   imageClass: String,
   otherImage: Int,
   detector: D,
