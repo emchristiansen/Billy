@@ -22,7 +22,7 @@ case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   otherImage: Int,
   detector: D,
   extractor: E,
-  matcher: M) extends Logging {
+  matcher: M) extends Experiment with Logging {
   def groundTruthHomography(implicit runtimeConfig: RuntimeConfig) =
     Homography.fromFile(ExistingFile(new File(
       runtimeConfig.dataRoot,
@@ -38,7 +38,7 @@ case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
       runtimeConfig.dataRoot,
       s"oxfordImages/${imageClass}/images/img${otherImage}.bmp")))
 
-  def run(implicit runtimeConfig: RuntimeConfig): Results = {
+  override def run(implicit runtimeConfig: RuntimeConfig): Results = {
     logger.info(s"Running ${this}")
 
     val pairDetector = PairDetector(2, detector)
