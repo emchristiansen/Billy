@@ -11,6 +11,7 @@ import com.sksamuel.scrimage.Image
 
 import scala.pickling._
 import binary._
+import st.sparse.billy.internal._
 
 ///////////////////////////////////////////////////////////
 

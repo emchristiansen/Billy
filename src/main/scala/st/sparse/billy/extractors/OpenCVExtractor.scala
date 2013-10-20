@@ -9,7 +9,7 @@ import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
 import st.sparse.sundry._
 import com.sksamuel.scrimage._
-//import com.typesafe.scalalogging.slf4j.Logging
+import st.sparse.billy.internal._
 
 
 ///////////////////////////////////////////////////////////

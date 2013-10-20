@@ -5,6 +5,7 @@ import breeze.linalg._
 import java.io.File
 import st.sparse.sundry._
 import org.apache.commons.io.FileUtils
+import st.sparse.billy.internal._
 
 ///////////////////////////////////////
 

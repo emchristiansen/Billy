@@ -3,6 +3,7 @@ package st.sparse.billy
 import org.opencv.core.KeyPoint
 
 import com.sksamuel.scrimage.Image
+import st.sparse.billy.internal._
 
 
 ///////////////////////////////////////////////////////////

@@ -7,7 +7,7 @@ import scala.pickling._
 /**
  * This contains workarounds for a few cases where scala-pickling fails.
  */
-trait Picklers {
+trait CustomPicklers {
   def putField[A: SPickler: FastTypeTag](
     builder: PBuilder,
     name: String,
@@ -61,4 +61,24 @@ trait Picklers {
 
   implicit def customExperimentPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
     implicit format: PickleFormat) = new OxfordPickler[D, E, M, F]()
+
+//  class ResultsPickler(implicit val format: PickleFormat) extends SPickler[Results] with Unpickler[Results] {
+//    override def pickle(
+//      picklee: Results,
+//      builder: PBuilder) {
+//      builder.beginEntry(picklee)
+//
+//      putField(builder, "distances", picklee.distances)
+//
+//      builder.endEntry()
+//    }
+//
+//    override def unpickle(
+//      tag: => FastTypeTag[_],
+//      reader: PReader): Results = {
+//      val distances = readField[DenseMatrix[Double]](reader)
+//      
+//      Results(distances)
+//    }
+//  }
 }
