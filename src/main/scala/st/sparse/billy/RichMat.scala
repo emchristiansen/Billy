@@ -10,31 +10,6 @@ import breeze.linalg.DenseMatrix
  * Additional methods for Mat.
  */
 case class RichMat(mat: Mat) {
-  def byteDepths = Seq(
-    CvType.CV_8U,
-    CvType.CV_8S)
-
-  def intDepths = Seq(
-    CvType.CV_16U,
-    CvType.CV_16S,
-    CvType.CV_32S)
-
-  def floatDepths = Seq(
-    CvType.CV_32F,
-    CvType.CV_64F)
-
-  def makeTypes(depths: Seq[Int]) = depths map { depth =>
-    1 to 4 map { channel =>
-      CvType.makeType(depth, channel)
-    }
-  }
-
-  def isByte = makeTypes(byteDepths).contains(mat.`type`)
-
-  def isInt = makeTypes(intDepths).contains(mat.`type`)
-
-  def isFloat = makeTypes(floatDepths).contains(mat.`type`)
-
   def toMatrixSeqDouble: Option[DenseMatrix[IndexedSeq[Double]]] = {
     // There may be errors converting byte types to Double.
     if (mat.rows == 0 || mat.cols == 0 || mat.channels == 0) None
