@@ -37,10 +37,7 @@ case class RichMat(mat: Mat) {
 
   def toMatrixSeqDouble: Option[DenseMatrix[IndexedSeq[Double]]] = {
     // There may be errors converting byte types to Double.
-    if ((!(isFloat || isInt)) ||
-      mat.rows == 0 ||
-      mat.cols == 0 ||
-      mat.channels == 0) None
+    if (mat.rows == 0 || mat.cols == 0 || mat.channels == 0) None
     else {
       val matrix = DenseMatrix.zeros[IndexedSeq[Double]](mat.rows, mat.cols)
       for (row <- 0 until mat.rows; column <- 0 until mat.cols) {
@@ -56,7 +53,7 @@ case class RichMat(mat: Mat) {
     if (mat.channels == 1) {
       for (matrixSeqDouble <- toMatrixSeqDouble) yield {
         matrixSeqDouble mapValues {
-          case Seq(x) => x
+          case IndexedSeq(x) => x
         }
       }
     } else None
