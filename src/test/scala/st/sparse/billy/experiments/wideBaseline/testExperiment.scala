@@ -17,11 +17,6 @@ import scala.pickling._
 import scala.pickling.binary._
 import st.sparse.sundry._
 import breeze.linalg._
-//import scala.reflect.ClassTag
-
-import org.joda.time._
-import st.sparse.persistentmap._
-import st.sparse.persistentmap.CustomPicklers._
 
 ////////////////////////////////////////////////////////////////////////////////
 

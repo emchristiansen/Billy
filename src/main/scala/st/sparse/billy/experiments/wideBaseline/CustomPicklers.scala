@@ -6,9 +6,6 @@ import breeze.linalg._
 
 import scala.pickling._
 
-/**
- * This contains workarounds for a few cases where scala-pickling fails.
- */
 trait CustomPicklers extends billy.CustomPicklers {
   implicit def oxfordPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
     implicit implicitFormat: PickleFormat) =
@@ -39,28 +36,6 @@ trait CustomPicklers extends billy.CustomPicklers {
         val matcher = readField[M](reader)
 
         Oxford(imageClass, otherImage, detector, extractor, matcher)
-      }
-    }
-
-  implicit def resultsPickler(implicit implicitFormat: PickleFormat) =
-    new SPickler[Results] with Unpickler[Results] {
-      override val format = implicitFormat
-
-      override def pickle(
-        picklee: Results,
-        builder: PBuilder) {
-        builder.beginEntry(picklee)
-
-        putField(builder, "distances", picklee.distances)
-
-        builder.endEntry()
-      }
-
-      override def unpickle(
-        tag: => FastTypeTag[_],
-        reader: PReader): Results = {
-        val distances = readField[DenseMatrix[Double]](reader)
-        Results(distances)
       }
     }
 }
