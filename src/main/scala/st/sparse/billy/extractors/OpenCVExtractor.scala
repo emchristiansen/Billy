@@ -101,7 +101,11 @@ object OpenCVExtractor {
           // The bits are packed into unsigned bytes.
           assert(x >= 0 && x <= 255)
           assert(x.round == x)
-          Integer.toBinaryString(x.toInt).map(_ == '1')
+          val bytesTail = Integer.toBinaryString(x.toInt).map(_ == '1')
+          assert(bytesTail.size <= 8)
+          val bytes = ((8 - bytesTail.size) times false) ++ bytesTail
+          assert(bytes.size == 8)
+          bytes
       }))
     }
   }
