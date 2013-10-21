@@ -18,24 +18,24 @@ object VectorMatcher extends Logging {
   /**
    * The l0 distance, defined on any vector.
    */
-  object L0
+  case object L0
 
   /**
    * The l1 distance, defined on vectors of numeric types.
    */
-  object L1
+  case object L1
 
   /**
    * The l2 distance, defined on vectors of numeric types.
    */
-  object L2
+  case object L2
 
   /**
    * The Kendall tau distance, defined on vectors of numeric types.
    *
    * See http://en.wikipedia.org/wiki/Kendall_tau_rank_correlation_coefficient.
    */
-  object KendallTau
+  case object KendallTau
 
   implicit def permutationToIndexedSeq(
     permutation: Permutation): IndexedSeq[Int] = permutation.data

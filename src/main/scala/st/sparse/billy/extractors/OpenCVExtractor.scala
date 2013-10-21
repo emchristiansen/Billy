@@ -18,12 +18,12 @@ import st.sparse.billy.internal._
  * Represents descriptor extraction algorithms available in OpenCV.
  */
 object OpenCVExtractor {
-  object BRISK extends BooleanExtractorFromEnum(DescriptorExtractor.BRISK)
-  object FREAK extends BooleanExtractorFromEnum(DescriptorExtractor.FREAK)
-  object BRIEF extends BooleanExtractorFromEnum(DescriptorExtractor.BRIEF)
-  object ORB extends BooleanExtractorFromEnum(DescriptorExtractor.ORB)
-  object SIFT extends DoubleExtractorFromEnum(DescriptorExtractor.SIFT)
-  object SURF extends DoubleExtractorFromEnum(DescriptorExtractor.SURF)
+  case object BRISK extends BooleanExtractorFromEnum(DescriptorExtractor.BRISK)
+  case object FREAK extends BooleanExtractorFromEnum(DescriptorExtractor.FREAK)
+  case object BRIEF extends BooleanExtractorFromEnum(DescriptorExtractor.BRIEF)
+  case object ORB extends BooleanExtractorFromEnum(DescriptorExtractor.ORB)
+  case object SIFT extends DoubleExtractorFromEnum(DescriptorExtractor.SIFT)
+  case object SURF extends DoubleExtractorFromEnum(DescriptorExtractor.SURF)
 
   /**
    * An extractor backed by a call to OpenCV, which returns descriptors which
