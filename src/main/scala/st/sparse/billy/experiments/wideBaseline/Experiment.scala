@@ -30,9 +30,13 @@ object Experiment extends Logging {
         // Each type is going to need its own table in the database.
         // This name should make very clear what type the table holds.
         val tableName = {
-          val raw = 
-            s"PilgrimExperiment_s${implicitly[FastTypeTag[E]].tpe.toString}"
-          raw.replace(".", "_").replace(",", "_").replace("[", "_").replace("]", "_")        }
+          // Unfortunately, some DBs can't handle long table names :(.
+          //          val raw =
+          //            s"PilgrimExperiment_s${implicitly[FastTypeTag[E]].tpe.toString}"
+          //          raw.replace(".", "_").replace(",", "_").replace("[", "_").replace("]", "_")
+
+          s"Pilgrim${implicitly[FastTypeTag[E]].tpe.toString.hashCode.abs}"
+        }
         logger.debug(s"Connecting to $tableName.")
         val cache = PersistentMap.connectElseCreate[E, Set[(DateTime, Results)]](
           tableName,

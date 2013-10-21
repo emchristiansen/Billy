@@ -22,7 +22,7 @@ object BillyBuild extends Build {
   val publishSettings = Seq(
     name := mavenName,
 
-    version := "0.1-SNAPSHOT",
+    version := "0.1.1-SNAPSHOT",
 
     organization := "st.sparse",
 
