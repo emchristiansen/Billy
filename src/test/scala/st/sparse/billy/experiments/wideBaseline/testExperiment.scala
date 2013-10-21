@@ -17,9 +17,16 @@ import scala.pickling._
 import scala.pickling.binary._
 import st.sparse.sundry._
 import breeze.linalg._
-import scala.reflect.ClassTag
+//import scala.reflect.ClassTag
+
+import org.joda.time._
+import st.sparse.persistentmap._
+import st.sparse.persistentmap.CustomPicklers._
 
 ////////////////////////////////////////////////////////////////////////////////
+
+case class Foo[A](data: Array[A])
+case class MyResults(data: Foo[Double])
 
 @RunWith(classOf[JUnitRunner])
 class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
@@ -30,9 +37,11 @@ class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.
       BoundedDetector(OpenCVDetector.SIFT, 20),
       OpenCVExtractor.SIFT,
       VectorMatcher.L0)
-
+    
     val experiment = Experiment.cached(oxford)
 
-    experiment.run
+    val results1 = experiment.run
+    val results2 = experiment.run
+    assert(results1 == results2)
   }
 }

@@ -1,84 +1,66 @@
 package st.sparse.billy.experiments.wideBaseline
 
+import st.sparse.billy
 import st.sparse.billy._
+import breeze.linalg._
 
 import scala.pickling._
 
 /**
  * This contains workarounds for a few cases where scala-pickling fails.
  */
-trait CustomPicklers {
-  def putField[A: SPickler: FastTypeTag](
-    builder: PBuilder,
-    name: String,
-    value: A) {
-    builder.putField(
-      name,
-      b => {
-        b.hintTag(implicitly[FastTypeTag[A]])
-        implicitly[SPickler[A]].pickle(value, b)
-      })
-  }
+trait CustomPicklers extends billy.CustomPicklers {
+  implicit def oxfordPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
+    implicit implicitFormat: PickleFormat) =
+    new SPickler[Oxford[D, E, M, F]] with Unpickler[Oxford[D, E, M, F]] {
+      override val format = implicitFormat
 
-  def readField[A: Unpickler: FastTypeTag](reader: PReader): A = {
-    reader.hintTag(implicitly[FastTypeTag[A]])
-    val tag = reader.beginEntry()
-    val value = implicitly[Unpickler[A]].unpickle(
-      tag,
-      reader).asInstanceOf[A]
-    reader.endEntry()
-    value
-  }
+      override def pickle(
+        picklee: Oxford[D, E, M, F],
+        builder: PBuilder) {
+        builder.beginEntry(picklee)
 
-  class OxfordPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
-    implicit val format: PickleFormat) extends SPickler[Oxford[D, E, M, F]] with Unpickler[Oxford[D, E, M, F]] {
-    override def pickle(
-      picklee: Oxford[D, E, M, F],
-      builder: PBuilder) {
-      builder.beginEntry(picklee)
+        putField(builder, "imageClass", picklee.imageClass)
+        putField(builder, "otherImage", picklee.otherImage)
+        putField(builder, "detector", picklee.detector)
+        putField(builder, "extractor", picklee.extractor)
+        putField(builder, "matcher", picklee.matcher)
 
-      putField(builder, "imageClass", picklee.imageClass)
-      putField(builder, "otherImage", picklee.otherImage)
-      putField(builder, "detector", picklee.detector)
-      putField(builder, "extractor", picklee.extractor)
-      putField(builder, "matcher", picklee.matcher)
+        builder.endEntry()
+      }
 
-      builder.endEntry()
+      override def unpickle(
+        tag: => FastTypeTag[_],
+        reader: PReader): Oxford[D, E, M, F] = {
+        val imageClass = readField[String](reader)
+        val otherImage = readField[Int](reader)
+        val detector = readField[D](reader)
+        val extractor = readField[E](reader)
+        val matcher = readField[M](reader)
+
+        Oxford(imageClass, otherImage, detector, extractor, matcher)
+      }
     }
 
-    override def unpickle(
-      tag: => FastTypeTag[_],
-      reader: PReader): Oxford[D, E, M, F] = {
-      val imageClass = readField[String](reader)
-      val otherImage = readField[Int](reader)
-      val detector = readField[D](reader)
-      val extractor = readField[E](reader)
-      val matcher = readField[M](reader)
+  implicit def resultsPickler(implicit implicitFormat: PickleFormat) =
+    new SPickler[Results] with Unpickler[Results] {
+      override val format = implicitFormat
 
-      Oxford(imageClass, otherImage, detector, extractor, matcher)
+      override def pickle(
+        picklee: Results,
+        builder: PBuilder) {
+        builder.beginEntry(picklee)
+
+        putField(builder, "distances", picklee.distances)
+
+        builder.endEntry()
+      }
+
+      override def unpickle(
+        tag: => FastTypeTag[_],
+        reader: PReader): Results = {
+        val distances = readField[DenseMatrix[Double]](reader)
+        Results(distances)
+      }
     }
-  }
-
-  implicit def customExperimentPickler[D <% Detector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
-    implicit format: PickleFormat) = new OxfordPickler[D, E, M, F]()
-
-//  class ResultsPickler(implicit val format: PickleFormat) extends SPickler[Results] with Unpickler[Results] {
-//    override def pickle(
-//      picklee: Results,
-//      builder: PBuilder) {
-//      builder.beginEntry(picklee)
-//
-//      putField(builder, "distances", picklee.distances)
-//
-//      builder.endEntry()
-//    }
-//
-//    override def unpickle(
-//      tag: => FastTypeTag[_],
-//      reader: PReader): Results = {
-//      val distances = readField[DenseMatrix[Double]](reader)
-//      
-//      Results(distances)
-//    }
-//  }
 }

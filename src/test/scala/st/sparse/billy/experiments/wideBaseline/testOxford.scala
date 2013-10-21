@@ -32,7 +32,7 @@ class TestOxford extends FunGeneratorSuite with st.sparse.billy.experiments.Test
       VectorMatcher.L0)
     val pickle = experiment.pickle
     val unpickled = pickle.unpickle[Oxford[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L0.type, IndexedSeq[Double]]]
-
+    
     assert(experiment == unpickled)
   }
 
@@ -103,6 +103,8 @@ class TestOxford extends FunGeneratorSuite with st.sparse.billy.experiments.Test
     val results = experiment.run
     assert(results.distances.rows == results.distances.cols)
     results.distances.foreachValue(distance => assert(distance >= 0))
+    
+    results.pickle.unpickle[Results]
   }
 
   test("matching an image to itself should produce perfect performance", MediumTest) {

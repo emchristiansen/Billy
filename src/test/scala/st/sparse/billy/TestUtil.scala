@@ -9,7 +9,7 @@ import com.sksamuel.scrimage._
 trait TestUtil {
   lazy val configureLogger = {
     // Must be one of: "trace", "debug", "info", "warn", or "error".
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info")
   }
 
   loadOpenCV

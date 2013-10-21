@@ -34,14 +34,14 @@ object Experiment extends Logging {
             s"PilgrimExperiment_s${implicitly[FastTypeTag[E]].tpe.toString}"
           raw.replace(".", "_").replace(",", "_").replace("[", "_").replace("]", "_")        }
         logger.debug(s"Connecting to $tableName.")
-        val cache = PersistentMap.connectElseCreate[E, List[(DateTime, Results)]](
+        val cache = PersistentMap.connectElseCreate[E, Set[(DateTime, Results)]](
           "foo",
           runtimeConfig.database)
 
         // Runs the experiment and stores the new results in the database.
         def run() {
-          val existing = cache.getOrElse(experiment, Nil)
-          val updated = (new DateTime, experiment.run) :: existing
+          val existing = cache.getOrElse(experiment, Set[(DateTime, Results)]())
+          val updated = existing ++ Set((new DateTime, experiment.run))
           cache += experiment -> updated
         }
 
@@ -57,7 +57,7 @@ object Experiment extends Logging {
         }
 
         // We return the results of the most recent run.
-        cache(experiment).sortWith(_._1 isBefore _._1).head._2
+        cache(experiment).toList.sortWith(_._1 isBefore _._1).head._2
       }
     }
 }
