@@ -7,13 +7,14 @@ import scala.reflect.ClassTag
 import spire.algebra._
 import spire.math._
 import spire.implicits._
+import st.sparse.billy.internal._
 
 ///////////////////////////////////////////////////////////
 
 /**
  * Represents distances on vectors or vector-like objects.
  */
-object VectorMatcher {
+object VectorMatcher extends Logging {
   /**
    * The l0 distance, defined on any vector.
    */
@@ -47,6 +48,8 @@ object VectorMatcher {
   // is fixed:
   // http://stackoverflow.com/questions/18902228/possible-bug-with-scala-2-10-2-implicits
   def l0Distance[A](left: IndexedSeq[A], right: IndexedSeq[A]): Int = {
+    logger.debug(s"Descriptor left.size: ${left.size}")
+    logger.debug(s"Descriptor right.size: ${right.size}")
     require(left.size == right.size)
     (left, right).zipped count {
       case (l, r) => l != r

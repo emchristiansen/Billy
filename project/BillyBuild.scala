@@ -13,6 +13,7 @@ object BillyBuild extends Build {
       "Akka Repository" at "http://repo.akka.io/releases/",
       //      "spray-io" at "http://repo.spray.io/",
       "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
+      "Expecty Repository" at "https://raw.github.com/pniederw/expecty/master/m2repo/",
       "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + "/.m2/repository"))
 
   val projectName = "Billy"
@@ -75,6 +76,7 @@ object BillyBuild extends Build {
       "commons-io" % "commons-io" % "2.4",
       "com.typesafe.slick" %% "slick" % "1.0.1",
       "org.scalatest" %% "scalatest" % "2.0.RC1-SNAP6" % "test",
+      "org.expecty" % "expecty" % "0.9",
       //      "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
 //      "org.scala-stm" %% "scala-stm" % "0.7",
 //      "com.chuusai" %% "shapeless" % "1.2.4",

@@ -96,7 +96,7 @@ object OpenCVExtractor {
         new DoubleExtractorFromEnum(extractorType).extract(image, keyPoints)
       doubles.map(_.map(_.flatMap {
         x =>
-          logger.debug(s"x: $x")
+          logger.trace(s"x: $x")
           
           // The bits are packed into unsigned bytes.
           assert(x >= 0 && x <= 255)

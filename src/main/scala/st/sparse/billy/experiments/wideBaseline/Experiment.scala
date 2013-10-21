@@ -35,7 +35,7 @@ object Experiment extends Logging {
           raw.replace(".", "_").replace(",", "_").replace("[", "_").replace("]", "_")        }
         logger.debug(s"Connecting to $tableName.")
         val cache = PersistentMap.connectElseCreate[E, Set[(DateTime, Results)]](
-          "foo",
+          tableName,
           runtimeConfig.database)
 
         // Runs the experiment and stores the new results in the database.
