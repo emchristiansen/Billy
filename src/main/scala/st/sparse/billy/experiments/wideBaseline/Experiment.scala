@@ -9,12 +9,61 @@ import st.sparse.persistentmap._
 import st.sparse.persistentmap.CustomPicklers._
 import breeze.linalg.DenseMatrix
 import org.joda.time.DateTime
+import com.sksamuel.scrimage.Image
 
 trait Experiment {
   def run(implicit runtimeConfig: RuntimeConfig): Results
 }
 
+abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% Matcher[F], F] extends Experiment with Logging {
+  def leftImage(implicit runtimeConfig: RuntimeConfig): Image
+  def rightImage(implicit runtimeConfig: RuntimeConfig): Image
+  def correspondenceMap(implicit runtimeConfig: RuntimeConfig): CorrespondenceMap
+  val detector: D
+  val extractor: E
+  val matcher: M
+
+  def run(implicit runtimeConfig: RuntimeConfig): Results = {
+    logger.info(s"Running ${this}")
+
+    val pairDetector = PairDetector(2, detector)
+    val (leftKeyPoints, rightKeyPoints) = pairDetector.detectPair(
+      correspondenceMap,
+      leftImage,
+      rightImage) unzip
+
+    logger.info(s"Number of KeyPoints: ${leftKeyPoints.size}")
+
+    val (leftDescriptors, rightDescriptors) = {
+      val leftDescriptors = extractor.extract(leftImage, leftKeyPoints)
+      val rightDescriptors = extractor.extract(rightImage, rightKeyPoints)
+
+      for (
+        (Some(left), Some(right)) <- leftDescriptors.zip(rightDescriptors)
+      ) yield (left, right)
+    } unzip
+
+    logger.info(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
+
+    val distances = matcher.matchAll(
+      leftDescriptors,
+      rightDescriptors)
+
+    Results(distances)
+  }
+}
+
 object Experiment extends Logging {
+  //  def apply[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
+  //    leftImage: => Image,
+  //    rightImage: => Image,
+  //    correspondenceMap: CorrespondenceMap,
+  //    detector: D,
+  //    extractor: E,
+  //    matcher: M) = new Experiment {
+  //    
+  //  }
+
   /**
    * Adds a caching layer around an existing experiment, so that it need not
    * be recomputed if it has already been run.

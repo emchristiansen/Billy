@@ -9,7 +9,7 @@ import st.sparse.billy.internal._
 
 ///////////////////////////////////////
 
-case class Homography(matrix: DenseMatrix[Double]) extends Logging {
+case class Homography(matrix: DenseMatrix[Double]) extends CorrespondenceMap with Logging {
   require(matrix.rows == 3)
   require(matrix.cols == 3)
 
@@ -35,7 +35,7 @@ case class Homography(matrix: DenseMatrix[Double]) extends Logging {
    * 
    * The returned KeyPoint has defaults for all other values.
    */
-  def transformXYOnly(in: KeyPoint): KeyPoint = {
+  override def transformXYOnly(in: KeyPoint): KeyPoint = {
     val inVector = DenseVector[Double](in.pt.x, in.pt.y)
     val outVector = transform(inVector)
     logger.debug(s"outVector: $outVector")

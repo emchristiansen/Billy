@@ -18,13 +18,13 @@ import st.sparse.billy.internal._
  *  could map to >= 2 points in the other image.
  */
 trait PairDetector {
-  def detectPair: (Homography, Image, Image) => Seq[Tuple2[KeyPoint, KeyPoint]]
+  def detectPair: (CorrespondenceMap, Image, Image) => Seq[Tuple2[KeyPoint, KeyPoint]]
 }
 
 object PairDetector extends Logging {
   def apply[D <% Detector](threshold: Double, detector: D) = new PairDetector {
     override def detectPair =
-      (homography: Homography,
+      (correspondenceMap: CorrespondenceMap,
         leftImage: Image,
         rightImage: Image) => {
         val left = detector.detect(leftImage)
@@ -34,7 +34,7 @@ object PairDetector extends Logging {
 
         createBijectionWithNearestUnderWarp(
           threshold,
-          homography,
+          correspondenceMap,
           left,
           right).sortBy(pairResponse).reverse
       }
@@ -48,9 +48,9 @@ object PairDetector extends Logging {
    */
   def nearestUnderWarp(
     threshold: Double,
-    homography: Homography,
+    correspondeceMap: CorrespondenceMap,
     rightKeyPoints: Seq[KeyPoint])(leftKeyPoint: KeyPoint): Option[KeyPoint] = {
-    val leftWarped = homography.transformXYOnly(leftKeyPoint)
+    val leftWarped = correspondeceMap.transformXYOnly(leftKeyPoint)
     logger.debug(s"leftKeyPoint: $leftKeyPoint")
     logger.debug(s"leftWarped: $leftWarped")
     val rightWithDistances = rightKeyPoints zip rightKeyPoints.map(
@@ -92,7 +92,7 @@ object PairDetector extends Logging {
    */
   def createBijectionWithNearestUnderWarp(
     threshold: Double, 
-    homography: Homography, 
+    correspondenceMap: CorrespondenceMap, 
     leftKeyPoints: Seq[KeyPoint], 
     rightKeyPoints: Seq[KeyPoint]): Seq[Tuple2[KeyPoint, KeyPoint]] = {
     require(leftKeyPoints.size == leftKeyPoints.toSet.size)
@@ -101,7 +101,7 @@ object PairDetector extends Logging {
     // The nearest neighbors on the right side of each left keypoint.
     val rightMatches = leftKeyPoints.map(nearestUnderWarp(
       threshold,
-      homography,
+      correspondenceMap,
       rightKeyPoints))
     assert(leftKeyPoints.size == rightMatches.size)
 
