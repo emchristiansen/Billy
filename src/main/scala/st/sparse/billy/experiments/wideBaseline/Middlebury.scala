@@ -38,7 +38,7 @@ case class Middlebury[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   require(databaseYear == 2006)
 
   def databaseRoot(implicit runtimeConfig: RuntimeConfig) =
-    ExistingFile(new File(
+    ExistingDirectory(new File(
       runtimeConfig.dataRoot,
       s"middleburyStereo/$databaseYear/$imageClass"))
 

@@ -21,7 +21,7 @@ case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   override val extractor: E,
   override val matcher: M) extends ExperimentImplementation[D, E, M, F] with Logging {
   def databaseRoot(implicit runtimeConfig: RuntimeConfig) =
-    ExistingFile(new File(
+    ExistingDirectory(new File(
       runtimeConfig.dataRoot,
       s"oxfordImages/$imageClass"))
 
