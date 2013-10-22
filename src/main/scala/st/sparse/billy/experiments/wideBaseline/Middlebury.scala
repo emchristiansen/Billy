@@ -4,26 +4,15 @@ import st.sparse.billy._
 import st.sparse.billy.experiments._
 import java.io.File
 import st.sparse.sundry._
-import com.sksamuel.scrimage.Image
+import com.sksamuel.scrimage._
 import scala.pickling._
 import binary._
 import st.sparse.billy.internal._
 import breeze.linalg._
 import org.opencv.core.KeyPoint
+import thirdparty.jhlabs.image.PixelUtils
 
 ///////////////////////////////////////////////////////////
-
-case class StereoDisparity(
-  data: DenseMatrix[Double]) extends CorrespondenceMap with Logging {
-
-  override def transformXYOnly(in: KeyPoint): Option[KeyPoint] = {
-    ???
-  }
-}
-
-object StereoDisparity {
-  def fromImage(image: Image): StereoDisparity = ???
-}
 
 /**
  * Represents experiments on the Oxford image dataset.
