@@ -5,7 +5,6 @@ import org.opencv.core.KeyPoint
 import com.sksamuel.scrimage.Image
 import st.sparse.billy.internal._
 
-
 ///////////////////////////////////////////////////////////
 
 /**
@@ -48,17 +47,21 @@ object PairDetector extends Logging {
    */
   def nearestUnderWarp(
     threshold: Double,
-    correspondeceMap: CorrespondenceMap,
+    correspondenceMap: CorrespondenceMap,
     rightKeyPoints: Seq[KeyPoint])(leftKeyPoint: KeyPoint): Option[KeyPoint] = {
-    val leftWarped = correspondeceMap.transformXYOnly(leftKeyPoint)
+    val leftWarpedOption = correspondenceMap.transformXYOnly(leftKeyPoint)
     logger.debug(s"leftKeyPoint: $leftKeyPoint")
-    logger.debug(s"leftWarped: $leftWarped")
-    val rightWithDistances = rightKeyPoints zip rightKeyPoints.map(
-      leftWarped.l2Distance)
-    val (nearest, distance) = rightWithDistances.minBy(_._2)
-    logger.debug(s"distance: $distance")
-    if (distance < threshold) Some(nearest)
-    else None
+    logger.debug(s"leftWarped: $leftWarpedOption")
+    val keyPointOptionOption =
+      for (leftWarped <- leftWarpedOption) yield {
+        val rightWithDistances = rightKeyPoints zip rightKeyPoints.map(
+          leftWarped.l2Distance)
+        val (nearest, distance) = rightWithDistances.minBy(_._2)
+        logger.debug(s"distance: $distance")
+        if (distance < threshold) Some(nearest)
+        else None
+      }
+    keyPointOptionOption.flatten
   }
 
   /**
@@ -73,7 +76,7 @@ object PairDetector extends Logging {
   /**
    * The quality of a pair of keypoints.
    */
-  def pairResponse(pair: Tuple2[KeyPoint, KeyPoint]): Double = 
+  def pairResponse(pair: Tuple2[KeyPoint, KeyPoint]): Double =
     pairResponse(pair._1, pair._2)
 
   /**
@@ -91,9 +94,9 @@ object PairDetector extends Logging {
    * Note: The homography maps from left to right.
    */
   def createBijectionWithNearestUnderWarp(
-    threshold: Double, 
-    correspondenceMap: CorrespondenceMap, 
-    leftKeyPoints: Seq[KeyPoint], 
+    threshold: Double,
+    correspondenceMap: CorrespondenceMap,
+    leftKeyPoints: Seq[KeyPoint],
     rightKeyPoints: Seq[KeyPoint]): Seq[Tuple2[KeyPoint, KeyPoint]] = {
     require(leftKeyPoints.size == leftKeyPoints.toSet.size)
     require(rightKeyPoints.size == rightKeyPoints.toSet.size)

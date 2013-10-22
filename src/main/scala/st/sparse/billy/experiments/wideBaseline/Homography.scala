@@ -38,14 +38,16 @@ case class Homography(
    * 
    * The returned KeyPoint has defaults for all other values.
    */
-  override def transformXYOnly(in: KeyPoint): KeyPoint = {
+  override def transformXYOnly(in: KeyPoint): Some[KeyPoint] = {
     val inVector = DenseVector[Double](in.pt.x, in.pt.y)
     val outVector = transform(inVector)
     logger.debug(s"outVector: $outVector")
-    new KeyPoint(
+    
+    // Homography warps always succeed.
+    Some(new KeyPoint(
       outVector(0).toFloat,
       outVector(1).toFloat,
-      0)
+      0))
   }
 }
 
