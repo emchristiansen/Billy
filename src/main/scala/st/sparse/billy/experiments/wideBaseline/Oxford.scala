@@ -2,13 +2,9 @@ package st.sparse.billy.experiments.wideBaseline
 
 import st.sparse.billy._
 import st.sparse.billy.experiments._
-
 import java.io.File
-
 import st.sparse.sundry._
-
 import com.sksamuel.scrimage.Image
-
 import scala.pickling._
 import binary._
 import st.sparse.billy.internal._

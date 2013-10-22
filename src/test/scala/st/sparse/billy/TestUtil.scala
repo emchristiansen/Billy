@@ -1,10 +1,9 @@
 package st.sparse.billy
 
 import java.io.File
-
 import st.sparse.sundry._
-
 import com.sksamuel.scrimage._
+import st.sparse.billy.experiments.wideBaseline.Homography
 
 trait TestUtil {
   lazy val configureLogger = {
