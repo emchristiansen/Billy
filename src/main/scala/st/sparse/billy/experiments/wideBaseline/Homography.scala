@@ -11,7 +11,8 @@ import st.sparse.sundry.Box.boxAToA
 
 ///////////////////////////////////////
 
-case class Homography(matrix: DenseMatrix[Double]) extends CorrespondenceMap with Logging {
+case class Homography(
+    matrix: DenseMatrix[Double]) extends CorrespondenceMap with Logging {
   require(matrix.rows == 3)
   require(matrix.cols == 3)
 

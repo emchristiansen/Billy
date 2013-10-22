@@ -20,21 +20,26 @@ case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
   override val detector: D,
   override val extractor: E,
   override val matcher: M) extends ExperimentImplementation[D, E, M, F] with Logging {
+  def databaseRoot(implicit runtimeConfig: RuntimeConfig) =
+    ExistingFile(new File(
+      runtimeConfig.dataRoot,
+      s"oxfordImages/$imageClass"))
+
   override def leftImage(implicit runtimeConfig: RuntimeConfig) =
     Image(ExistingFile(new File(
-      runtimeConfig.dataRoot,
-      s"oxfordImages/${imageClass}/images/img1.bmp")))
+      databaseRoot,
+      "images/img1.bmp")))
 
   override def rightImage(implicit runtimeConfig: RuntimeConfig) =
     Image(ExistingFile(new File(
-      runtimeConfig.dataRoot,
-      s"oxfordImages/${imageClass}/images/img${otherImage}.bmp")))
-      
+      databaseRoot,
+      s"images/img${otherImage}.bmp")))
+
   def groundTruthHomography(implicit runtimeConfig: RuntimeConfig) =
     Homography.fromFile(ExistingFile(new File(
-      runtimeConfig.dataRoot,
-      s"oxfordImages/${imageClass}/homographies/H1to${otherImage}p")))
-      
+      databaseRoot,
+      s"homographies/H1to${otherImage}p")))
+
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) =
-    groundTruthHomography    
+    groundTruthHomography
 }
