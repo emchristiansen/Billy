@@ -112,4 +112,34 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
 
     assert(experiment == unpickled)
   }
+
+  test("run FAST SIFT L1", MediumTest) {
+    val experiment = Middlebury(
+      2006,
+      "Flowerpots",
+      BoundedDetector(OpenCVDetector.FAST, 20),
+      OpenCVExtractor.SIFT,
+      VectorMatcher.L1)
+
+    val results = experiment.run
+    assert(results.distances.rows == results.distances.cols)
+    results.distances.foreachValue(distance => assert(distance >= 0))
+
+    results.pickle.unpickle[Results]
+  }
+  
+  test("run SURF BRISK L0", MediumTest) {
+    val experiment = Middlebury(
+      2006,
+      "Flowerpots",
+      BoundedDetector(OpenCVDetector.SURF, 100),
+      OpenCVExtractor.BRISK,
+      VectorMatcher.L0)
+
+    val results = experiment.run
+    assert(results.distances.rows == results.distances.cols)
+    results.distances.foreachValue(distance => assert(distance >= 0))
+
+    results.pickle.unpickle[Results]
+  }
 }
