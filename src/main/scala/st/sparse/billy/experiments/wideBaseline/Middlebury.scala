@@ -44,4 +44,6 @@ case class Middlebury[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
 
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) =
     stereoDisparity
+    
+  override def experimentParametersString = s"${databaseYear}_$imageClass"
 }

@@ -3,6 +3,7 @@ package st.sparse.billy.experiments.wideBaseline
 import st.sparse.billy._
 import st.sparse.billy.internal._
 import st.sparse.billy.experiments.RuntimeConfig
+import st.sparse.sundry._
 import scala.pickling._
 import scala.pickling.binary._
 import st.sparse.persistentmap._
@@ -13,6 +14,24 @@ import com.sksamuel.scrimage.Image
 
 trait Experiment {
   def run(implicit runtimeConfig: RuntimeConfig): Results
+
+  /**
+   * A string representation of the parameters of the model used in this
+   * experiment.
+   *
+   * For example, this might include the detector, extractor, and matcher
+   * types.
+   * Used for reporting results.
+   */
+  def modelParametersString: String
+
+  /**
+   * A string representation of the experiment parameters.
+   *
+   * For example, this describe the actual task, such as the image used.
+   * Used for reporting results.
+   */
+  def experimentParametersString: String
 }
 
 abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% Matcher[F], F] extends Experiment with Logging {
@@ -51,6 +70,9 @@ abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% M
 
     Results(distances)
   }
+
+  override def modelParametersString =
+    s"${detector.toString}_${extractor.toString}_${matcher.toString}"
 }
 
 object Experiment extends Logging {
@@ -112,5 +134,10 @@ object Experiment extends Logging {
         // We return the results of the most recent run.
         cache(experiment).toList.sortWith(_._1 isBefore _._1).head._2
       }
+
+      override def modelParametersString = experiment.modelParametersString
+
+      override def experimentParametersString =
+        experiment.experimentParametersString
     }
 }
