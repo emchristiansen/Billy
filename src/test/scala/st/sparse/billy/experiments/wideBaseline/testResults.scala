@@ -22,7 +22,7 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestSummary extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
+class TestResults extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
   test("matching an image to itself should yield a perfect recognition rate", MediumTest) {
     val experiment = Oxford(
       "boat",
@@ -33,7 +33,6 @@ class TestSummary extends FunGeneratorSuite with st.sparse.billy.experiments.Tes
 
     val results = experiment.run
     
-    SummaryUtil.precisionRecall(results)
-    assert(SummaryUtil.recognitionRate(results) == 1)
+    assert(results.recognitionRate == 1)
   }
 }

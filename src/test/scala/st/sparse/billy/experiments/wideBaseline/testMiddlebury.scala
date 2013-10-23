@@ -109,7 +109,6 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
 
     val pickle = experiment.pickle
     val unpickled = pickle.unpickle[Middlebury[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L2.type, IndexedSeq[Double]]]
-
     assert(experiment == unpickled)
   }
 
@@ -120,6 +119,9 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
       BoundedDetector(OpenCVDetector.FAST, 20),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Middlebury[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L1.type, IndexedSeq[Double]]]
+    assert(experiment == unpickled)
 
     val results = experiment.run
     assert(results.distances.rows == results.distances.cols)
@@ -127,7 +129,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
 
     results.pickle.unpickle[Results]
   }
-  
+
   test("run SURF BRISK L0", MediumTest) {
     val experiment = Middlebury(
       2006,
@@ -135,6 +137,9 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
       BoundedDetector(OpenCVDetector.SURF, 100),
       OpenCVExtractor.BRISK,
       VectorMatcher.L0)
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Middlebury[OpenCVDetector.SURF.type, OpenCVExtractor.BRISK.type, VectorMatcher.L0.type, IndexedSeq[Boolean]]]
+    assert(experiment == unpickled)
 
     val results = experiment.run
     assert(results.distances.rows == results.distances.cols)
