@@ -13,7 +13,8 @@ case class RichSeqSeq[A: ClassTag](seqSeq: Seq[Seq[A]]) {
     // Ensures all the rows are the same length.
     require(seqSeq forall { _.size == seqSeq.head.size })
 
-    val matrix = new DenseMatrix[A](seqSeq.size, seqSeq.flatten.toArray)
+    val matrix = 
+      new DenseMatrix[A](seqSeq.size, seqSeq.transpose.flatten.toArray)
     
     assert(matrix.rows == seqSeq.size)
     assert(matrix.cols == seqSeq.head.size)

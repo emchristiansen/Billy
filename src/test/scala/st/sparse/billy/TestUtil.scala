@@ -8,7 +8,7 @@ import st.sparse.billy.experiments.wideBaseline.Homography
 trait TestUtil {
   lazy val configureLogger = {
     // Must be one of: "trace", "debug", "info", "warn", or "error".
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info")
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
   }
 
   loadOpenCV

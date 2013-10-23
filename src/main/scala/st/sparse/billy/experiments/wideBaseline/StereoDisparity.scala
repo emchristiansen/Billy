@@ -28,9 +28,9 @@ case class StereoDisparity(
     val xIndex = in.pt.x.round.toInt
     val yIndex = in.pt.y.round.toInt
 
-    for (xTransformed <- data(xIndex, yIndex)) yield {
+    for (xOffset <- data(yIndex, xIndex)) yield {
       new KeyPoint(
-        xTransformed.toFloat,
+        (xIndex + xOffset).toFloat,
         in.pt.y.toFloat,
         0)
     }
@@ -58,7 +58,7 @@ object StereoDisparity {
         // Loving the quality engineering.
         if (gray == 0) None
         else {
-          Some(gray.toDouble)
+          Some(-gray.toDouble)
         }
       }
     }
