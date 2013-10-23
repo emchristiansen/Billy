@@ -5,7 +5,7 @@ import breeze.linalg._
 import java.io.File
 import st.sparse.sundry._
 import org.apache.commons.io.FileUtils
-import com.sksamuel.scrimage.Image
+import com.sksamuel.scrimage._
 import org.opencv.core.Mat
 import javax.imageio.ImageIO
 import org.opencv.highgui.Highgui
@@ -25,7 +25,17 @@ case class RichImage(image: Image) {
     assert(mat != null)
     mat
   }
-  
+
+  def toSeqSeq: Seq[Seq[(Int, Int, Int, Int)]] =
+    for (y <- 0 until image.height) yield {
+      for (x <- 0 until image.width) yield {
+        val pixel = image.pixel(x, y)
+        (PixelTools.alpha(pixel),
+          PixelTools.red(pixel),
+          PixelTools.green(pixel),
+          PixelTools.blue(pixel))
+      }
+    }
 }
 
 trait RichImageImplicits {

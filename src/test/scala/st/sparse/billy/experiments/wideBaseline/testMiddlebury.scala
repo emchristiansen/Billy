@@ -37,24 +37,25 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val rightImage = experiment.rightImage
     val stereoDisparity = experiment.stereoDisparity
 
-    leftImage.write(new File("/home/eric/Downloads/leftImage.png"))
-    rightImage.write(new File("/home/eric/Downloads/rightImage.png"))
-    val disparityImage = {
-      val image = Image.filled(
-        stereoDisparity.data.cols,
-        stereoDisparity.data.rows,
-        0).toMutable
-      stereoDisparity.data.mapPairs {
-        case ((y, x), value) => value match {
-          case None => image.setPixel(x, y, 0)
-          case Some(offsetDouble) =>
-            val offset = offsetDouble.toInt
-            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
-        }
-      }
-      image
-    }
-    disparityImage.write(new File("/home/eric/Downloads/disparity.png"))
+    // TODO: Mark this test as interactive and dump these images somewhere.
+    //    leftImage.write(new File("/home/eric/Downloads/leftImage.png"))
+    //    rightImage.write(new File("/home/eric/Downloads/rightImage.png"))
+    //    val disparityImage = {
+    //      val image = Image.filled(
+    //        stereoDisparity.data.cols,
+    //        stereoDisparity.data.rows,
+    //        0).toMutable
+    //      stereoDisparity.data.mapPairs {
+    //        case ((y, x), value) => value match {
+    //          case None => image.setPixel(x, y, 0)
+    //          case Some(offsetDouble) =>
+    //            val offset = offsetDouble.toInt
+    //            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
+    //        }
+    //      }
+    //      image
+    //    }
+    //    disparityImage.write(new File("/home/eric/Downloads/disparity.png"))
 
     logger.debug(s"stereoDisparity: $stereoDisparity")
 
@@ -90,12 +91,25 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
       }
     }
 
-    fromLeft.write(new File("/home/eric/Downloads/fromLeft.png"))
-    fromRight.write(new File("/home/eric/Downloads/fromRight.png"))
+    val fromLeftPixels = fromLeft.copy.toSeqSeq.flatten flatMap {
+      case (_, red, green, blue) => Seq(red, green, blue)
+    }
+    val fromRightPixels = fromRight.copy.toSeqSeq.flatten flatMap {
+      case (_, red, green, blue) => Seq(red, green, blue)
+    }
 
-    //    val pickle = experiment.pickle
-    //    val unpickled = pickle.unpickle[Middlebury[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L0.type, IndexedSeq[Double]]]
-    //
-    //    assert(experiment == unpickled)
+    val l2Distance = VectorMatcher.l2Distance(
+      fromLeftPixels.toIndexedSeq,
+      fromRightPixels.toIndexedSeq)
+    val averageL2Distance = l2Distance / fromLeftPixels.size
+    assert(averageL2Distance < 0.1)
+
+    //    fromLeft.write(new File("/home/eric/Downloads/fromLeft.png"))
+    //    fromRight.write(new File("/home/eric/Downloads/fromRight.png"))
+
+    val pickle = experiment.pickle
+    val unpickled = pickle.unpickle[Middlebury[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L2.type, IndexedSeq[Double]]]
+
+    assert(experiment == unpickled)
   }
 }
