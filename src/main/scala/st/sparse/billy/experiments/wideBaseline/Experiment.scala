@@ -34,7 +34,7 @@ trait Experiment {
   def experimentParametersString: String
 }
 
-abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% Matcher[F], F] extends Experiment with Logging {
+abstract class ExperimentImplementation[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F] extends Experiment with Logging {
   def leftImage(implicit runtimeConfig: RuntimeConfig): Image
   def rightImage(implicit runtimeConfig: RuntimeConfig): Image
   def correspondenceMap(implicit runtimeConfig: RuntimeConfig): CorrespondenceMap
@@ -45,8 +45,7 @@ abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% M
   def run(implicit runtimeConfig: RuntimeConfig): Results = {
     logger.info(s"Running ${this}")
 
-    val pairDetector = PairDetector(2, detector)
-    val (leftKeyPoints, rightKeyPoints) = pairDetector.detectPair(
+    val (leftKeyPoints, rightKeyPoints) = detector.detectPair(
       correspondenceMap,
       leftImage,
       rightImage) unzip
@@ -76,16 +75,6 @@ abstract class ExperimentImplementation[D <% Detector, E <% Extractor[F], M <% M
 }
 
 object Experiment extends Logging {
-  //  def apply[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
-  //    leftImage: => Image,
-  //    rightImage: => Image,
-  //    correspondenceMap: CorrespondenceMap,
-  //    detector: D,
-  //    extractor: E,
-  //    matcher: M) = new Experiment {
-  //    
-  //  }
-
   /**
    * Adds a caching layer around an existing experiment, so that it need not
    * be recomputed if it has already been run.

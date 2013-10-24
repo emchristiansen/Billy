@@ -55,8 +55,8 @@ object BillyBuild extends Build {
           <name>Eric Christiansen</name>
           <url>http://sparse.st</url>
         </developer>
-      </developers>))      
-      
+      </developers>))
+
   val scalaVersionString = "2.10.3"
 
   def extraLibraryDependencies = Seq(
@@ -69,26 +69,26 @@ object BillyBuild extends Build {
       "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.7",
       "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.7",
       //      "nebula" %% "nebula" % "0.1-SNAPSHOT",
-//      "commons-lang" % "commons-lang" % "2.6",
+      //      "commons-lang" % "commons-lang" % "2.6",
       "org.scala-lang" % "scala-reflect" % scalaVersionString,
       "org.scala-lang" % "scala-compiler" % scalaVersionString,
-//      "org.apache.commons" % "commons-math3" % "3.2",
+      //      "org.apache.commons" % "commons-math3" % "3.2",
       "commons-io" % "commons-io" % "2.4",
       "com.typesafe.slick" %% "slick" % "1.0.1",
       "org.scalatest" %% "scalatest" % "2.0.RC1-SNAP6" % "test",
       "org.expecty" % "expecty" % "0.9",
       //      "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-//      "org.scala-stm" %% "scala-stm" % "0.7",
-//      "com.chuusai" %% "shapeless" % "1.2.4",
+      //      "org.scala-stm" %% "scala-stm" % "0.7",
+      "com.chuusai" % "shapeless_2.10.2" % "2.0.0-M1",
       "org.clapper" %% "grizzled-scala" % "1.1.4",
       "org.scalanlp" %% "breeze-math" % "0.4",
       "org.spire-math" %% "spire" % "0.6.0",
-//      "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
-//      "org.rogach" %% "scallop" % "0.9.2",
+      //      "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
+      //      "org.rogach" %% "scallop" % "0.9.2",
       "junit" % "junit" % "4.11" % "test",
       "org.xerial" % "sqlite-jdbc" % "3.7.2",
       "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
-//      "org.apache.logging.log4j" % "log4j-core" % "2.0-beta8",
+      //      "org.apache.logging.log4j" % "log4j-core" % "2.0-beta8",
       "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
       "org.imgscalr" % "imgscalr-lib" % "4.2"))
 

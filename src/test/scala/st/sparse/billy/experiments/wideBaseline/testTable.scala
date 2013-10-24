@@ -32,7 +32,7 @@ class TestTable extends FunGeneratorSuite with st.sparse.billy.experiments.TestU
       Oxford(
         "boat",
         otherImage,
-        BoundedDetector(OpenCVDetector.FAST, 20),
+        DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.FAST),
         OpenCVExtractor.FREAK,
         VectorMatcher.L0): Experiment
     }
@@ -43,7 +43,7 @@ class TestTable extends FunGeneratorSuite with st.sparse.billy.experiments.TestU
       Oxford(
         "boat",
         otherImage,
-        BoundedDetector(OpenCVDetector.SIFT, 20),
+        DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.SIFT),
         OpenCVExtractor.FREAK,
         VectorMatcher.L0): Experiment
     }

@@ -27,7 +27,7 @@ class TestResults extends FunGeneratorSuite with st.sparse.billy.experiments.Tes
     val experiment = Oxford(
       "boat",
       1,
-      BoundedDetector(OpenCVDetector.BRISK, 20),
+      BoundedPairDetector(2, 20, OpenCVDetector.BRISK),
       PatchExtractor(Gray, 4, 4),
       VectorMatcher.L1)
 

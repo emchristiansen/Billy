@@ -17,7 +17,7 @@ import thirdparty.jhlabs.image.PixelUtils
 /**
  * Represents experiments on the Oxford image dataset.
  */
-case class Middlebury[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
+case class Middlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   databaseYear: Int,
   imageClass: String,
   override val detector: D,

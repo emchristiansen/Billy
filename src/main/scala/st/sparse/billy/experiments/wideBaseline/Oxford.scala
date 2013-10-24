@@ -14,7 +14,7 @@ import st.sparse.billy.internal._
 /**
  * Represents experiments on the Oxford image dataset.
  */
-case class Oxford[D <% Detector, E <% Extractor[F], M <% Matcher[F], F](
+case class Oxford[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   imageClass: String,
   otherImage: Int,
   override val detector: D,

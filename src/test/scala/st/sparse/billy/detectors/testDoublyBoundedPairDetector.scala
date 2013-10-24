@@ -22,34 +22,11 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestBoundedPairDetector extends FunGeneratorSuite with st.sparse.billy.TestUtil {
-  val image = goldfishGirl
-
-  test("FAST", FastTest) {
-    val detector = OpenCVDetector.FAST
-
-    val pairs = BoundedPairDetector(
-      2,
-      10,
-      BoundedDetector(100, detector)).detectPair(
-        boat12Homography,
-        boat1,
-        boat2)
-
-    assert(pairs.size > 0)
-  }
-
-  test("SIFT", FastTest) {
-    val detector = OpenCVDetector.SIFT
-
-    val pairs = BoundedPairDetector(
-      2,
-      10,
-      BoundedDetector(100, detector)).detectPair(
-        boat12Homography,
-        boat1,
-        boat2)
-
-    assert(pairs.size > 0)
+class TestDoublyBoundedPairDetector extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+  test("pickling", FastTest) {
+    val detector = DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.SIFT)
+    val pickled = detector.pickle
+    val unpickled = pickled.unpickle[DoublyBoundedPairDetector[OpenCVDetector.SIFT.type]]
+    assert(detector == unpickled)
   }
 }

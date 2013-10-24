@@ -25,7 +25,7 @@ import scala.reflect.ClassTag
 @RunWith(classOf[JUnitRunner])
 class TestPatchExtractor extends FunGeneratorSuite with st.sparse.billy.TestUtil  {
   val image = goldfishGirl
-  val detector = BoundedDetector(OpenCVDetector.FAST, 10)
+  val detector = BoundedDetector(10, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 

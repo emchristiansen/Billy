@@ -4,14 +4,19 @@ import st.sparse.billy._
 
 ///////////////////////////////////////////////////////////
 
-/** A PairDetector which returns no more than a set number of keypoints.
+/**
+ * A PairDetector which returns no more than a set number of keypoints.
  */
-case class BoundedPairDetector[D <% PairDetector](
-  pairDetector: D,
-  maxKeyPoints: Int) extends PairDetector {
-  override def detectPair = (homography, leftImage, rightImage) =>
+case class BoundedPairDetector[D <% Detector](
+  threshold: Double,
+  maxKeyPoints: Int,
+  detector: D) extends PairDetector {
+  override def detectPair = (homography, leftImage, rightImage) => {
+    val pairDetector = PairDetector(threshold, detector)
+    
     pairDetector.detectPair(
       homography,
       leftImage,
       rightImage).take(maxKeyPoints)
+  }
 }

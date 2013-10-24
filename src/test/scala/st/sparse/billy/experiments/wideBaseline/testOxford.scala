@@ -23,95 +23,38 @@ import scala.reflect.ClassTag
 
 @RunWith(classOf[JUnitRunner])
 class TestOxford extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
-  test("pickling FAST SIFT L0", InstantTest) {
+  test("pickling", InstantTest) {
     val experiment = Oxford(
-      "boat",
-      4,
-      OpenCVDetector.FAST,
+      "bikes",
+      2,
+      DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
       OpenCVExtractor.SIFT,
-      VectorMatcher.L0)
-    val pickle = experiment.pickle
-    val unpickled = pickle.unpickle[Oxford[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L0.type, IndexedSeq[Double]]]
-    
-    assert(experiment == unpickled)
-  }
-
-  test("pickling SIFT PatchExtractor L0", InstantTest) {
-    val experiment = Oxford(
-      "boat",
-      4,
-      OpenCVDetector.SIFT,
-      PatchExtractor(Gray, 2, 3),
-      VectorMatcher.L0)
-    val pickle = experiment.pickle
-    val unpickled = pickle.unpickle[Oxford[OpenCVDetector.SIFT.type, PatchExtractor, VectorMatcher.L0.type, DenseMatrix[IndexedSeq[Int]]]]
-
-    assert(experiment == unpickled)
-  }
-
-  test("pickling SIFT PatchExtractor L1", InstantTest) {
-    val experiment = Oxford(
-      "boat",
-      4,
-      OpenCVDetector.SIFT,
-      PatchExtractor(Gray, 2, 3),
       VectorMatcher.L1)
-    val pickle = experiment.pickle
-    val unpickled = pickle.unpickle[Oxford[OpenCVDetector.SIFT.type, PatchExtractor, VectorMatcher.L1.type, DenseMatrix[IndexedSeq[Int]]]]
-
-    assert(experiment == unpickled)
-  }
-
-  test("pickling FAST SIFT L2", InstantTest) {
-    val experiment = Oxford(
-      "boat",
-      4,
-      OpenCVDetector.FAST,
-      OpenCVExtractor.SIFT,
-      VectorMatcher.L2)
-    val pickle = experiment.pickle
-    val unpickled = pickle.unpickle[Oxford[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.L2.type, IndexedSeq[Double]]]
-
-    assert(experiment == unpickled)
-  }
-
-  test("pickling FAST SIFT KendallTau", InstantTest) {
-    val experiment = Oxford(
-      "boat",
-      4,
-      OpenCVDetector.FAST,
-      OpenCVExtractor.SIFT,
-      VectorMatcher.KendallTau)
-    val pickle = experiment.pickle
-    val unpickled = pickle.unpickle[Oxford[OpenCVDetector.FAST.type, OpenCVExtractor.SIFT.type, VectorMatcher.KendallTau.type, IndexedSeq[Double]]]
-
-    assert(experiment == unpickled)
+    val pickled = experiment.pickle
+    val unpickled = pickled.unpickle[Oxford[DoublyBoundedPairDetector[OpenCVDetector.FAST.type], OpenCVExtractor.SIFT.type, VectorMatcher.L1.type, IndexedSeq[Double]]]
+    assert(unpickled == experiment)
   }
 
   test("run FAST SIFT L1", MediumTest) {
     val experiment = Oxford(
       "boat",
       2,
-      BoundedDetector(OpenCVDetector.FAST, 20),
+      DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
-
-    experiment.groundTruthHomography
-    experiment.leftImage
-    experiment.rightImage
 
     val results = experiment.run
     assert(results.distances.rows == results.distances.cols)
     results.distances.foreachValue(distance => assert(distance >= 0))
-    
-    results.pickle.unpickle[Results]
+
+    assert(results == results.pickle.unpickle[Results])
   }
 
   test("matching an image to itself should produce perfect performance", MediumTest) {
     val experiment = Oxford(
       "boat",
       1,
-      BoundedDetector(OpenCVDetector.FAST, 20),
+      DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
 
