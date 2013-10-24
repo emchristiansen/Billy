@@ -11,7 +11,8 @@ import org.apache.commons.io.FileUtils
 /////////////////////////////////////////////////////////////
 
 case class Table(data: DenseMatrix[String]) {
-  def csv: String = data.toSeqSeq.map(_.mkString(", ")).mkString("\n") 
+  def csv: String = data.toSeqSeq.map(_.mkString(", ")).mkString("\n")
+  def tsv: String = data.toSeqSeq.map(_.mkString("\t")).mkString("\n")
 }
 
 object Table extends Logging {
