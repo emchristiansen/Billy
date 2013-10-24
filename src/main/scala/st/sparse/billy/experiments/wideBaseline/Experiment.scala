@@ -92,7 +92,7 @@ object Experiment extends Logging {
    */
   def cached[E <% Experiment: SPickler: Unpickler: FastTypeTag](
     experiment: E)(
-      implicit ftt2a: FastTypeTag[FastTypeTag[E]]): Experiment =
+      implicit ftt2e: FastTypeTag[FastTypeTag[E]]): Experiment =
     new Experiment {
       override def run(implicit runtimeConfig: RuntimeConfig) = {
         val m = DenseMatrix.zeros[Double](3, 4)
