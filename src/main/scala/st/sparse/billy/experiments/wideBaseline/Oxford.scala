@@ -17,6 +17,7 @@ import st.sparse.billy.internal._
 case class Oxford[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   imageClass: String,
   otherImage: Int,
+  override val maxPairedDescriptors: Int,
   override val detector: D,
   override val extractor: E,
   override val matcher: M) extends ExperimentImplementation[D, E, M, F] with Logging {

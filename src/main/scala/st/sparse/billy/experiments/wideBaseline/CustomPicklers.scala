@@ -19,6 +19,7 @@ trait CustomPicklers extends billy.CustomPicklers {
 
         putField(builder, "imageClass", picklee.imageClass)
         putField(builder, "otherImage", picklee.otherImage)
+        putField(builder, "maxPairedDescriptors", picklee.maxPairedDescriptors)
         putField(builder, "detector", picklee.detector)
         putField(builder, "extractor", picklee.extractor)
         putField(builder, "matcher", picklee.matcher)
@@ -31,11 +32,18 @@ trait CustomPicklers extends billy.CustomPicklers {
         reader: PReader): Oxford[D, E, M, F] = {
         val imageClass = readField[String](reader)
         val otherImage = readField[Int](reader)
+        val maxPairedDescriptors = readField[Int](reader)
         val detector = readField[D](reader)
         val extractor = readField[E](reader)
         val matcher = readField[M](reader)
 
-        Oxford(imageClass, otherImage, detector, extractor, matcher)
+        Oxford(
+          imageClass,
+          otherImage,
+          maxPairedDescriptors,
+          detector,
+          extractor,
+          matcher)
       }
     }
 
@@ -51,6 +59,7 @@ trait CustomPicklers extends billy.CustomPicklers {
 
         putField(builder, "databaseYear", picklee.databaseYear)
         putField(builder, "imageClass", picklee.imageClass)
+        putField(builder, "maxPairedDescriptors", picklee.maxPairedDescriptors)
         putField(builder, "detector", picklee.detector)
         putField(builder, "extractor", picklee.extractor)
         putField(builder, "matcher", picklee.matcher)
@@ -63,11 +72,18 @@ trait CustomPicklers extends billy.CustomPicklers {
         reader: PReader): Middlebury[D, E, M, F] = {
         val databaseYear = readField[Int](reader)
         val imageClass = readField[String](reader)
+        val maxPairedDescriptors = readField[Int](reader)
         val detector = readField[D](reader)
         val extractor = readField[E](reader)
         val matcher = readField[M](reader)
 
-        Middlebury(databaseYear, imageClass, detector, extractor, matcher)
+        Middlebury(
+          databaseYear,
+          imageClass,
+          maxPairedDescriptors,
+          detector,
+          extractor,
+          matcher)
       }
     }
 }

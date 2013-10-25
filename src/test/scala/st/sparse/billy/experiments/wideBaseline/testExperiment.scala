@@ -29,6 +29,7 @@ class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.
     val oxford = Oxford(
       "boat",
       4,
+      10,
       DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.SIFT),
       OpenCVExtractor.SIFT,
       VectorMatcher.L0)
@@ -44,6 +45,7 @@ class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.
     val oxford1 = Oxford(
       "boat",
       4,
+      10,
       DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.FAST),
       OpenCVExtractor.ORB,
       VectorMatcher.L0)
@@ -53,6 +55,7 @@ class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.
     val oxford2 = Oxford(
       "boat",
       5,
+      10,
       DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.SIFT),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
@@ -62,6 +65,7 @@ class TestExperiment extends FunGeneratorSuite with st.sparse.billy.experiments.
     val oxford3 = Oxford(
       "boat",
       4,
+      10,
       DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.SIFT),
       OpenCVExtractor.SIFT,
       VectorMatcher.L2)

@@ -29,6 +29,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val experiment = Middlebury(
       2006,
       "Flowerpots",
+      10,
       DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
@@ -41,6 +42,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val experiment = Middlebury(
       2006,
       "Flowerpots",
+      10,
       DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.SIFT),
       OpenCVExtractor.SIFT,
       VectorMatcher.L2)
@@ -124,6 +126,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val experiment = Middlebury(
       2006,
       "Flowerpots",
+      10,
       DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
       OpenCVExtractor.SIFT,
       VectorMatcher.L1)
@@ -137,6 +140,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val experiment = Middlebury(
       2006,
       "Flowerpots",
+      10,
       DoublyBoundedPairDetector(2, 20, 100, OpenCVDetector.SURF),
       OpenCVExtractor.BRISK,
       VectorMatcher.L0)

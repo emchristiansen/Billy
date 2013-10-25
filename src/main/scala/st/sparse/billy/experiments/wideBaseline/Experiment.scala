@@ -38,6 +38,7 @@ abstract class ExperimentImplementation[D <% PairDetector, E <% Extractor[F], M 
   def leftImage(implicit runtimeConfig: RuntimeConfig): Image
   def rightImage(implicit runtimeConfig: RuntimeConfig): Image
   def correspondenceMap(implicit runtimeConfig: RuntimeConfig): CorrespondenceMap
+  val maxPairedDescriptors: Int
   val detector: D
   val extractor: E
   val matcher: M
@@ -50,20 +51,27 @@ abstract class ExperimentImplementation[D <% PairDetector, E <% Extractor[F], M 
       leftImage,
       rightImage) unzip
 
-    logger.info(s"Number of KeyPoints: ${leftKeyPoints.size}")
+    logger.info(s"Number of paired KeyPoints: ${leftKeyPoints.size}")
 
-    val (leftDescriptors, rightDescriptors) = {
+    val leftAndRightDescriptors = {
       val leftDescriptors = extractor.extract(leftImage, leftKeyPoints)
       val rightDescriptors = extractor.extract(rightImage, rightKeyPoints)
 
       for (
         (Some(left), Some(right)) <- leftDescriptors.zip(rightDescriptors)
       ) yield (left, right)
-    } unzip
+    }
 
-    // TODO: A cap should be set on the number of surviving keypoints, and
-    // should be an experimental parameter.
-    logger.info(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
+    logger.info(s"Number of paired descriptors: ${leftAndRightDescriptors.size}")
+
+    if (maxPairedDescriptors > leftAndRightDescriptors.size) {
+      logger.warn(
+        s"Extracted only ${leftAndRightDescriptors.size} paired descriptors, " +
+          s"but maxPairedDescriptors was $maxPairedDescriptors.")
+    }
+
+    val (leftDescriptors, rightDescriptors) = 
+      leftAndRightDescriptors.take(maxPairedDescriptors).unzip
 
     val distances = matcher.matchAll(
       leftDescriptors,

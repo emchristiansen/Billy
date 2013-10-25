@@ -20,6 +20,7 @@ import thirdparty.jhlabs.image.PixelUtils
 case class Middlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   databaseYear: Int,
   imageClass: String,
+  override val maxPairedDescriptors: Int,
   override val detector: D,
   override val extractor: E,
   override val matcher: M) extends ExperimentImplementation[D, E, M, F] with Logging {
