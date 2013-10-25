@@ -44,5 +44,6 @@ case class Oxford[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) =
     groundTruthHomography
     
-  override def experimentParametersString = s"${imageClass}_$otherImage"
+  override def experimentParametersString = 
+    s"${imageClass}_${otherImage}_$maxPairedDescriptors"
 }

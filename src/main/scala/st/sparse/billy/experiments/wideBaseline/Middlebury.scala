@@ -25,7 +25,7 @@ case class Middlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   override val extractor: E,
   override val matcher: M) extends ExperimentImplementation[D, E, M, F] with Logging {
   // For now we only support one database year.
-  require(databaseYear == 2006)
+  require(databaseYear == 2005 || databaseYear == 2006)
 
   def databaseRoot(implicit runtimeConfig: RuntimeConfig) =
     ExistingDirectory(new File(
@@ -46,5 +46,6 @@ case class Middlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) =
     stereoDisparity
     
-  override def experimentParametersString = s"${databaseYear}_$imageClass"
+  override def experimentParametersString = 
+    s"${databaseYear}_${imageClass}_$maxPairedDescriptors"
 }
