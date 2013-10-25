@@ -61,6 +61,8 @@ abstract class ExperimentImplementation[D <% PairDetector, E <% Extractor[F], M 
       ) yield (left, right)
     } unzip
 
+    // TODO: A cap should be set on the number of surviving keypoints, and
+    // should be an experimental parameter.
     logger.info(s"Number of surviving KeyPoints: ${leftDescriptors.size}")
 
     val distances = matcher.matchAll(

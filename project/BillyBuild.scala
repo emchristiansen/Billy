@@ -22,7 +22,7 @@ object BillyBuild extends Build {
   val publishSettings = Seq(
     name := mavenName,
 
-    version := "0.1.1-SNAPSHOT",
+    version := "0.1.2-SNAPSHOT",
 
     organization := "st.sparse",
 
@@ -62,8 +62,8 @@ object BillyBuild extends Build {
   def extraLibraryDependencies = Seq(
     libraryDependencies ++= Seq(
       "opencv" % "opencv" % "3.0.0",
-      "st.sparse" %% "sundry" % "0.1.1-SNAPSHOT",
-      "st.sparse" %% "persistent-map" % "0.1.1-SNAPSHOT",
+      "st.sparse" %% "sundry" % "0.1.2-SNAPSHOT",
+      "st.sparse" %% "persistent-map" % "0.1.2-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
       "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.7",
