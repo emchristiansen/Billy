@@ -22,7 +22,7 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
    * Assumes the matrix values are in the range [0.0, 1.0].
    */
   def toImage(implicit numericA: Numeric[A]): Image = {
-    val image = Image.empty(matrix.cols, matrix.rows)
+    val image = Image.empty(matrix.cols, matrix.rows).toMutable
 
     (0 until matrix.rows) foreach { row =>
       (0 until matrix.cols) foreach { column =>
@@ -30,8 +30,8 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
         require(element >= 0)
         require(element <= 1)
         val scaled = (element * 255).round.toInt
-
-        image.toMutable.setPixel(column, row, PixelTools.argb(
+        
+        image.setPixel(column, row, PixelTools.argb(
           255,
           scaled,
           scaled,
