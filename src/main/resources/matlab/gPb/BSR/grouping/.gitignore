@@ -2,4 +2,4 @@
 *.mex*
 *~
 *.log
-.ignore_dirs/
+*.ignore_dirs
