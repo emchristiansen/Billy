@@ -23,9 +23,9 @@ import scala.reflect.ClassTag
 
 @RunWith(classOf[JUnitRunner])
 class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.TestUtil {
-  val image = goldfishGirl
+  val image = goldfishGirl.resize(0.5)
   
-  test("boundaries", MediumTest) {
+  test("boundaries", SlowTest) {
     val boundaries = MatlabGPbSegmenter.boundaries(image)
     assert(boundaries.min >= 0)
     assert(boundaries.max <= 1)

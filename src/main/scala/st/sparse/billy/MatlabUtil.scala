@@ -1,14 +1,19 @@
 package st.sparse.billy
 
+import internal._
 import sys.process._
 import st.sparse.sundry.ExistingDirectory
 
-object MatlabUtil {
+object MatlabUtil extends Logging {
   def runInDirectory(directory: ExistingDirectory, command: String) {
-    val fullCommand =
-      s"""matlab -nodisplay -nojvm -r "cd ${directory.getPath}; $command; exit" """
-    val returnCode = fullCommand !
-    
+    val process = Process(
+      Seq("matlab", "-nodisplay", "-nojvm", "-r", s"$command; exit;"),
+      Some(directory.data))
+      
+    logger.info(s"Executing process:\n${process.toString}\nin directory\n${directory.getPath}")
+      
+    val returnCode = process !
+
     assert(returnCode == 0)
   }
 }

@@ -14,6 +14,9 @@ trait Segmentation {
 
 object MatlabGPbSegmenter {
   def boundaries(image: Image): DenseMatrix[Double] = {
+    // Otherwise the Matlab code will blow up memory.
+    require(image.width <= 500 && image.height <= 500)
+    
     val gPbDirectory =
       ExistingDirectory(getClass.getResource("/matlab/gPb").getPath)
 
