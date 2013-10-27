@@ -22,11 +22,11 @@ object MatlabGPbSegmenter {
 
     val boundariesPath =
       File.createTempFile("MatlabGPbSegmenterBoundaries", ".png")
-
+      
     // This Matlab script reads the image from `imagePath` and writes the
     // boundary image to `boundariesPath`.
     // The boundaries are probabilistic, and scaled in the range [0, 255].
-    val command = s"gPbBoundaries $imagePath $boundariesPath"
+    val command = s"gPbBoundaries('$imagePath', '$boundariesPath');"
     MatlabUtil.runInDirectory(gPbDirectory, command)
 
     val boundariesImage = Image(boundariesPath)
