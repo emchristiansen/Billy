@@ -27,7 +27,7 @@ trait Segmenter {
 }
 
 trait SegmenterBoundaries extends Segmenter {
-  override def segment = (image: Image) => {
+  override def segmentation = (image: Image) => {
     val boundaries = this.boundaries(image)
 
     val step = 0.04

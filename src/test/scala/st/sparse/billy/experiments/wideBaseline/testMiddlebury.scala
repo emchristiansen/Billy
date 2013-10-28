@@ -24,7 +24,7 @@ import st.sparse.billy.internal._
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil with Logging {
+class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
   ignore("pickling", InstantTest) {
     val experiment = Middlebury(
       2006,
@@ -38,7 +38,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     assert(unpickled == experiment)
   }
 
-  test("pixels should roughly match on Flowerpots", FastTest) {
+  test("pixels should roughly match on Flowerpots", FastTest, InteractiveTest) {
     val experiment = Middlebury(
       2006,
       "Flowerpots",
@@ -51,25 +51,24 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val rightImage = experiment.rightImage
     val stereoDisparity = experiment.stereoDisparity
 
-    // TODO: Mark this test as interactive and dump these images somewhere.
-    //    leftImage.write(new File("/home/eric/Downloads/leftImage.png"))
-    //    rightImage.write(new File("/home/eric/Downloads/rightImage.png"))
-    //    val disparityImage = {
-    //      val image = Image.filled(
-    //        stereoDisparity.data.cols,
-    //        stereoDisparity.data.rows,
-    //        0).toMutable
-    //      stereoDisparity.data.mapPairs {
-    //        case ((y, x), value) => value match {
-    //          case None => image.setPixel(x, y, 0)
-    //          case Some(offsetDouble) =>
-    //            val offset = offsetDouble.toInt
-    //            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
-    //        }
-    //      }
-    //      image
-    //    }
-    //    disparityImage.write(new File("/home/eric/Downloads/disparity.png"))
+    logImage(leftImage, "Flowerpots_leftImage")
+    logImage(rightImage, "Flowerpots_rightImage")
+    val disparityImage = {
+      val image = Image.filled(
+        stereoDisparity.data.cols,
+        stereoDisparity.data.rows,
+        0).toMutable
+      stereoDisparity.data.mapPairs {
+        case ((y, x), value) => value match {
+          case None => image.setPixel(x, y, 0)
+          case Some(offsetDouble) =>
+            val offset = offsetDouble.toInt
+            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
+        }
+      }
+      image
+    }
+    logImage(disparityImage, "Flowerpots_disparity")
 
     logger.debug(s"stereoDisparity: $stereoDisparity")
 
@@ -118,8 +117,8 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val averageL2Distance = l2Distance / fromLeftPixels.size
     assert(averageL2Distance < 0.1)
 
-    //    fromLeft.write(new File("/home/eric/Downloads/fromLeft.png"))
-    //    fromRight.write(new File("/home/eric/Downloads/fromRight.png"))
+    logImage(fromLeft, "Flowerpots_fromLeft")
+    logImage(fromRight, "Flowerpots_fromRight")
   }
 
   test("pixels should roughly match on Moebius", FastTest) {
@@ -135,25 +134,24 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val rightImage = experiment.rightImage
     val stereoDisparity = experiment.stereoDisparity
 
-    // TODO: Mark this test as interactive and dump these images somewhere.
-//    leftImage.write(new File("/home/eric/Downloads/leftImage.png"))
-//    rightImage.write(new File("/home/eric/Downloads/rightImage.png"))
-//    val disparityImage = {
-//      val image = Image.filled(
-//        stereoDisparity.data.cols,
-//        stereoDisparity.data.rows,
-//        0).toMutable
-//      stereoDisparity.data.mapPairs {
-//        case ((y, x), value) => value match {
-//          case None => image.setPixel(x, y, 0)
-//          case Some(offsetDouble) =>
-//            val offset = offsetDouble.toInt
-//            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
-//        }
-//      }
-//      image
-//    }
-//    disparityImage.write(new File("/home/eric/Downloads/disparity.png"))
+    logImage(leftImage, "Moebius_leftImage")
+    logImage(rightImage, "Moebius_rightImage")
+    val disparityImage = {
+      val image = Image.filled(
+        stereoDisparity.data.cols,
+        stereoDisparity.data.rows,
+        0).toMutable
+      stereoDisparity.data.mapPairs {
+        case ((y, x), value) => value match {
+          case None => image.setPixel(x, y, 0)
+          case Some(offsetDouble) =>
+            val offset = offsetDouble.toInt
+            image.setPixel(x, y, PixelTools.argb(255, offset, offset, offset))
+        }
+      }
+      image
+    }
+    logImage(disparityImage, "Moebius_disparity")
 
     logger.debug(s"stereoDisparity: $stereoDisparity")
 
@@ -201,9 +199,9 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
       fromRightPixels.toIndexedSeq)
     val averageL2Distance = l2Distance / fromLeftPixels.size
     assert(averageL2Distance < 0.1)
-//
-//    fromLeft.write(new File("/home/eric/Downloads/fromLeft.png"))
-//    fromRight.write(new File("/home/eric/Downloads/fromRight.png"))
+    
+    logImage(fromLeft, "Moebius_fromLeft")
+    logImage(fromRight, "Moebius_fromRight")
   }
 
   test("run FAST SIFT L1", MediumTest) {

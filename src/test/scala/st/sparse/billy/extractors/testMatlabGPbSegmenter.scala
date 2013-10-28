@@ -24,16 +24,15 @@ import scala.reflect.ClassTag
 
 @RunWith(classOf[JUnitRunner])
 class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.TestUtil {
-  val image = goldfishGirl.scale(0.5)
-
+  val smallGoldfishGirl = goldfishGirl.scale(0.5)
+  logImage(smallGoldfishGirl, "smallGoldfishGirl")
+  
   ignore("boundaries", SlowTest) {
-    val boundaries = MatlabGPbSegmenter.boundaries(image)
+    val boundaries = MatlabGPbSegmenter.boundaries(smallGoldfishGirl)
     assert(boundaries.min >= 0)
     assert(boundaries.max <= 1)
 
-    // TODO
-    image.write("/home/eric//Downloads/resized.png")
-    boundaries.toImage.write("/home/eric//Downloads/boundaries.png")
+    logImage(boundaries, "boundaries")
   }
 
   test("connected components", FastTest) {
@@ -50,8 +49,8 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Test
     assert(MatlabGPbSegmenter.connectedComponentsLabels(denseMatrix) == labels)
   }
   
-  test("image segments", SlowTest) {
-    val boundaries = MatlabGPbSegmenter.boundaries(goldfishGirl.scale(0.5))
+  ignore("image segments", SlowTest) {
+    val boundaries = MatlabGPbSegmenter.boundaries(smallGoldfishGirl)
     
     val segments = boundaries.mapValues(_ < 0.1)
     val labels = MatlabGPbSegmenter.connectedComponentsLabels(segments)
@@ -60,9 +59,8 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Test
       case None => 0
       case Some(n) => n + 1
     }
-    val image = intImage.affineToUnitInterval.toImage
+    val segmentsImage = intImage.affineToUnitInterval.toImage
     
-    boundaries.toImage.write("/home/eric//Downloads/boundaries1.png")
-    image.write("/home/eric//Downloads/segments1.png")
+    logImage(segmentsImage, "segmentsImage")
   }
 }
