@@ -57,17 +57,20 @@ object MatlabGPbSegmenter {
     mask: DenseMatrix[Boolean]): DenseMatrix[Option[Int]] = {
     val labels = DenseMatrix.fill[Option[Int]](mask.rows, mask.cols)(None)
 
-    // Fill a connected component with the given label via depth-first search.
+    // Fill a connected component with the given label via something
+    // like depth-first search.
     // We're not using the Wikipedia algorithm; it was faster to just write this
     // than bother to read that article.
     def fillRegionWithLabel(
       label: Int,
       rootRow: Int,
       rootColumn: Int) {
-      val queue = Queue((rootRow, rootColumn))
+      val set = collection.mutable.Set((rootRow, rootColumn))
 
-      while (queue.nonEmpty) {
-        val (row, column) = queue.dequeue()
+      while (set.nonEmpty) {
+        val (row, column) = set.head
+        set -= ((row, column))
+        
         labels(row, column) = Some(label)
 
         val west = (row, column - 1)
@@ -84,7 +87,7 @@ object MatlabGPbSegmenter {
             mask(row, column) &&
             !labels(row, column).isDefined
         ) {
-          queue enqueue ((row, column))
+          set += ((row, column))
         }
       }
     }

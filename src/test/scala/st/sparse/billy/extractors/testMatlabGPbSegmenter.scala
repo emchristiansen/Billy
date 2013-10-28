@@ -51,15 +51,17 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Test
   }
   
   test("image segments", SlowTest) {
-    val boundaries = MatlabGPbSegmenter.boundaries(goldfishGirl.scale(0.3))
+    val boundaries = MatlabGPbSegmenter.boundaries(image)
     
     val segments = boundaries.mapValues(_ < 0.1)
+    println("calling ccl")
     val labels = MatlabGPbSegmenter.connectedComponentsLabels(segments)
     
     val intImage = labels mapValues {
       case None => 0
       case Some(n) => n + 1
     }
+    println("calling affine")
     val image = intImage.affineToUnitInterval.toImage
     
     boundaries.toImage.write("/home/eric//Downloads/boundaries1.png")
