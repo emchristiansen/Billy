@@ -8,6 +8,7 @@ import java.io.File
 import st.sparse.billy.MatlabUtil
 import breeze.linalg.DenseMatrix
 import com.sksamuel.scrimage.PixelTools
+import scala.collection.mutable.Queue
 
 trait Segmentation {
   def probabilityInSameSegment(left: Point, right: Point): Double
@@ -56,30 +57,35 @@ object MatlabGPbSegmenter {
     mask: DenseMatrix[Boolean]): DenseMatrix[Option[Int]] = {
     val labels = DenseMatrix.fill[Option[Int]](mask.rows, mask.cols)(None)
 
-    // Recursively fill a connected component with the given label.
+    // Fill a connected component with the given label via depth-first search.
     // We're not using the Wikipedia algorithm; it was faster to just write this
     // than bother to read that article.
     def fillRegionWithLabel(
       label: Int,
-      row: Int,
-      column: Int) {
-      require(mask(row, column))
-      require(!labels(row, column).isDefined)
+      rootRow: Int,
+      rootColumn: Int) {
+      val queue = Queue((rootRow, rootColumn))
 
-      labels(row, column) = Some(label)
+      while (queue.nonEmpty) {
+        val (row, column) = queue.dequeue()
+        labels(row, column) = Some(label)
 
-      val west = (row, column - 1)
-      val east = (row, column + 1)
-      val north = (row - 1, column)
-      val south = (row + 1, column)
+        val west = (row, column - 1)
+        val east = (row, column + 1)
+        val north = (row - 1, column)
+        val south = (row + 1, column)
 
-      for (
-        (nextRow, nextColumn) <- Seq(west, east, north, south);
-        if nextRow >= 0 && nextRow < mask.rows;
-        if nextColumn >= 0 && nextColumn < mask.cols
-      ) {
-        if (mask(nextRow, nextColumn) && !labels(nextRow, nextColumn).isDefined)
-          fillRegionWithLabel(label, nextRow, nextColumn)
+        for (
+          (row, column) <- Seq(west, east, north, south);
+          if row >= 0 &&
+            row < mask.rows &&
+            column >= 0 &&
+            column < mask.cols &&
+            mask(row, column) &&
+            !labels(row, column).isDefined
+        ) {
+          queue enqueue ((row, column))
+        }
       }
     }
 
