@@ -19,7 +19,6 @@ import scala.reflect.ClassTag
 import com.sksamuel.scrimage._
 import org.opencv.core.KeyPoint
 import java.io.File
-import st.sparse.billy.internal._
 
 ////////////////////////////////////////////////////////////////////////////////
 

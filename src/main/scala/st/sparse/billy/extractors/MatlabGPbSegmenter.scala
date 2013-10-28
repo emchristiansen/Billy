@@ -1,6 +1,6 @@
 package st.sparse.billy.extractors
 
-import st.sparse.billy.internal._
+import st.sparse.sundry._
 import org.opencv.core.Point
 import com.sksamuel.scrimage.Image
 import st.sparse.sundry.ExistingDirectory

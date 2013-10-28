@@ -4,11 +4,12 @@ import java.io.File
 import st.sparse.sundry._
 import com.sksamuel.scrimage._
 import st.sparse.billy.experiments.wideBaseline.Homography
-import com.typesafe.scalalogging.slf4j.Logging
 import scala.slick.session.Database
 import st.sparse.billy.experiments._
+import java.nio.file.Files
+import st.sparse.sundry._
 
-trait TestUtil extends RichLogging {
+trait TestUtil extends Logging {
   lazy val configureLogger = {
     // Must be one of: "trace", "debug", "info", "warn", or "error".
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info")
@@ -35,19 +36,13 @@ trait TestUtil extends RichLogging {
   val boat12Homography = Homography.fromFile(ExistingFile(new File(
     resourceRoot,
     "/data/oxfordImages/boat/homographies/H1to2p")))
-
-  // TODO: Hack alert: These should be moved down the hierarchy.
-  val database: Database = {
-    val tempFile = File.createTempFile("TestBilly", "sqlite")
-    tempFile.deleteOnExit
-    Database.forURL(s"jdbc:sqlite:$tempFile", driver = "org.sqlite.JDBC")
+    
+  val outputRoot = 
+    ExistingDirectory(Files.createTempDirectory("TestBillyOutputRoot").toFile)
+    
+  implicit val logRoot = {
+    val directory = new File(outputRoot, "log")
+    if (!directory.isDirectory) directory.mkdir()
+    LogRoot(ExistingDirectory(directory))
   }
-
-  implicit val runtimeConfig = RuntimeConfig(
-    ExistingDirectory(new File(resourceRoot, "/data")),
-    database,
-    ExistingDirectory(Files.createTempDirectory("TestBillyOutputRoot").toFile),
-    None,
-    false,
-    true)
 }

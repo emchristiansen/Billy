@@ -4,7 +4,6 @@ import org.opencv.core.KeyPoint
 import breeze.linalg._
 import st.sparse.sundry._
 import org.apache.commons.io.FileUtils
-import st.sparse.billy.internal._
 import scala.Array.canBuildFrom
 import st.sparse.billy.CorrespondenceMap
 import st.sparse.sundry.Box.boxAToA

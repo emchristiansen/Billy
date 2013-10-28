@@ -1,7 +1,6 @@
 package st.sparse.billy.experiments.wideBaseline
 
 import st.sparse.billy._
-import st.sparse.billy.internal._
 import breeze.linalg._
 import java.io.File
 import st.sparse.sundry._

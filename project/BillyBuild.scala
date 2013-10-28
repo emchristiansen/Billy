@@ -89,7 +89,7 @@ object BillyBuild extends Build {
       "org.xerial" % "sqlite-jdbc" % "3.7.2",
       "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
       //      "org.apache.logging.log4j" % "log4j-core" % "2.0-beta8",
-      "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
+//      "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
       "org.imgscalr" % "imgscalr-lib" % "4.2"))
 
   def updateOnDependencyChange = Seq(

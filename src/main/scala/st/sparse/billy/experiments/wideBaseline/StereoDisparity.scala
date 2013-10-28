@@ -7,7 +7,6 @@ import st.sparse.sundry._
 import com.sksamuel.scrimage._
 import scala.pickling._
 import binary._
-import st.sparse.billy.internal._
 import breeze.linalg._
 import org.opencv.core.KeyPoint
 import thirdparty.jhlabs.image.PixelUtils

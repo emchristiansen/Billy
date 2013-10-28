@@ -1,8 +1,8 @@
 package st.sparse.billy
 
-import internal._
 import sys.process._
 import st.sparse.sundry.ExistingDirectory
+import st.sparse.sundry._
 
 object MatlabUtil extends Logging {
   def runInDirectory(directory: ExistingDirectory, command: String) {

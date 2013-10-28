@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 import spire.algebra._
 import spire.math._
 import spire.implicits._
-import st.sparse.billy.internal._
+import st.sparse.sundry._
 
 ///////////////////////////////////////////////////////////
 

@@ -1,7 +1,6 @@
 package st.sparse.billy.experiments.wideBaseline
 
 import st.sparse.billy._
-import st.sparse.billy.internal._
 import st.sparse.billy.experiments.RuntimeConfig
 import st.sparse.sundry._
 import scala.pickling._

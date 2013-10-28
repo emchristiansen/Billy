@@ -1,7 +1,6 @@
 package st.sparse.billy.extractors
 
 import st.sparse.billy._
-import st.sparse.billy.internal._
 import st.sparse.billy.experiments._
 import st.sparse.billy.detectors._
 import st.sparse.billy.extractors._
@@ -32,7 +31,7 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Test
     assert(boundaries.min >= 0)
     assert(boundaries.max <= 1)
 
-    logImage(boundaries, "boundaries")
+    logImage(boundaries.affineToUnitInterval.toImage, "boundaries")
   }
 
   test("connected components", FastTest) {
