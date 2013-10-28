@@ -11,7 +11,54 @@ import com.sksamuel.scrimage.PixelTools
 import scala.collection.mutable.Queue
 
 trait Segmentation {
-  def probabilityInSameSegment(left: Point, right: Point): Double
+  /**
+   * The probability two points belong to the same segment.
+   * 
+   * Sometimes this cannot be computed, such as when a point is on a 
+   * boundary.
+   */
+  def probabilityInSameSegment: (Point, Point) => Option[Double]
+}
+
+trait Segmenter {
+  def segmentation: Image => Segmentation
+
+  def boundaries: Image => DenseMatrix[Double]
+}
+
+trait SegmenterBoundaries extends Segmenter {
+  override def segment = (image: Image) => {
+    val boundaries = this.boundaries(image)
+
+    val step = 0.04
+    val layers = (0.0 until 1.0 by step) map { probability =>
+      val segments = boundaries mapValues (_ < probability)
+      (MatlabGPbSegmenter.connectedComponentsLabels(segments), probability)
+    }
+
+    new Segmentation {
+      override def probabilityInSameSegment = (left: Point, right: Point) => {
+        val leftX = left.x.round.toInt
+        val leftY = left.y.round.toInt
+        val rightX = right.x.round.toInt
+        val rightY = right.y.round.toInt
+
+        require(leftX >= 0 && leftX < image.width)
+        require(leftY >= 0 && leftY < image.height)
+        require(rightX >= 0 && rightX < image.width)
+        require(rightY >= 0 && rightY < image.height)
+
+        val probabilityDifferent = layers.find {
+          case (layer, _) =>
+            val left = layer(leftY, leftX)
+            val right = layer(rightY, rightX)
+            left.isDefined && right.isDefined && left.get == right.get
+        } map (_._2)
+
+        probabilityDifferent map (1 - _)
+      }
+    }
+  }
 }
 
 object MatlabGPbSegmenter {
@@ -70,7 +117,7 @@ object MatlabGPbSegmenter {
       while (set.nonEmpty) {
         val (row, column) = set.head
         set -= ((row, column))
-        
+
         labels(row, column) = Some(label)
 
         val west = (row, column - 1)
