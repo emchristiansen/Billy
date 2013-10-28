@@ -30,7 +30,7 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
         require(element >= 0)
         require(element <= 1)
         val scaled = (element * 255).round.toInt
-        
+
         image.setPixel(column, row, PixelTools.argb(
           255,
           scaled,
@@ -40,6 +40,18 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
     }
 
     image
+  }
+
+  /**
+   * Affine transform the contents of the matrix so that the minimum value
+   * is zero and the maximum is one. 
+   */
+  def affineToUnitInterval(
+    implicit numericA: Numeric[A]): DenseMatrix[Double] = {
+     val doubles = matrix.mapValues(implicitly[Numeric[A]].toDouble)
+     val zeroMin = doubles - doubles.min
+     
+     zeroMin / zeroMin.max
   }
 }
 
