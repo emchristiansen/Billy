@@ -21,6 +21,6 @@ class TestRichDenseMatrix extends FunGeneratorSuite with st.sparse.billy.TestUti
     
     val image = matrix.toImage
     
-    image.write("/home/eric/Downloads/random.png")
+    logImage(image, "random")
   }
 }

@@ -36,8 +36,8 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     val unpickled = pickled.unpickle[Middlebury[DoublyBoundedPairDetector[OpenCVDetector.FAST.type], OpenCVExtractor.SIFT.type, VectorMatcher.L1.type, IndexedSeq[Double]]]
     assert(unpickled == experiment)
   }
-
-  test("pixels should roughly match on Flowerpots", FastTest, InteractiveTest) {
+  
+  test("pixels should roughly match on Flowerpots", MediumTest, InteractiveTest) {
     val experiment = Middlebury(
       2006,
       "Flowerpots",
@@ -120,7 +120,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     logImage(fromRight, "Flowerpots_fromRight")
   }
 
-  test("pixels should roughly match on Moebius", FastTest) {
+  test("pixels should roughly match on Moebius", MediumTest, InteractiveTest) {
     val experiment = Middlebury(
       2005,
       "Moebius",

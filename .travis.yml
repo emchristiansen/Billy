@@ -29,7 +29,7 @@ before_script:
   - cd ../..
 
 script:
-  - sbt test
+  - sbt "testOnly * -- -l MatlabTest"
 
 
 
