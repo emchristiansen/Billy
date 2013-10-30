@@ -13,11 +13,52 @@ import scala.collection.mutable.Queue
 trait Segmentation {
   /**
    * The probability two points belong to the same segment.
-   * 
-   * Sometimes this cannot be computed, such as when a point is on a 
+   *
+   * Sometimes this cannot be computed, such as when a point is on a
    * boundary.
    */
   def probabilityInSameSegment: (Point, Point) => Option[Double]
+}
+
+object Segmentation {
+  def fromBoundariesImage(boundariesImage: Image): Segmentation = {
+    val boundaries = DenseMatrix.tabulate[Double](
+      boundariesImage.height,
+      boundariesImage.width) {
+        case (y, x) => {
+          PixelTools.gray(boundariesImage.pixel(x, y)) / 255.0
+        }
+      }
+
+    val step = 0.04
+    val layers = (0.0 until 1.0 by step) map { probability =>
+      val segments = boundaries mapValues (_ < probability)
+      (MatlabGPbSegmenter.connectedComponentsLabels(segments), probability)
+    }
+
+    new Segmentation {
+      override def probabilityInSameSegment = (left: Point, right: Point) => {
+        val leftX = left.x.round.toInt
+        val leftY = left.y.round.toInt
+        val rightX = right.x.round.toInt
+        val rightY = right.y.round.toInt
+
+        require(leftX >= 0 && leftX < boundariesImage.width)
+        require(leftY >= 0 && leftY < boundariesImage.height)
+        require(rightX >= 0 && rightX < boundariesImage.width)
+        require(rightY >= 0 && rightY < boundariesImage.height)
+
+        val probabilityDifferent = layers.find {
+          case (layer, _) =>
+            val left = layer(leftY, leftX)
+            val right = layer(rightY, rightX)
+            left.isDefined && right.isDefined && left.get == right.get
+        } map (_._2)
+
+        probabilityDifferent map (1 - _)
+      }
+    }
+  }
 }
 
 trait Segmenter {
@@ -65,7 +106,7 @@ object MatlabGPbSegmenter {
   /**
    * Returns a map of the boundary probabilities.
    */
-  def boundaries(image: Image): DenseMatrix[Double] = {
+  def boundariesImage(image: Image): Image = {
     // Otherwise the Matlab code will blow up memory.
     require(image.width <= 500 && image.height <= 500)
 
@@ -84,7 +125,11 @@ object MatlabGPbSegmenter {
     val command = s"gPbBoundaries('$imagePath', '$boundariesPath');"
     MatlabUtil.runInDirectory(gPbDirectory, command)
 
-    val boundariesImage = Image(boundariesPath)
+    Image(boundariesPath)
+  }
+
+  def boundaries(image: Image): DenseMatrix[Double] = {
+    val boundariesImage = this.boundariesImage(image)
     DenseMatrix.tabulate[Double](
       boundariesImage.height,
       boundariesImage.width) {
