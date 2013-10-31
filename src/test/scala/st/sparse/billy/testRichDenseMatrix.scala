@@ -18,9 +18,9 @@ class TestRichDenseMatrix extends FunGeneratorSuite with st.sparse.billy.TestUti
     val matrix = DenseMatrix.tabulate[Double](100, 200) {
       case (y, x) => (new util.Random).nextDouble.abs % 1.0
     }
-    
+
     val image = matrix.toImage
-    
-    logImage(image, "random")
+
+    logImage("random", image)
   }
 }

@@ -38,10 +38,12 @@ object Segmentation {
 
     new Segmentation {
       override def probabilityInSameSegment = (left: Point, right: Point) => {
-        val leftX = left.x.round.toInt
-        val leftY = left.y.round.toInt
-        val rightX = right.x.round.toInt
-        val rightY = right.y.round.toInt
+        // Floor is here because the segmentation logic doesn't work with
+        // subpixels.
+        val leftX = left.x.floor.toInt
+        val leftY = left.y.floor.toInt
+        val rightX = right.x.floor.toInt
+        val rightY = right.y.floor.toInt
 
         require(leftX >= 0 && leftX < boundariesImage.width)
         require(leftY >= 0 && leftY < boundariesImage.height)
@@ -102,13 +104,17 @@ trait SegmenterBoundaries extends Segmenter {
   }
 }
 
-object MatlabGPbSegmenter {
+object MatlabGPbSegmenter extends Logging {
+  // Otherwise the Matlab code will blow up memory.
+  // TODO: Make parameter.
+  val maxComputablePixels = 400 * 400
+
   /**
    * Returns a map of the boundary probabilities.
    */
   def boundariesImage(image: Image): Image = {
-    // Otherwise the Matlab code will blow up memory.
-    require(image.width <= 500 && image.height <= 500)
+    // `+ 1000` is fudge factor is case resizing isn't perfect.
+    require(image.width * image.height <= maxComputablePixels + 1000)
 
     val gPbDirectory =
       ExistingDirectory(getClass.getResource("/matlab/gPb").getPath)
@@ -126,6 +132,19 @@ object MatlabGPbSegmenter {
     MatlabUtil.runInDirectory(gPbDirectory, command)
 
     Image(boundariesPath)
+  }
+
+  def boundariesImageScaling(image: Image): Image = {
+    val scaleFactor = {
+      val numPixels = image.width * image.height
+      List(1.0, maxComputablePixels.toDouble / numPixels).min
+    }
+
+    val smallImage = image.scale(scaleFactor)
+    logger.debug(s"Image was ${image.width} by ${image.height}, and rescaled by a factor of ${scaleFactor} to get an image of size ${smallImage.width} by ${smallImage.height}.")
+    
+    val smallBoundaries = boundariesImage(smallImage)
+    smallBoundaries.scaleTo(image.width, image.height)
   }
 
   def boundaries(image: Image): DenseMatrix[Double] = {

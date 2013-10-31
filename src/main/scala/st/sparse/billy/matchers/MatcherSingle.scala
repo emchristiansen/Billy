@@ -10,11 +10,11 @@ import breeze.linalg.DenseMatrix
  * A Matcher which only requires that distance be defined by the user.
  */
 trait MatcherSingle[F] extends Matcher[F] {
-  override def matchCorresponding = (leftDescriptors, rightDescriptors) => {
+  final override def matchCorresponding = (leftDescriptors, rightDescriptors) => {
     (leftDescriptors, rightDescriptors).zipped map distance
   }
 
-  override def matchAll = (leftDescriptors, rightDescriptors) => {
+  final override def matchAll = (leftDescriptors, rightDescriptors) => {
     // A stream in which each element is repeated before moving to the
     // next element.
     // For example [a, b, c] might become [a, a, b, b, c, c].
