@@ -46,7 +46,7 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil 
     assert(scaledSTD == 1.0)
   }
 
-  test("distances are sane", SlowTest) {
+  test("distances are sane", SlowTest, MatlabTest) {
     val patchWidth = 16
     val extractor = AndExtractor(
       PatchExtractor(Gray, patchWidth, 2),
