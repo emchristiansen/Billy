@@ -31,7 +31,7 @@ class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.TestUtil {
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
-  test("Patch and ForegroundMask", SlowTest) {
+  test("Patch and ForegroundMask", SlowTest, MatlabTest) {
     val patchWidth = 64
     val extractor = AndExtractor(
       PatchExtractor(Gray, patchWidth, 1),
