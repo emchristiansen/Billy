@@ -10,6 +10,7 @@ import st.sparse.billy.MatlabUtil
 import breeze.linalg.DenseMatrix
 import com.sksamuel.scrimage.PixelTools
 import scala.collection.mutable.Queue
+import java.net.JarURLConnection
 
 trait Segmentation {
   /**
@@ -111,8 +112,19 @@ object MatlabGPbSegmenter extends Logging {
     // `+ 1000` is fudge factor is case resizing isn't perfect.
     require(image.width * image.height <= maxComputablePixels + 1000)
 
-    val gPbDirectory =
-      ExistingDirectory(getClass.getResource("/matlab/gPb").getPath)
+    // We're going to copy the contents of the matlab directory to some
+    // temporary folder.
+    val gPbDirectory: ExistingDirectory = {
+      val directory = File.createTempFile("matlabResources", "")
+      directory.mkdir()
+      val jarURL = getClass.getResource("/matlab/gPb")
+      st.sparse.billy.internal.FileUtils.copyJarResourcesRecursively(
+          directory, 
+          jarURL.openConnection().asInstanceOf[JarURLConnection])
+      ExistingDirectory(directory)
+    }
+      
+//      ExistingDirectory(getClass.getResource("/matlab/gPb").getPath)
 
     val imagePath = File.createTempFile("MatlabGPbSegmenterImage", ".png")
     image.write(imagePath)
