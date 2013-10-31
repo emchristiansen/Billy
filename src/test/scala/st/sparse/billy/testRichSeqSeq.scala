@@ -13,22 +13,16 @@ import st.sparse.sundry._
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestRichDenseMatrix extends FunGeneratorSuite with st.sparse.billy.TestUtil {
-  val randomMatrix = DenseMatrix.tabulate[Double](100, 200) {
+class TestRichSeqSeq extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+  val randomSeqSeq = DenseMatrix.tabulate[Double](100, 200) {
     case (y, x) => random.nextDouble
-  }
+  } toSeqSeq
 
-  test("toSeqSeq", FastTest) {
-    val seqSeq = randomMatrix.toSeqSeq
+  test("toDenseMatrix", FastTest) {
+    val randomMatrix = randomSeqSeq.toDenseMatrix
     
     randomMatrix foreachPair {
-      case ((y, x), value) => assert(seqSeq(y)(x) == value)
+      case ((y, x), value) => assert(randomSeqSeq(y)(x) == value)
     }
-  }
-  
-  test("random toImage", FastTest) {
-    val image = randomMatrix.toImage
-
-    logImage("random", image)
   }
 }

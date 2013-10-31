@@ -46,7 +46,7 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil 
     assert(scaledSTD == 1.0)
   }
 
-  ignore("distances are sane", SlowTest) {
+  test("distances are sane", SlowTest) {
     val patchWidth = 16
     val extractor = AndExtractor(
       PatchExtractor(Gray, patchWidth, 2),
@@ -55,7 +55,7 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil 
     val descriptors = extractor.extract(image, keyPoints)
     val descriptorsFlat = descriptors.flatten
 
-    val matcher = PixelSMatcher(1.0, 1.0)
+    val matcher = PixelSMatcher(1.0, 1.0, 1.0, 1.0)
 
     val distances = matcher.matchAll(descriptorsFlat, descriptorsFlat)
 
