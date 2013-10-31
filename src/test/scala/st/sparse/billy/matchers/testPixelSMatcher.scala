@@ -1,4 +1,4 @@
-package st.sparse.billy.extractors
+package st.sparse.billy.matchers
 
 import st.sparse.billy._
 import st.sparse.billy.experiments._
@@ -25,32 +25,26 @@ import java.io.File
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil {
   val image = palmTree
   val detector = BoundedDetector(32, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
-  test("Patch and ForegroundMask", SlowTest) {
-    val patchWidth = 64
+  test("distances are sane", SlowTest) {
+    val patchWidth = 16
     val extractor = AndExtractor(
-      PatchExtractor(Gray, patchWidth, 1),
+      PatchExtractor(Gray, patchWidth, 2),
       ForegroundMaskExtractor(patchWidth))
 
     val descriptors = extractor.extract(image, keyPoints)
-    assert(descriptors.flatten.size >= 8)
-
-    descriptors.flatten foreach {
-      case (patch, foregroundMask) => {       
-        val patchImage = patch.mapValues(_.head.toDouble / 255).toImage
-
-        val foregroundMaskImage = foregroundMask.toImage
-        
-        logDirectory("PatchAndMask") { directory: ExistingDirectory =>
-          patchImage.write(new File(directory, "patch.png"))
-          foregroundMaskImage.write(new File(directory, "foregroundMask.png"))
-        }
-      }
-    }
+    val descriptorsFlat = descriptors.flatten
+    
+    val matcher = PixelSMatcher
+    
+    val distances = matcher.matchAll(descriptorsFlat, descriptorsFlat)
+    
+    assert(distances.min >= 0)
+    diag(distances).foreach(element => assert(element == 0))
   }
 }

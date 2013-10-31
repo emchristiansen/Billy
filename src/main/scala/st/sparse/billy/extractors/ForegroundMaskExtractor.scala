@@ -11,6 +11,7 @@ import com.sksamuel.scrimage._
 import com.sksamuel.scrimage.filter._
 import scala.util.Try
 import org.opencv.core.Point
+import grizzled.math.stats
 
 ///////////////////////////////////////////////////////////
 
@@ -19,8 +20,14 @@ import org.opencv.core.Point
  * to similarity, and then extracts a square patch of given size and color.
  */
 case class ForegroundMaskExtractor(
-  patchWidth: Int) extends ExtractorSeveral[DenseMatrix[Option[Double]]] {
-  override def extract = (image, keyPoints) => {
+  patchWidth: Int) extends ExtractorSeveral[DenseMatrix[Double]] {
+  override def extract = (image, keyPoints) =>
+    extractCorrect(image, keyPoints).map(_.map(inpaint))
+
+  /**
+   * This method makes very clear which mask probabilities are unknown.
+   */
+  def extractCorrect = (image: Image, keyPoints: Seq[KeyPoint]) => {
     val boundaries = MatlabGPbSegmenter.boundariesImageScaling(image)
     assert(boundaries.width == image.width)
     assert(boundaries.height == image.height)
@@ -36,14 +43,35 @@ case class ForegroundMaskExtractor(
         val centerPoint = new Point(patchWidth / 2.0, patchWidth / 2.0)
         def probabilityFromCenterSegment(otherPoint: Point) =
           segmentation.probabilityInSameSegment(centerPoint, otherPoint)
-          
+
         DenseMatrix.tabulate[Option[Double]](
-            boundariesPatch.height, 
-            boundariesPatch.width) {
-          case (y, x) => probabilityFromCenterSegment(new Point(x, y))
-        }
+          boundariesPatch.height,
+          boundariesPatch.width) {
+            case (y, x) => probabilityFromCenterSegment(new Point(x, y))
+          }
       }
     }
   }
+
+  def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) =>
+    image.mapPairs {
+      case (_, Some(element)) => element
+      case ((y, x), None) => {
+        def at(y: Int, x: Int): Option[Option[Double]] =
+          if (y >= 0 && y < image.rows && x >= 0 && x < image.cols)
+            Some(image(y, x))
+          else None
+
+        val window: Seq[Double] = {
+          val indices = (y - 1 to y + 1).flatMap { y =>
+            (x - 1 to x + 1).map { x => (y, x) }
+          }
+          indices.map((at _).tupled).flatten.flatten
+        }
+        
+        stats.mean(window: _*)
+      }
+    }
+
 }
 
