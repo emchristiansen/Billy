@@ -4,6 +4,7 @@ import org.opencv.core.Mat
 import breeze.linalg.DenseMatrix
 import com.sksamuel.scrimage.Image
 import com.sksamuel.scrimage.PixelTools
+import st.sparse.sundry.ExpectyOverrides._
 
 ///////////////////////////////////////////////////
 

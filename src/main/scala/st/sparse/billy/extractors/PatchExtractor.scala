@@ -43,15 +43,9 @@ case class PatchExtractor(
         }
       }
 
-      val matrix = DenseMatrix.fill(patchWidth, patchWidth)(IndexedSeq[Int]())
-      for (
-        y <- 0 until patchWidth;
-        x <- 0 until patchWidth
-      ) {
-        matrix(x, y) = extract(x, y)
+      DenseMatrix.tabulate[IndexedSeq[Int]](patchWidth, patchWidth) {
+        case (y, x) => extract(x, y)
       }
-
-      matrix
     }
   }
 }
