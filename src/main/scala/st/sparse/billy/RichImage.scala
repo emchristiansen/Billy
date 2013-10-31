@@ -36,6 +36,14 @@ case class RichImage(image: Image) {
           PixelTools.blue(pixel))
       }
     }
+
+  def toGrayMatrix: DenseMatrix[Int] = DenseMatrix.tabulate[Int](
+    image.height,
+    image.width) {
+      case (y, x) => {
+        PixelTools.gray(image.pixel(x, y))
+      }
+    }
 }
 
 trait RichImageImplicits {

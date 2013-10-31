@@ -18,6 +18,8 @@ trait TestUtil extends Logging {
   loadOpenCV
   configureLogger
 
+  val random = new util.Random(0)
+
   val resourceRoot = ExistingDirectory(
     new File(getClass.getResource("/").getPath))
 

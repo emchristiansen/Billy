@@ -31,7 +31,22 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil 
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
-  test("distances are sane", SlowTest) {
+  test("weighted mean and std", FastTest) {
+    val data = 100 times (random.nextDouble)
+    val weights = 100 times (random.nextDouble)
+    
+    val mean = PixelSMatcher.weightedMean(data.zip(weights))
+    val dataCentered = data map(_ - mean)
+    val centeredMean = PixelSMatcher.weightedMean(dataCentered.zip(weights))
+    assert(centeredMean.abs <= 0.001)
+    
+    val std = PixelSMatcher.weightedSTD(data.zip(weights))
+    val dataScaled = data map (_ / std)
+    val scaledSTD = PixelSMatcher.weightedSTD(dataScaled.zip(weights))
+    assert(scaledSTD == 1.0)
+  }
+
+  ignore("distances are sane", SlowTest) {
     val patchWidth = 16
     val extractor = AndExtractor(
       PatchExtractor(Gray, patchWidth, 2),
@@ -39,11 +54,11 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil 
 
     val descriptors = extractor.extract(image, keyPoints)
     val descriptorsFlat = descriptors.flatten
-    
-    val matcher = PixelSMatcher
-    
+
+    val matcher = PixelSMatcher(1.0, 1.0)
+
     val distances = matcher.matchAll(descriptorsFlat, descriptorsFlat)
-    
+
     assert(distances.min >= 0)
     diag(distances).foreach(element => assert(element == 0))
   }

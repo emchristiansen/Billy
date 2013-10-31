@@ -1,6 +1,7 @@
 package st.sparse.billy.extractors
 
 import st.sparse.sundry._
+import st.sparse.billy._
 import org.opencv.core.Point
 import com.sksamuel.scrimage.Image
 import st.sparse.sundry.ExistingDirectory
@@ -22,13 +23,7 @@ trait Segmentation {
 
 object Segmentation {
   def fromBoundariesImage(boundariesImage: Image): Segmentation = {
-    val boundaries = DenseMatrix.tabulate[Double](
-      boundariesImage.height,
-      boundariesImage.width) {
-        case (y, x) => {
-          PixelTools.gray(boundariesImage.pixel(x, y)) / 255.0
-        }
-      }
+    val boundaries = boundariesImage.toGrayMatrix mapValues { _ / 255.0 }
 
     val step = 0.04
     val layers = (0.0 until 1.0 by step) map { probability =>

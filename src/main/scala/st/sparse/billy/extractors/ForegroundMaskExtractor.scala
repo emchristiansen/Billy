@@ -22,7 +22,7 @@ import grizzled.math.stats
 case class ForegroundMaskExtractor(
   patchWidth: Int) extends ExtractorSeveral[DenseMatrix[Double]] {
   override def extract = (image, keyPoints) =>
-    extractCorrect(image, keyPoints).map(_.map(inpaint))
+    extractCorrect(image, keyPoints).map(_.map(ForegroundMaskExtractor.inpaint))
 
   /**
    * This method makes very clear which mask probabilities are unknown.
@@ -52,7 +52,9 @@ case class ForegroundMaskExtractor(
       }
     }
   }
+}
 
+object ForegroundMaskExtractor {
   def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) =>
     image.mapPairs {
       case (_, Some(element)) => element
@@ -63,15 +65,14 @@ case class ForegroundMaskExtractor(
           else None
 
         val window: Seq[Double] = {
-          val indices = (y - 1 to y + 1).flatMap { y =>
-            (x - 1 to x + 1).map { x => (y, x) }
+          val indices = (y - 2 to y + 2).flatMap { y =>
+            (x - 2 to x + 2).map { x => (y, x) }
           }
           indices.map((at _).tupled).flatten.flatten
         }
-        
+
         stats.mean(window: _*)
       }
     }
-
 }
 
