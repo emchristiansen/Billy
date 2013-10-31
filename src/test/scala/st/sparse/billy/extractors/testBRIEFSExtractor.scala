@@ -30,7 +30,7 @@ class TestBRIEFSExtractor extends FunGeneratorSuite with st.sparse.billy.TestUti
   assert(keyPoints.size > 0)
 
   test("correct length", SlowTest) {
-    val extractor = BRIEFSExtractor(32, 256, 2)
+    val extractor = BRIEFSExtractor(32, 64, 2)
     val descriptors = extractor.extract(image, keyPoints)
     assert(descriptors.flatten.size >= 8)
     assert(descriptors.flatten.forall(_.size == 32))
