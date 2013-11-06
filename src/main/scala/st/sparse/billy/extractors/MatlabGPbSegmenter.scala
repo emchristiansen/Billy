@@ -108,23 +108,16 @@ object MatlabGPbSegmenter extends Logging {
   /**
    * Returns a map of the boundary probabilities.
    */
-  def boundariesImage(image: Image): Image = {
+  def boundariesImage(
+    image: Image)(
+      implicit matlabLibraryRoot: MatlabLibraryRoot): Image = {
     // `+ 1000` is fudge factor is case resizing isn't perfect.
     require(image.width * image.height <= maxComputablePixels + 1000)
 
     // We're going to copy the contents of the matlab directory to some
     // temporary folder.
-    val gPbDirectory: ExistingDirectory = {
-      val directory = File.createTempFile("matlabResources", "")
-      directory.mkdir()
-      val jarURL = getClass.getResource("/matlab/gPb")
-      st.sparse.billy.internal.FileUtils.copyJarResourcesRecursively(
-          directory, 
-          jarURL.openConnection().asInstanceOf[JarURLConnection])
-      ExistingDirectory(directory)
-    }
-      
-//      ExistingDirectory(getClass.getResource("/matlab/gPb").getPath)
+    val gPbDirectory: ExistingDirectory =
+      ExistingDirectory(new File(matlabLibraryRoot.data, "gPb"))
 
     val imagePath = File.createTempFile("MatlabGPbSegmenterImage", ".png")
     image.write(imagePath)
@@ -141,7 +134,8 @@ object MatlabGPbSegmenter extends Logging {
     Image(boundariesPath)
   }
 
-  def boundariesImageScaling(image: Image): Image = {
+  def boundariesImageScaling(image: Image)(
+    implicit matlabLibraryRoot: MatlabLibraryRoot): Image = {
     val scaleFactor = {
       val numPixels = image.width * image.height
       List(1.0, maxComputablePixels.toDouble / numPixels).min
@@ -149,12 +143,13 @@ object MatlabGPbSegmenter extends Logging {
 
     val smallImage = image.scale(scaleFactor)
     logger.debug(s"Image was ${image.width} by ${image.height}, and rescaled by a factor of ${scaleFactor} to get an image of size ${smallImage.width} by ${smallImage.height}.")
-    
+
     val smallBoundaries = boundariesImage(smallImage)
     smallBoundaries.scaleTo(image.width, image.height)
   }
 
-  def boundaries(image: Image): DenseMatrix[Double] = {
+  def boundaries(image: Image)(
+    implicit matlabLibraryRoot: MatlabLibraryRoot): DenseMatrix[Double] = {
     val boundariesImage = this.boundariesImage(image)
     DenseMatrix.tabulate[Double](
       boundariesImage.height,

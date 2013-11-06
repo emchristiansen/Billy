@@ -22,7 +22,7 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
   val smallGoldfishGirl = goldfishGirl.scale(0.5)
   logImage("smallGoldfishGirl", smallGoldfishGirl)
 
@@ -32,7 +32,7 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Test
     logImage("boundaries", boundaries)
   }
 
-  test("connected components", FastTest) {
+  test("connected components", FastTest, MatlabTest) {
     val denseMatrix = Seq(
       Seq(true, true, false, true),
       Seq(true, false, false, true),

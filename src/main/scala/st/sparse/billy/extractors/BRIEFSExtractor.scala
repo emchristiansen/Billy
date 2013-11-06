@@ -17,7 +17,8 @@ case class BRIEFSExtractor(
   numPairs: Int,
   patchWidth: Int,
   blurWidth: Int)(
-    implicit logRoot: LogRoot) extends ExtractorSeveral[IndexedSeq[(Boolean, Option[Double], Option[Double])]] with Logging {
+    implicit logRoot: LogRoot,
+    matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[IndexedSeq[(Boolean, Option[Double], Option[Double])]] with Logging {
   require(numPairs > 0)
   require(patchWidth > 0)
   require(blurWidth > 0)

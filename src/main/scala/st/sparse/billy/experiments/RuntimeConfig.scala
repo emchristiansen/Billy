@@ -1,6 +1,7 @@
 package st.sparse.billy.experiments
 
 import st.sparse.sundry._
+import st.sparse.billy._
 
 import scala.slick.session.Database
 
@@ -32,6 +33,11 @@ case class RuntimeConfig(
    * You can optionally set a different temp directory.
    */
   tempRoot: Option[ExistingDirectory],
+  /**
+   * Some code that shells out to Matlab requires that some Matlab libraries
+   * exist on the system.
+   */
+  matlabLibraryRoot: Option[MatlabLibraryRoot],
   /**
    * Whether Billy should delete the temporary files it creates.
    * If so, the deletion will happen at program termination.

@@ -20,7 +20,8 @@ import grizzled.math.stats
  * to similarity, and then extracts a square patch of given size and color.
  */
 case class ForegroundMaskExtractor(
-  patchWidth: Int) extends ExtractorSeveral[DenseMatrix[Double]] {
+  patchWidth: Int)(
+    implicit matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[DenseMatrix[Double]] {
   override def extract = (image, keyPoints) =>
     extractCorrect(image, keyPoints).map(_.map(ForegroundMaskExtractor.inpaint))
 

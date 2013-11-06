@@ -25,7 +25,7 @@ import java.io.File
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
   val image = palmTree
   val detector = BoundedDetector(32, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)

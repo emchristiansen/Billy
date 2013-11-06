@@ -23,7 +23,7 @@ import scala.reflect.ClassTag
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestBRIEFSExtractor extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+class TestBRIEFSExtractor extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
   val image = palmTree
   val detector = BoundedDetector(16, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)
