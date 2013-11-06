@@ -25,13 +25,13 @@ import java.io.File
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.TestUtil {
+class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
   val image = palmTree
   val detector = BoundedDetector(32, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
-  test("weighted mean and std", FastTest) {
+  test("weighted mean and std", FastTest, MatlabTest) {
     val data = 100 times (random.nextDouble)
     val weights = 100 times (random.nextDouble)
     
