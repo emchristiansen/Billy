@@ -5,12 +5,16 @@ import st.sparse.sundry._
 import st.sparse.sundry.ExpectyOverrides._
 import breeze.linalg._
 import grizzled.math.stats
+import java.io.File
+import org.apache.commons.io.FileUtils
 
+// TODO: Figure out what to do with `logRoot`.
 case class PixelSMatcher(
   pixelsNCCWeight: Double,
   maskNCCWeight: Double,
   pixelsWeightedNCCWeight: Double,
-  maskWeightedNCCWeight: Double) extends MatcherSingle[(DenseMatrix[IndexedSeq[Int]], DenseMatrix[Double])] with Logging {
+  maskWeightedNCCWeight: Double)(
+    implicit logRoot: LogRoot) extends MatcherSingle[(DenseMatrix[IndexedSeq[Int]], DenseMatrix[Double])] with Logging {
   override def distance = (left, right) => {
     val ((leftPixelsSeq, leftMask), (rightPixelsSeq, rightMask)) = (left, right)
     val leftPixels = leftPixelsSeq mapValues { elements =>
@@ -68,6 +72,7 @@ case class PixelSMatcher(
     // NCC on the pixels, weighted by the probability the pixel is in the 
     // foreground of both patches.
     val pixelsWeightedNCC = {
+      // The probability the pixel is in the foreground of each patch.
       val weights = {
         val left = leftMask.toSeqSeq.flatten
         val right = rightMask.toSeqSeq.flatten
@@ -75,6 +80,7 @@ case class PixelSMatcher(
           toIndexedSeq.toDenseMatrix
       }
 
+      // The pixels, normalized by these probabilities.
       val leftPixelsWeightNormalized =
         normalizeL2Weighted(leftPixels, weights)
       val rightPixelsWeightNormalized =
@@ -119,6 +125,38 @@ case class PixelSMatcher(
           sqrtWeights.toSeqSeq.flatten).zipped.map(_ * _))
 
       unnormalizedDistance / weights.sum
+    }
+
+    logDirectory("patchesAndDistances") { directory =>
+      // Assumes the input matrix has mean zero and unit std.
+      def writeNormalized(
+        name: String,
+        matrix: DenseMatrix[Double]) {
+        // We'll clip at 3 standard deviations.
+        val scaled = matrix mapValues (_ / 3 + 0.5) mapValues
+          (_.min(1.0)) mapValues (_.max(0.0))
+        scaled.toImage.write(new File(directory, name))
+      }
+
+      leftPixels.affineToUnitInterval.toImage.write(new File(directory, "leftPixels"))
+      rightPixels.affineToUnitInterval.toImage.write(new File(directory, "rightPixels"))
+      leftMask.toImage.write(new File(directory, "leftMask"))
+      rightMask.toImage.write(new File(directory, "rightMask"))
+      
+      writeNormalized("leftPixelsNormalized", leftPixelsNormalized)
+      writeNormalized("rightPixelsNormalized", rightPixelsNormalized)
+
+      writeNormalized("leftMaskNormalized", leftMaskNormalized)
+      writeNormalized("rightMaskNormalized", rightMaskNormalized)
+
+      val message = Seq(
+        "pixelsNCC: " + pixelsNCC,
+        "maskNCC: " + maskNCC,
+        "pixelsWeightedNCC: " + pixelsWeightedNCC,
+        "maskWeightedNCC: " + maskWeightedNCC).mkString("\n")
+      FileUtils.writeStringToFile(
+        new File(directory, "log.txt"),
+        message)
     }
 
     pixelsNCCWeight * pixelsNCC +

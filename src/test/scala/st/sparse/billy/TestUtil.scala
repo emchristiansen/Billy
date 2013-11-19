@@ -31,6 +31,22 @@ trait TestUtil extends Logging {
     resourceRoot,
     "/flowerpots.png")))
 
+  val moebiusView1 = Image(ExistingFile(new File(
+    resourceRoot,
+    "/data/middleburyStereo/2005/Moebius/view1.png")))
+
+  val moebiusDisp1 = Image(ExistingFile(new File(
+    resourceRoot,
+    "/data/middleburyStereo/2005/Moebius/disp1.png")))
+
+  val moebiusView5 = Image(ExistingFile(new File(
+    resourceRoot,
+    "/data/middleburyStereo/2005/Moebius/view5.png")))
+
+  val moebiusDisp5 = Image(ExistingFile(new File(
+    resourceRoot,
+    "/data/middleburyStereo/2005/Moebius/disp5.png")))
+
   val palmTree = Image(ExistingFile(new File(
     resourceRoot,
     "/palmTree.jpg")))

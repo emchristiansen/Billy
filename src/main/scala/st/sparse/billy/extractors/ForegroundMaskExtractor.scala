@@ -23,7 +23,7 @@ case class ForegroundMaskExtractor(
   patchWidth: Int)(
     implicit matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[DenseMatrix[Double]] {
   override def extract = (image, keyPoints) =>
-    extractCorrect(image, keyPoints).map(_.map(ForegroundMaskExtractor.inpaint))
+    extractCorrect(image, keyPoints).map(_.map(RichDenseMatrix.inpaint))
 
   /**
    * This method makes very clear which mask probabilities are unknown.
@@ -53,27 +53,5 @@ case class ForegroundMaskExtractor(
       }
     }
   }
-}
-
-object ForegroundMaskExtractor {
-  def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) =>
-    image.mapPairs {
-      case (_, Some(element)) => element
-      case ((y, x), None) => {
-        def at(y: Int, x: Int): Option[Option[Double]] =
-          if (y >= 0 && y < image.rows && x >= 0 && x < image.cols)
-            Some(image(y, x))
-          else None
-
-        val window: Seq[Double] = {
-          val indices = (y - 2 to y + 2).flatMap { y =>
-            (x - 2 to x + 2).map { x => (y, x) }
-          }
-          indices.map((at _).tupled).flatten.flatten
-        }
-
-        stats.mean(window: _*)
-      }
-    }
 }
 

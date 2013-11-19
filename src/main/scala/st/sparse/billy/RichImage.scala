@@ -46,6 +46,13 @@ case class RichImage(image: Image) {
     }
 }
 
+// TODO
+object RichImage {
+  def edgePreservingSmoothing(
+    edges: DenseMatrix[Double])(
+      image: Image): Image = ???
+}
+
 trait RichImageImplicits {
   implicit def image2RichImage(image: Image) = RichImage(image)
 }

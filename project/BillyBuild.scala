@@ -76,7 +76,7 @@ object BillyBuild extends Build {
       "commons-io" % "commons-io" % "2.4",
       "com.typesafe.slick" %% "slick" % "1.0.1",
       "org.scalatest" %% "scalatest" % "2.0.RC1-SNAP6" % "test",
-      "org.expecty" % "expecty" % "0.9",
+      "org.expecty" % "expecty" % "0.10",
       //      "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
       //      "org.scala-stm" %% "scala-stm" % "0.7",
       "com.chuusai" % "shapeless_2.10.2" % "2.0.0-M1",

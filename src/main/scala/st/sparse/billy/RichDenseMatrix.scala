@@ -5,6 +5,7 @@ import breeze.linalg.DenseMatrix
 import com.sksamuel.scrimage.Image
 import com.sksamuel.scrimage.PixelTools
 import st.sparse.sundry.ExpectyOverrides._
+import grizzled.math.stats
 
 ///////////////////////////////////////////////////
 
@@ -45,15 +46,38 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
 
   /**
    * Affine transform the contents of the matrix so that the minimum value
-   * is zero and the maximum is one. 
+   * is zero and the maximum is one.
    */
   def affineToUnitInterval(
     implicit numericA: Numeric[A]): DenseMatrix[Double] = {
-     val doubles = matrix.mapValues(implicitly[Numeric[A]].toDouble)
-     val zeroMin = doubles - doubles.min
-     
-     zeroMin / zeroMin.max
+    val doubles = matrix.mapValues(implicitly[Numeric[A]].toDouble)
+    val zeroMin = doubles - doubles.min
+
+    zeroMin / zeroMin.max
   }
+}
+
+// TODO: Move to case class.
+object RichDenseMatrix {
+  def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) =>
+    image.mapPairs {
+      case (_, Some(element)) => element
+      case ((y, x), None) => {
+        def at(y: Int, x: Int): Option[Option[Double]] =
+          if (y >= 0 && y < image.rows && x >= 0 && x < image.cols)
+            Some(image(y, x))
+          else None
+
+        val window: Seq[Double] = {
+          val indices = (y - 2 to y + 2).flatMap { y =>
+            (x - 2 to x + 2).map { x => (y, x) }
+          }
+          indices.map((at _).tupled).flatten.flatten
+        }
+
+        stats.mean(window: _*)
+      }
+    }
 }
 
 trait RichDenseMatrixImplicits {

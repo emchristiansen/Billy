@@ -27,7 +27,7 @@ import java.io.File
 @RunWith(classOf[JUnitRunner])
 class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
   val image = palmTree
-  val detector = BoundedDetector(32, OpenCVDetector.FAST)
+  val detector = BoundedDetector(8, OpenCVDetector.FAST)
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
@@ -47,7 +47,7 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.MatlabTes
   }
 
   test("distances are sane", SlowTest, MatlabTest) {
-    val patchWidth = 16
+    val patchWidth = 64
     val extractor = AndExtractor(
       PatchExtractor(Gray, patchWidth, 2),
       ForegroundMaskExtractor(patchWidth))
