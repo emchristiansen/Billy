@@ -13,16 +13,19 @@ import st.sparse.sundry._
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
+class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {  
   test("edge preserving smoothing", MediumTest) {
     val smallDisp = moebiusDisp1.scale(0.25)
     val smallView = moebiusView1.scale(0.25)
 
+    logger.info("Getting boundaries")
     val boundaries = MatlabGPbSegmenter.boundariesImageScaling(smallDisp)
+    logger.info("Getting segmentation")
     val segmentation = Segmentation.fromBoundariesImage(boundaries)
 
+    logger.info("Doing edge preserving smoothing")
     val smoothed = RichImage.edgePreservingSmoothing(
-      5,
+      10,
       segmentation)(smallView)
 
     logImage("smallDisp", smallDisp)
