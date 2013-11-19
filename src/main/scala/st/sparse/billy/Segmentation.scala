@@ -26,7 +26,7 @@ object Segmentation {
     val boundaries = boundariesImage.toGrayMatrix mapValues { _ / 255.0 }
 
     val step = 0.04
-    val layers = (0.0 until 1.0 by step) map { probability =>
+    val layers = (0.0 until 1.0 by step).par map { probability =>
       val segments = boundaries mapValues (_ < probability)
       (MatlabGPbSegmenter.connectedComponentsLabels(segments), probability)
     }

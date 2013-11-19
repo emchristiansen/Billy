@@ -9,6 +9,9 @@ import com.sksamuel.scrimage._
 import org.opencv.core.Mat
 import javax.imageio.ImageIO
 import org.opencv.highgui.Highgui
+import scalaz._
+import Scalaz._
+import org.opencv.core.Point
 
 ///////////////////////////////////////
 
@@ -30,6 +33,7 @@ case class RichImage(image: Image) {
     for (y <- 0 until image.height) yield {
       for (x <- 0 until image.width) yield {
         val pixel = image.pixel(x, y)
+
         (PixelTools.alpha(pixel),
           PixelTools.red(pixel),
           PixelTools.green(pixel),
@@ -49,8 +53,48 @@ case class RichImage(image: Image) {
 // TODO
 object RichImage {
   def edgePreservingSmoothing(
-    edges: DenseMatrix[Double])(
-      image: Image): Image = ???
+    radius: Int,
+    segmentation: Segmentation)(
+      image: Image): Image = {
+    val smoothed = Image.empty(image.width, image.height).toMutable
+    for (
+      yCenter <- 0 until image.height par;
+      xCenter <- 0 until image.width
+    ) {
+      val yStart = math.max(yCenter - radius, 0)
+      val yEnd = math.min(yCenter + radius, image.height - 1)
+      val xStart = math.max(xCenter - radius, 0)
+      val xEnd = math.min(xCenter + radius, image.width - 1)
+
+      val pixelsAndWeights = for (
+        ySample <- yStart to yEnd;
+        xSample <- xStart to xEnd
+      ) yield {
+        val pixel = image.pixel(xSample, ySample)
+        val vector = DenseVector[Double](
+          PixelTools.alpha(pixel),
+          PixelTools.red(pixel),
+          PixelTools.green(pixel),
+          PixelTools.blue(pixel))
+        val weightOption = segmentation.probabilityInSameSegment(
+          new Point(xCenter, yCenter),
+          new Point(xSample, ySample))
+        for (weight <- weightOption) yield {
+          (vector * weight, weight)
+        }
+      }
+
+      val Seq(alpha, red, green, blue): Seq[Int] =
+        (pixelsAndWeights.flatten.map(_._1).reduce(_ + _) /
+          pixelsAndWeights.flatten.map(_._2).sum).data.map(_.round.toInt)
+      smoothed.setPixel(
+        xCenter,
+        yCenter,
+        PixelTools.argb(alpha, red, green, blue))
+    }
+
+    smoothed
+  }
 }
 
 trait RichImageImplicits {

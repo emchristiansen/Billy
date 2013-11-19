@@ -83,7 +83,7 @@ object BillyBuild extends Build {
       "org.clapper" %% "grizzled-scala" % "1.1.4",
       "org.scalanlp" %% "breeze-math" % "0.4",
       "org.spire-math" %% "spire" % "0.6.0",
-      //      "org.scalaz" %% "scalaz-core" % "7.1.0-SNAPSHOT",
+      "org.scalaz" %% "scalaz-core" % "7.0.4",
       //      "org.rogach" %% "scallop" % "0.9.2",
       "junit" % "junit" % "4.11" % "test",
       "org.xerial" % "sqlite-jdbc" % "3.7.2",
