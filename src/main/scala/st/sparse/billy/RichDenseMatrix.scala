@@ -59,9 +59,9 @@ case class RichDenseMatrix[A](matrix: DenseMatrix[A]) {
 
 // TODO: Move to case class.
 object RichDenseMatrix {
-  def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) =>
-    image.mapPairs {
-      case (_, Some(element)) => element
+  def inpaint: DenseMatrix[Option[Double]] => DenseMatrix[Double] = (image) => {
+    def iteration(image: DenseMatrix[Option[Double]]) = image.mapPairs {
+      case (_, Some(element)) => Some(element)
       case ((y, x), None) => {
         def at(y: Int, x: Int): Option[Option[Double]] =
           if (y >= 0 && y < image.rows && x >= 0 && x < image.cols)
@@ -75,9 +75,15 @@ object RichDenseMatrix {
           indices.map((at _).tupled).flatten.flatten
         }
 
-        stats.mean(window: _*)
+        if (window.size > 0) Some(stats.mean(window: _*))
+        else None
       }
     }
+
+    val inpainted = 
+      Stream.iterate(image)(iteration).find(!_.data.contains(None))
+    inpainted.get.mapValues(_.get)
+  }
 }
 
 trait RichDenseMatrixImplicits {

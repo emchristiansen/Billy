@@ -48,6 +48,17 @@ case class RichImage(image: Image) {
         PixelTools.gray(image.pixel(x, y))
       }
     }
+  
+  // Only takes grayscale images.
+  def inpaintBlackPixels: Image = {
+    val matrixInt = toGrayMatrix
+    val matrixOptionDouble = matrixInt.mapValues {
+      case 0 => None
+      case x => Some(x.toDouble / 255)
+    }
+    val inpainted = RichDenseMatrix.inpaint(matrixOptionDouble)
+    inpainted.toImage
+  }
 }
 
 // TODO
@@ -80,7 +91,8 @@ object RichImage {
           new Point(xCenter, yCenter),
           new Point(xSample, ySample))
         for (weight <- weightOption) yield {
-          (vector * weight, weight)
+          val weightPower = math.pow(weight, 5)
+          (vector * weightPower, weightPower)
         }
       }
 
