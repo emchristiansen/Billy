@@ -59,20 +59,10 @@ class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUti
   test("anisotropic diffusion", MediumTest, MatlabTest) {
     val scaleFactor = 0.25
 
-    val smallDisp = moebiusDisp1
-//    val smallView = moebiusView1
-    
-//    val smallDisp = moebiusDisp1.scale(scaleFactor)
     val smallView = moebiusView1.scale(scaleFactor)
 
     logger.info("Inpainting")
-    val dispInpainted = smallDisp.inpaintBlackPixels.scale(scaleFactor)
-//    val dispInpainted = smallDisp.inpaintBlackPixels
-
-    //    logger.info("Getting boundaries")
-    //    val boundaries = MatlabGPbSegmenter.boundariesImageScaling(smallDisp)
-    //    logger.info("Getting segmentation")
-    //    val segmentation = Segmentation.fromBoundariesImage(smallBoundaries)
+    val dispInpainted = moebiusDisp1.inpaintBlackPixels.scale(scaleFactor)
 
     def smooth(image: Image) = {
       logger.info("Doing anisotropic diffusion")

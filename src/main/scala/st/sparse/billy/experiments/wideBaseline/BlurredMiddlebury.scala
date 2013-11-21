@@ -32,14 +32,26 @@ case class BlurredMiddlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[
         similarityThreshold,
         disparity)
     }
-    
+
     smoothed(numSmoothingIterations)
   }
 
-  override def leftImage(implicit runtimeConfig: RuntimeConfig) = ???
-  override def rightImage(implicit runtimeConfig: RuntimeConfig) = ???
-  override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) = ???
-  override def experimentParametersString = ???
+  override def leftImage(implicit runtimeConfig: RuntimeConfig) = {
+    val disparity = Image(ExistingFile(new File(
+      middlebury.databaseRoot,
+      "disp1.png")))
+    smooth(middlebury.leftImage, disparity)
+  }
+  override def rightImage(implicit runtimeConfig: RuntimeConfig) = {
+    val disparity = Image(ExistingFile(new File(
+      middlebury.databaseRoot,
+      "disp5.png")))
+    smooth(middlebury.rightImage, disparity)
+  }
+  override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) = 
+    middlebury.correspondenceMap
+  override def experimentParametersString = 
+    s"${similarityThreshold}_${numSmoothingIterations}_${middlebury.experimentParametersString}"
 }
 
 object BlurredMiddlebury
