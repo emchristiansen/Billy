@@ -18,13 +18,24 @@ import thirdparty.jhlabs.image.PixelUtils
  * Represents experiments on the Oxford image dataset.
  */
 case class BlurredMiddlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[F], F](
-  blur: Double,
+  similarityThreshold: Double,
+  numSmoothingIterations: Int,
   middlebury: Middlebury[D, E, M, F]) extends ExperimentImplementation[D, E, M, F] with Logging {
   override val maxPairedDescriptors = middlebury.maxPairedDescriptors
   override val detector = middlebury.detector
   override val extractor = middlebury.extractor
   override val matcher = middlebury.matcher
-  
+
+  def smooth: (Image, Image) => Image = (image, disparity) => {
+    val smoothed = Stream.iterate(image) { image =>
+      image.anisotropicDiffusion(
+        similarityThreshold,
+        disparity)
+    }
+    
+    smoothed(numSmoothingIterations)
+  }
+
   override def leftImage(implicit runtimeConfig: RuntimeConfig) = ???
   override def rightImage(implicit runtimeConfig: RuntimeConfig) = ???
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) = ???
