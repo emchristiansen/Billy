@@ -15,6 +15,15 @@ import org.opencv.core.Point
 
 ///////////////////////////////////////
 
+case class ImagePOD(
+  width: Int,
+  height: Int,
+  `type`: Int,
+  data: Array[Int]) {
+  override def toString = 
+    s"ImagePOD($width, $height, ${`type`}, ${data.hashCode})" 
+}
+
 /**
  * Additional methods for Image.
  */
@@ -48,6 +57,12 @@ case class RichImage(image: Image) {
         PixelTools.gray(image.pixel(x, y))
       }
     }
+
+  def toPOD: ImagePOD = ImagePOD(
+    image.awt.getWidth,
+    image.awt.getHeight,
+    image.awt.getType,
+    image.pixels.toArray)
 
   // Only takes grayscale images.
   def inpaintBlackPixels: Image = {
@@ -119,34 +134,34 @@ case class RichImage(image: Image) {
               similaritySample.toDouble / similarityCenter
           val weight = math.pow(1 / dissimilarity, 20)
 
-                    if (dissimilarity > similarityThreshold) None
-                    else {
-                      val pixel = imagePatch.pixel(xSample, ySample)
-                      val vector = DenseVector[Double](
-                        PixelTools.alpha(pixel),
-                        PixelTools.red(pixel),
-                        PixelTools.green(pixel),
-                        PixelTools.blue(pixel))
-                      Some(vector)
-                    }
-//          val pixel = imagePatch.pixel(xSample, ySample)
-//          val vector = DenseVector[Double](
-//            PixelTools.alpha(pixel),
-//            PixelTools.red(pixel),
-//            PixelTools.green(pixel),
-//            PixelTools.blue(pixel))
-//          (vector * weight, weight)
+          if (dissimilarity > similarityThreshold) None
+          else {
+            val pixel = imagePatch.pixel(xSample, ySample)
+            val vector = DenseVector[Double](
+              PixelTools.alpha(pixel),
+              PixelTools.red(pixel),
+              PixelTools.green(pixel),
+              PixelTools.blue(pixel))
+            Some(vector)
+          }
+          //          val pixel = imagePatch.pixel(xSample, ySample)
+          //          val vector = DenseVector[Double](
+          //            PixelTools.alpha(pixel),
+          //            PixelTools.red(pixel),
+          //            PixelTools.green(pixel),
+          //            PixelTools.blue(pixel))
+          //          (vector * weight, weight)
         }
-//
-//        val Seq(alpha, red, green, blue): Seq[Int] =
-//          (pixelsAndWeights.map(_._1).reduce(_ + _) /
-//            pixelsAndWeights.map(_._2).sum).data.map(_.round.toInt)
-//        PixelTools.argb(alpha, red, green, blue)
+        //
+        //        val Seq(alpha, red, green, blue): Seq[Int] =
+        //          (pixelsAndWeights.map(_._1).reduce(_ + _) /
+        //            pixelsAndWeights.map(_._2).sum).data.map(_.round.toInt)
+        //        PixelTools.argb(alpha, red, green, blue)
 
-                val meanVector =
-                  pixelsAndWeights.flatten.reduce(_ + _) / pixelsAndWeights.flatten.size.toDouble
-                val Array(alpha, red, green, blue) = meanVector.map(_.round.toInt).data
-                PixelTools.argb(alpha, red, green, blue)
+        val meanVector =
+          pixelsAndWeights.flatten.reduce(_ + _) / pixelsAndWeights.flatten.size.toDouble
+        val Array(alpha, red, green, blue) = meanVector.map(_.round.toInt).data
+        PixelTools.argb(alpha, red, green, blue)
       }
     }
   }
@@ -154,6 +169,11 @@ case class RichImage(image: Image) {
 
 // TODO
 object RichImage {
+  def fromPOD(pod: ImagePOD): Image = {
+    val ImagePOD(width, height, imageType, data) = pod
+    Image(width, height, data.toArray)
+  }
+
   def edgePreservingSmoothing(
     radius: Int,
     segmentation: Segmentation)(

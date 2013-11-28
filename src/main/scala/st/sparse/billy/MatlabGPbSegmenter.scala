@@ -16,6 +16,8 @@ object MatlabGPbSegmenter extends Logging {
   // TODO: Make parameter.
   val maxComputablePixels = 500 * 500
 
+  object Lock
+
   /**
    * Returns a map of the boundary probabilities.
    */
@@ -40,7 +42,10 @@ object MatlabGPbSegmenter extends Logging {
     // boundary image to `boundariesPath`.
     // The boundaries are probabilistic, and scaled in the range [0, 255].
     val command = s"gPbBoundaries('$imagePath', '$boundariesPath');"
-    MatlabUtil.runInDirectory(gPbDirectory, command)
+    // This takes a lot of memory, so we'll only run one at a time.
+    Lock.synchronized {
+      MatlabUtil.runInDirectory(gPbDirectory, command)
+    }
 
     Image(boundariesPath)
   }

@@ -66,8 +66,8 @@ object BillyBuild extends Build {
       "st.sparse" %% "persistent-map" % "0.1.2-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
-      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.7",
-      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.7",
+      "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.9",
+      "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.9",
       //      "nebula" %% "nebula" % "0.1-SNAPSHOT",
       //      "commons-lang" % "commons-lang" % "2.6",
       "org.scala-lang" % "scala-reflect" % scalaVersionString,
@@ -88,9 +88,13 @@ object BillyBuild extends Build {
       "junit" % "junit" % "4.11" % "test",
       "org.xerial" % "sqlite-jdbc" % "3.7.2",
       "org.slf4j" % "slf4j-simple" % "1.7.5" % "test",
+      "com.github.axel22" %% "scalameter" % "0.4" % "test",
       //      "org.apache.logging.log4j" % "log4j-core" % "2.0-beta8",
-//      "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
+      //      "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
       "org.imgscalr" % "imgscalr-lib" % "4.2"))
+
+  def benchmarkSettings = Seq(
+    testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"))
 
   def updateOnDependencyChange = Seq(
     watchSources <++= (managedClasspath in Test) map { cp => cp.files })
@@ -117,7 +121,8 @@ object BillyBuild extends Build {
       extraLibraryDependencies ++
       scalaSettings ++
       updateOnDependencyChange ++
-      publishSettings
+      publishSettings ++
+      benchmarkSettings
 
   lazy val root = {
     val settings = libSettings ++ Seq(name := projectName, fork := true)

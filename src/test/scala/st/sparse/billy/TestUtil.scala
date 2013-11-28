@@ -12,7 +12,7 @@ import st.sparse.sundry._
 trait TestUtil extends Logging {
   lazy val configureLogger = {
     // Must be one of: "trace", "debug", "info", "warn", or "error".
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info")
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
   }
 
   loadOpenCV
