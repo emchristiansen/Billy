@@ -12,6 +12,8 @@ import com.sksamuel.scrimage.filter._
 import scala.util.Try
 import org.opencv.core.Point
 import grizzled.math.stats
+import st.sparse.sundry._
+import java.io.File
 
 ///////////////////////////////////////////////////////////
 
@@ -21,7 +23,7 @@ import grizzled.math.stats
  */
 case class ForegroundMaskExtractor(
   patchWidth: Int)(
-    implicit matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[DenseMatrix[Double]] {
+    implicit matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[DenseMatrix[Double]] with Logging {
   override def extract = (image, keyPoints) =>
     extractCorrect(image, keyPoints).map(_.map(RichDenseMatrix.inpaint))
 
@@ -29,7 +31,18 @@ case class ForegroundMaskExtractor(
    * This method makes very clear which mask probabilities are unknown.
    */
   def extractCorrect = (image: Image, keyPoints: Seq[KeyPoint]) => {
-    val boundaries = MatlabGPbSegmenter.boundariesImageScaling(image)
+    // TODO
+    val boundaries = {
+      val cacheFile = new File(
+        s"/tmp/boundary_${image.hashCode}.png")
+      if (!cacheFile.exists) {
+        logger.debug("Boundary cache miss.")
+        MatlabGPbSegmenter.boundariesImageScaling(image).write(cacheFile)
+      } else logger.debug("Boundary cache hit.")
+
+      Image(cacheFile)
+    }
+
     assert(boundaries.width == image.width)
     assert(boundaries.height == image.height)
     keyPoints map { keyPoint =>

@@ -127,37 +127,37 @@ case class PixelSMatcher(
       unnormalizedDistance / weights.sum
     }
 
-    logDirectory("patchesAndDistances") { directory =>
-      // Assumes the input matrix has mean zero and unit std.
-      def writeNormalized(
-        name: String,
-        matrix: DenseMatrix[Double]) {
-        // We'll clip at 3 standard deviations.
-        val scaled = matrix mapValues (_ / 3 + 0.5) mapValues
-          (_.min(1.0)) mapValues (_.max(0.0))
-        scaled.toImage.write(new File(directory, name))
-      }
-
-      leftPixels.affineToUnitInterval.toImage.write(new File(directory, "leftPixels"))
-      rightPixels.affineToUnitInterval.toImage.write(new File(directory, "rightPixels"))
-      leftMask.toImage.write(new File(directory, "leftMask"))
-      rightMask.toImage.write(new File(directory, "rightMask"))
-      
-      writeNormalized("leftPixelsNormalized", leftPixelsNormalized)
-      writeNormalized("rightPixelsNormalized", rightPixelsNormalized)
-
-      writeNormalized("leftMaskNormalized", leftMaskNormalized)
-      writeNormalized("rightMaskNormalized", rightMaskNormalized)
-
-      val message = Seq(
-        "pixelsNCC: " + pixelsNCC,
-        "maskNCC: " + maskNCC,
-        "pixelsWeightedNCC: " + pixelsWeightedNCC,
-        "maskWeightedNCC: " + maskWeightedNCC).mkString("\n")
-      FileUtils.writeStringToFile(
-        new File(directory, "log.txt"),
-        message)
-    }
+//    logDirectory("patchesAndDistances") { directory =>
+//      // Assumes the input matrix has mean zero and unit std.
+//      def writeNormalized(
+//        name: String,
+//        matrix: DenseMatrix[Double]) {
+//        // We'll clip at 3 standard deviations.
+//        val scaled = matrix mapValues (_ / 3 + 0.5) mapValues
+//          (_.min(1.0)) mapValues (_.max(0.0))
+//        scaled.toImage.write(new File(directory, name))
+//      }
+//
+//      leftPixels.affineToUnitInterval.toImage.write(new File(directory, "leftPixels"))
+//      rightPixels.affineToUnitInterval.toImage.write(new File(directory, "rightPixels"))
+//      leftMask.toImage.write(new File(directory, "leftMask"))
+//      rightMask.toImage.write(new File(directory, "rightMask"))
+//      
+//      writeNormalized("leftPixelsNormalized", leftPixelsNormalized)
+//      writeNormalized("rightPixelsNormalized", rightPixelsNormalized)
+//
+//      writeNormalized("leftMaskNormalized", leftMaskNormalized)
+//      writeNormalized("rightMaskNormalized", rightMaskNormalized)
+//
+//      val message = Seq(
+//        "pixelsNCC: " + pixelsNCC,
+//        "maskNCC: " + maskNCC,
+//        "pixelsWeightedNCC: " + pixelsWeightedNCC,
+//        "maskWeightedNCC: " + maskWeightedNCC).mkString("\n")
+//      FileUtils.writeStringToFile(
+//        new File(directory, "log.txt"),
+//        message)
+//    }
 
     pixelsNCCWeight * pixelsNCC +
       maskNCCWeight * maskNCC +
