@@ -34,7 +34,7 @@ case class ForegroundMaskExtractor(
     // TODO
     val boundaries = {
       val cacheFile = new File(
-        s"/tmp/boundary_${image.hashCode}.png")
+        s"/home/eric/t/2013_q4/pilgrimOutput/boundaryScratch/${image.hashCode.abs}.png")
       if (!cacheFile.exists) {
         logger.debug("Boundary cache miss.")
         MatlabGPbSegmenter.boundariesImageScaling(image).write(cacheFile)

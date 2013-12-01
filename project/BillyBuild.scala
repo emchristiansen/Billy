@@ -13,6 +13,7 @@ object BillyBuild extends Build {
       "Akka Repository" at "http://repo.akka.io/releases/",
       //      "spray-io" at "http://repo.spray.io/",
       "typesafe-releases" at "http://repo.typesafe.com/typesafe/repo",
+      "spray" at "http://repo.spray.io/",
       "Expecty Repository" at "https://raw.github.com/pniederw/expecty/master/m2repo/",
       "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + "/.m2/repository"))
 
@@ -66,6 +67,7 @@ object BillyBuild extends Build {
       "st.sparse" %% "persistent-map" % "0.1.2-SNAPSHOT",
       //      "org.spark-project" %% "spark-core" % "0.7.0-SNAPSHOT",
       "org.scala-lang" %% "scala-pickling" % "0.8.0-SNAPSHOT",
+      "io.spray" %%  "spray-json" % "1.2.5",
       "com.sksamuel.scrimage" %% "scrimage-core" % "1.3.9",
       "com.sksamuel.scrimage" %% "scrimage-filters" % "1.3.9",
       //      "nebula" %% "nebula" % "0.1-SNAPSHOT",
