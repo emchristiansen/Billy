@@ -28,6 +28,7 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
     val experiment = BlurredMiddlebury(
       2.002,
       0,
+      0.5,
       Middlebury(
         2005,
         "Moebius",
@@ -39,9 +40,9 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
     val (leftImage0, time0) = time(experiment.leftImage)
     val (leftImage1, time1) = time(experiment.leftImage)
 
+    logger.info(s"time0: $time0")
+    logger.info(s"time1: $time1")
     assert(leftImage0 == leftImage1)
-    logger.debug((time0 / 1000000).toString)
-    logger.debug((time1 / 1000000).toString)
 
     assert(time1 / 1000000 < 10000)
 
@@ -50,10 +51,11 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
     assert(leftImage0 == unpickled)
   }
 
-  ignore("run", SlowTest) {
+  test("run cached", MediumTest) {
     val experiment = BlurredMiddlebury(
       2.002,
-      0,
+      1,
+      0.5,
       Middlebury(
         2005,
         "Moebius",
@@ -62,6 +64,12 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
         OpenCVExtractor.BRIEF,
         VectorMatcher.L0))
 
-    experiment.run
+    val cached = Experiment.cached(experiment)
+    val (results0, time0) = time(cached.run)
+    val (results1, time1) = time(cached.run)
+
+    logger.info(s"time0: $time0")
+    logger.info(s"time1: $time1")
+    assert(results0 == results1)
   }
 }

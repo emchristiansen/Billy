@@ -24,7 +24,7 @@ import java.io.File
 
 @RunWith(classOf[JUnitRunner])
 class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil {
-  ignore("pickling", InstantTest) {
+  test("pickling", InstantTest) {
     val experiment = Middlebury(
       2006,
       "Flowerpots",
@@ -217,7 +217,7 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
     results.distances.foreachValue(distance => assert(distance >= 0))
   }
 
-  test("run SURF BRISK L0", MediumTest) {
+  test("run SURF BRISK L0 cached", MediumTest) {
     val experiment = Middlebury(
       2006,
       "Flowerpots",
@@ -226,8 +226,15 @@ class TestMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.
       OpenCVExtractor.BRISK,
       VectorMatcher.L0)
 
-    val results = experiment.run
-    assert(results.distances.rows == results.distances.cols)
-    results.distances.foreachValue(distance => assert(distance >= 0))
+    val cached = Experiment.cached(experiment)
+    val (results0, time0) = time(cached.run)
+    val (results1, time1) = time(cached.run)
+    
+    logger.info(s"time0: $time0")
+    logger.info(s"time1: $time1")
+    assert(results0 == results1)
+    
+    assert(results0.distances.rows == results0.distances.cols)
+    results0.distances.foreachValue(distance => assert(distance >= 0))
   }
 }

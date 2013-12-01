@@ -137,5 +137,7 @@ object Experiment extends Logging {
 
       override def experimentParametersString =
         experiment.experimentParametersString
+        
+      override def toString = "Cached " + experiment
     }
 }

@@ -22,14 +22,14 @@ import java.io.File
 
 import org.scalameter.api._
 
-object BenchmarkBlurredMiddlebury extends PerformanceTest.Microbenchmark {
-  val ranges = for {
-    size <- org.scalameter.api.Gen.range("size")(300000, 1500000, 300000)
-  } yield 0 until size
-
-  measure method "map" in {
-    using(ranges) curve("Range") in {
-      _.map(_ + 1)
-    }
-  }
-}
+//object BenchmarkBlurredMiddlebury extends PerformanceTest.Microbenchmark {
+//  val ranges = for {
+//    size <- org.scalameter.api.Gen.range("size")(300000, 1500000, 300000)
+//  } yield 0 until size
+//
+//  measure method "map" in {
+//    using(ranges) curve("Range") in {
+//      _.map(_ + 1)
+//    }
+//  }
+//}

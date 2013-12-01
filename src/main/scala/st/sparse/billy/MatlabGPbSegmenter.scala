@@ -14,7 +14,7 @@ import java.net.JarURLConnection
 object MatlabGPbSegmenter extends Logging {
   // Otherwise the Matlab code will blow up memory.
   // TODO: Make parameter.
-  val maxComputablePixels = 500 * 500
+  val maxComputablePixels = 400 * 400
 
   object Lock
 
