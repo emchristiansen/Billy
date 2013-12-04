@@ -7,6 +7,6 @@ package st.sparse.billy
  */
 sealed trait Color
 
-object Gray extends Color
+case object Gray extends Color
 
-object RGB extends Color
+case object RGB extends Color

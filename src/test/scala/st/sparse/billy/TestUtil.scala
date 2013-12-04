@@ -8,6 +8,8 @@ import scala.slick.session.Database
 import st.sparse.billy.experiments._
 import java.nio.file.Files
 import st.sparse.sundry._
+import spray.json._
+import spray.json.DefaultJsonProtocol._
 
 trait TestUtil extends Logging {
   lazy val configureLogger = {
@@ -38,15 +40,15 @@ trait TestUtil extends Logging {
   val moebiusDisp1 = Image(ExistingFile(new File(
     resourceRoot,
     "/data/middleburyStereo/2005/Moebius/disp1.png")))
-    
+
   val moebiusBoundaries1 = Image(ExistingFile(new File(
     resourceRoot,
-    "/moebiusBoundaries1.png")))    
+    "/moebiusBoundaries1.png")))
 
   val moebiusView5 = Image(ExistingFile(new File(
     resourceRoot,
     "/data/middleburyStereo/2005/Moebius/view5.png")))
-    
+
   val moebiusDisp5 = Image(ExistingFile(new File(
     resourceRoot,
     "/data/middleburyStereo/2005/Moebius/disp5.png")))
@@ -74,5 +76,11 @@ trait TestUtil extends Logging {
     val directory = new File(outputRoot, "log")
     if (!directory.isDirectory) directory.mkdir()
     LogRoot(ExistingDirectory(directory))
+  }
+
+  def checkJsonSerialization[A: JsonFormat](a: A) {
+    val json = a.toJson
+    val unjson = json.convertTo[A]
+    assert(a == unjson)
   }
 }

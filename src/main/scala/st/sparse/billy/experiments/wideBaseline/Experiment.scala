@@ -10,6 +10,8 @@ import st.sparse.persistentmap.CustomPicklers._
 import breeze.linalg.DenseMatrix
 import org.joda.time.DateTime
 import com.sksamuel.scrimage.Image
+import spray.json._
+import spray.json.DefaultJsonProtocol
 
 trait Experiment {
   def run(implicit runtimeConfig: RuntimeConfig): Results
@@ -93,9 +95,6 @@ object Experiment extends Logging {
       implicit ftt2e: FastTypeTag[FastTypeTag[E]]): Experiment =
     new Experiment {
       override def run(implicit runtimeConfig: RuntimeConfig) = {
-        val m = DenseMatrix.zeros[Double](3, 4)
-        m.pickle.unpickle[DenseMatrix[Double]]
-
         // Each type is going to need its own table in the database.
         // This name should make very clear what type the table holds.
         val tableName = {
@@ -140,4 +139,12 @@ object Experiment extends Logging {
         
       override def toString = "Cached " + experiment
     }
+  
+//  def jsonCached[E <% Experiment: JsonFormat](
+//    experiment: E): Experiment = {
+//    implicit def toExperiment(string: String): Experiment = 
+//      string.asJson.convertTo[E]
+//    
+//    cached(experiment.toJson.compactPrint)
+//  }
 }
