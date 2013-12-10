@@ -51,7 +51,7 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
     assert(leftImage0 == unpickled)
   }
 
-  test("run cached", MediumTest) {
+  test("run cached", MediumTest, MatlabTest) {
     val experiment = BlurredMiddlebury(
       2.002,
       1,
@@ -75,7 +75,7 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
     assert(results0 == results1)
   }
 
-  test("run cached shape", SlowTest) {
+  test("run cached shape", SlowTest, MatlabTest) {
     val detector = DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST)
     val extractor = AndExtractor(
       PatchExtractor(Gray, 24, 1),

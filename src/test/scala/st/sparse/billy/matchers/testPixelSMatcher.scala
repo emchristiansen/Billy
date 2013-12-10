@@ -31,7 +31,7 @@ class TestPixelSMatcher extends FunGeneratorSuite with st.sparse.billy.MatlabTes
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
-  test("weighted mean and std", FastTest, MatlabTest) {
+  test("weighted mean and std", FastTest) {
     val data = 100 times (random.nextDouble)
     val weights = 100 times (random.nextDouble)
     

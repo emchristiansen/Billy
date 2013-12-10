@@ -14,6 +14,9 @@ import org.opencv.core.Point
 import grizzled.math.stats
 import st.sparse.sundry._
 import java.io.File
+import scala.slick.session.Database
+import st.sparse.persistentmap._
+import scala.pickling._
 
 ///////////////////////////////////////////////////////////
 
@@ -23,25 +26,32 @@ import java.io.File
  */
 case class ForegroundMaskExtractor(
   patchWidth: Int)(
-    implicit matlabLibraryRoot: MatlabLibraryRoot) extends ExtractorSeveral[DenseMatrix[Double]] with Logging {
+    implicit matlabLibraryRoot: MatlabLibraryRoot,
+    database: Database) extends ExtractorSeveral[DenseMatrix[Double]] with Logging {
   override def extract = (image, keyPoints) =>
     extractCorrect(image, keyPoints).map(_.map(RichDenseMatrix.inpaint))
+
+  lazy val getBoundaries = Memo.connectElseCreateJson(
+    "memo_MatlabGPbSegmenter_boundariesImageScaling",
+    database,
+    MatlabGPbSegmenter.boundariesImageScaling)
 
   /**
    * This method makes very clear which mask probabilities are unknown.
    */
   def extractCorrect = (image: Image, keyPoints: Seq[KeyPoint]) => {
-    // TODO
-    val boundaries = {
-      val cacheFile = new File(
-        s"/home/eric/t/2013_q4/pilgrimOutput/boundaryScratch/${image.hashCode.abs}.png")
-      if (!cacheFile.exists) {
-        logger.debug("Boundary cache miss.")
-        MatlabGPbSegmenter.boundariesImageScaling(image).write(cacheFile)
-      } else logger.debug("Boundary cache hit.")
-
-      Image(cacheFile)
-    }
+    val boundaries = getBoundaries(image)
+    //    // TODO
+    //    val boundaries = {
+    //      val cacheFile = new File(
+    //        s"/home/eric/t/2013_q4/pilgrimOutput/boundaryScratch/${image.hashCode.abs}.png")
+    //      if (!cacheFile.exists) {
+    //        logger.debug("Boundary cache miss.")
+    //        MatlabGPbSegmenter.boundariesImageScaling(image).write(cacheFile)
+    //      } else logger.debug("Boundary cache hit.")
+    //
+    //      Image(cacheFile)
+    //    }
 
     assert(boundaries.width == image.width)
     assert(boundaries.height == image.height)

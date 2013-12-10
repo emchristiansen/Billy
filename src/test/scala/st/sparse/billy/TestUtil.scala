@@ -79,4 +79,10 @@ trait TestUtil extends Logging {
     if (!directory.isDirectory) directory.mkdir()
     LogRoot(ExistingDirectory(directory))
   }
+
+  implicit val database: Database = {
+    val tempFile = File.createTempFile("TestBilly", "sqlite")
+    tempFile.deleteOnExit
+    Database.forURL(s"jdbc:sqlite:$tempFile", driver = "org.sqlite.JDBC")
+  }
 }

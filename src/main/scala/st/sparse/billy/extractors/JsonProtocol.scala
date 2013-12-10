@@ -6,6 +6,7 @@ import st.sparse.billy.PairDetector
 import st.sparse.billy.Matcher
 import st.sparse.sundry._
 import scala.pickling.FastTypeTag
+import scala.slick.session.Database
 
 trait JsonProtocol extends DefaultJsonProtocol {
   implicit def andExtractorFormat[E1 <% Extractor[F1]: JsonFormat, E2 <% Extractor[F2]: JsonFormat, F1, F2] =
@@ -24,7 +25,8 @@ trait JsonProtocol extends DefaultJsonProtocol {
   implicit def patchExtractorFormat = jsonFormat3(PatchExtractor.apply)
 
   implicit def foregroundMaskExtractorFormat(
-    implicit matlabLibraryRoot: MatlabLibraryRoot) =
+    implicit matlabLibraryRoot: MatlabLibraryRoot,
+    database: Database) =
     jsonFormat(
       ForegroundMaskExtractor.apply _,
       "patchWidth")

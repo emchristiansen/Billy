@@ -29,80 +29,80 @@ case class BlurredMiddlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[
   override val extractor = middlebury.extractor
   override val matcher = middlebury.matcher
 
-//  private val smoothInner: (ImagePOD, ImagePOD) => ImagePOD =
-//    (imagePOD, disparityPOD) => {
-//      val image = RichImage.fromPOD(imagePOD)
-//      val disparity = RichImage.fromPOD(disparityPOD)
-//
-//      val smoothed = Stream.iterate(image) { image =>
-//        image.anisotropicDiffusion(
-//          similarityThreshold,
-//          disparity)
-//      }
-//
-//      smoothed(numSmoothingIterations).toPOD
-//    }
-//
-//  private def smoothInnerMemo(implicit runtimeConfig: RuntimeConfig) =
-//    PersistentMemo(
-//      runtimeConfig.database,
-//      "blurredMiddlebury_smooth",
-//      smoothInner.tupled)
-//
-//  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image =
-//    imageAndDisparity => {
-//      val (image, disparity) = imageAndDisparity
-//      logger.debug("Smoothing image")
-//      RichImage.fromPOD(smoothInnerMemo.apply((image.toPOD, disparity.toPOD)))
-//    }
-
-    // Pickling is failing for no apparent reason, so I'm reduced to a workaround.
-    def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image =
-      (imageAndDisparity) => {
-        def raw: (Image, Image) => Image = (image, disparity) => {
-          val small = image.scale(scaleFactor)
-          val smallSmoothedStream = Stream.iterate(small) {
-            _.anisotropicDiffusion(
-              similarityThreshold,
-              disparity)
-          }
-  
-          val smallSmoothed = smallSmoothedStream(numSmoothingIterations)
-          val smoothed = smallSmoothed.scale(1.0 / scaleFactor)
-          assert(image.width == smoothed.width)
-          assert(image.height == smoothed.height)
-          assert(image.awt.getType == smoothed.awt.getType)
-  
-          smoothed
-        }
-  
-        val (image, disparity) = imageAndDisparity
-        val cacheFile = new File(
-          s"/home/eric/t/2013_q4/pilgrimOutput/smoothScratch/${imageAndDisparity.hashCode.abs}_$numSmoothingIterations.png")
-        if (!cacheFile.exists) {
-          logger.debug("Smooth cache miss.")
-          raw(image, disparity).write(cacheFile)
-        } else logger.debug("Smooth cache hit.")
-  
-        Image(cacheFile)
-      }
-
-  //  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image = {
-  //    def raw: (Image, Image) => Image = (image, disparity) => {
+  //  private val smoothInner: (ImagePOD, ImagePOD) => ImagePOD =
+  //    (imagePOD, disparityPOD) => {
+  //      val image = RichImage.fromPOD(imagePOD)
+  //      val disparity = RichImage.fromPOD(disparityPOD)
+  //
   //      val smoothed = Stream.iterate(image) { image =>
   //        image.anisotropicDiffusion(
   //          similarityThreshold,
   //          disparity)
   //      }
   //
-  //      smoothed(numSmoothingIterations)
+  //      smoothed(numSmoothingIterations).toPOD
   //    }
   //
+  //  private def smoothInnerMemo(implicit runtimeConfig: RuntimeConfig) =
   //    PersistentMemo(
   //      runtimeConfig.database,
   //      "blurredMiddlebury_smooth",
-  //      raw.tupled)
-  //  }
+  //      smoothInner.tupled)
+  //
+  //  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image =
+  //    imageAndDisparity => {
+  //      val (image, disparity) = imageAndDisparity
+  //      logger.debug("Smoothing image")
+  //      RichImage.fromPOD(smoothInnerMemo.apply((image.toPOD, disparity.toPOD)))
+  //    }
+
+  //    // Pickling is failing for no apparent reason, so I'm reduced to a workaround.
+  //    def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image =
+  //      (imageAndDisparity) => {
+  //        def raw: (Image, Image) => Image = (image, disparity) => {
+  //          val small = image.scale(scaleFactor)
+  //          val smallSmoothedStream = Stream.iterate(small) {
+  //            _.anisotropicDiffusion(
+  //              similarityThreshold,
+  //              disparity)
+  //          }
+  //  
+  //          val smallSmoothed = smallSmoothedStream(numSmoothingIterations)
+  //          val smoothed = smallSmoothed.scale(1.0 / scaleFactor)
+  //          assert(image.width == smoothed.width)
+  //          assert(image.height == smoothed.height)
+  //          assert(image.awt.getType == smoothed.awt.getType)
+  //  
+  //          smoothed
+  //        }
+  //  
+  //        val (image, disparity) = imageAndDisparity
+  //        val cacheFile = new File(
+  //          s"/home/eric/t/2013_q4/pilgrimOutput/smoothScratch/${imageAndDisparity.hashCode.abs}_$numSmoothingIterations.png")
+  //        if (!cacheFile.exists) {
+  //          logger.debug("Smooth cache miss.")
+  //          raw(image, disparity).write(cacheFile)
+  //        } else logger.debug("Smooth cache hit.")
+  //  
+  //        Image(cacheFile)
+  //      }
+
+  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image = {
+    def raw: (Image, Image) => Image = (image, disparity) => {
+      val smoothed = Stream.iterate(image) { image =>
+        image.anisotropicDiffusion(
+          similarityThreshold,
+          disparity)
+      }
+
+      smoothed(numSmoothingIterations)
+    }
+
+    Memo.connectElseCreateJson(
+      "memo_blurredMiddlebury_smooth",
+      runtimeConfig.database,
+      raw.tupled)
+  }
 
   override def leftImage(implicit runtimeConfig: RuntimeConfig) = {
     val disparity = Image(ExistingFile(new File(

@@ -16,7 +16,7 @@ import com.sksamuel.scrimage.PixelTools
 
 @RunWith(classOf[JUnitRunner])
 class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUtil {
-  ignore("edge preserving smoothing", MediumTest, MatlabTest) {
+  ignore("edge preserving smoothing", MediumTest, MatlabTest, InteractiveTest) {
     val scaleFactor = 0.25
 
     val smallDisp = moebiusDisp1.scale(scaleFactor)
@@ -43,7 +43,7 @@ class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUti
     logImage("smoothed", smoothed)
   }
 
-  test("mapStencil", MediumTest, MatlabTest) {
+  test("mapStencil", MediumTest, InteractiveTest) {
     val blurred = goldfishGirl.mapStencil(1) {
       case ((x, y), _, patch) =>
         val sum = patch.argb.map(DenseVector.apply).reduce(_ + _)
@@ -56,7 +56,7 @@ class TestRichImage extends FunGeneratorSuite with st.sparse.billy.MatlabTestUti
     logImage("blurred", blurred)
   }
 
-  test("anisotropic diffusion", MediumTest, MatlabTest) {
+  test("anisotropic diffusion", MediumTest, InteractiveTest) {
     val scaleFactor = 0.25
 
     val smallView = moebiusView1.scale(scaleFactor)

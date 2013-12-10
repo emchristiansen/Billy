@@ -19,13 +19,13 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Matl
   val smallGoldfishGirl = goldfishGirl.scale(0.5)
   logImage("smallGoldfishGirl", smallGoldfishGirl)
 
-  ignore("boundaries", SlowTest, MatlabTest) {
+  test("boundaries", SlowTest, MatlabTest) {
     val boundaries = MatlabGPbSegmenter.boundariesImageScaling(palmTree)
 
     logImage("boundaries", boundaries)
   }
 
-  test("connected components", FastTest, MatlabTest) {
+  test("connected components", FastTest) {
     val denseMatrix = Seq(
       Seq(true, true, false, true),
       Seq(true, false, false, true),
@@ -39,7 +39,7 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Matl
     assert(MatlabGPbSegmenter.connectedComponentsLabels(denseMatrix) == labels)
   }
 
-  test("matlab segmenter golden", SlowTest, MatlabTest) {
+  ignore("matlab segmenter golden", SlowTest, MatlabTest) {
     val inpainted = moebiusDisp1.inpaintBlackPixels
     val boundaries = MatlabGPbSegmenter.boundariesImageScaling(inpainted)
     logImage("moebiusDisp1", moebiusDisp1)
@@ -48,7 +48,7 @@ class TestMatlabGPbSegmenter extends FunGeneratorSuite with st.sparse.billy.Matl
     assert(boundaries == moebiusBoundaries1)
   }
   
-  ignore("image segments", SlowTest, MatlabTest) {
+  test("image segments", SlowTest, MatlabTest) {
     val boundaries = MatlabGPbSegmenter.boundaries(smallGoldfishGirl)
 
     val segments = boundaries.mapValues(_ < 0.1)
