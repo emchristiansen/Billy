@@ -10,6 +10,8 @@ import java.nio.file.Files
 import st.sparse.sundry._
 import spray.json._
 import spray.json.DefaultJsonProtocol._
+import scala.pickling._
+import scala.pickling.binary._
 
 trait TestUtil extends Logging {
   lazy val configureLogger = {
@@ -76,11 +78,5 @@ trait TestUtil extends Logging {
     val directory = new File(outputRoot, "log")
     if (!directory.isDirectory) directory.mkdir()
     LogRoot(ExistingDirectory(directory))
-  }
-
-  def checkJsonSerialization[A: JsonFormat](a: A) {
-    val json = a.toJson
-    val unjson = json.convertTo[A]
-    assert(a == unjson)
   }
 }

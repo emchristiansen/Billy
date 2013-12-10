@@ -1,8 +1,24 @@
 package st.sparse
 
+import spray.json._
+import scala.pickling._
+import scala.pickling.binary._
+
 package object billy extends RichKeyPointImplicits with RichImageImplicits with RichMatImplicits with RichDenseMatrixImplicits with RichSeqSeqImplicits with CustomPicklers with JsonProtocol {
   lazy val loadOpenCV =
     System.load("/usr/local/share/OpenCV/java/libopencv_java300.so")
+    
+  def checkJson[A: JsonFormat](a: A) {
+    val json = a.toJson
+    val unjson = json.convertTo[A]
+    assert(a == unjson)
+  }
+  
+  def checkPickle[A: SPickler: Unpickler: FastTypeTag](a: A) {
+    val pickled = a.pickle
+    val unpickled = pickled.unpickle[A]
+    assert(a == unpickled)
+  }
 
   // TODO: Uncomment this function and change the relevant constructors.
   // Currently this is impossible due to a probable Scala bug.

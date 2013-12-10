@@ -39,11 +39,11 @@ class TestJsonProtocol extends FunGeneratorSuite with st.sparse.billy.experiment
         OpenCVExtractor.SIFT,
         VectorMatcher.L1))
 
-    checkJsonSerialization(experiment)
+    checkJson(experiment)
   }
   
   test("Results", InstantTest) {
     val results = Results(DenseMatrix.zeros[Double](3, 3))
-    checkJsonSerialization(results)
+    checkJson(results)
   }
 }

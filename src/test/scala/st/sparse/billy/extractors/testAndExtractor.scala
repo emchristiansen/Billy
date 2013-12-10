@@ -31,6 +31,15 @@ class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.MatlabTest
   val keyPoints = detector.detect(image)
   assert(keyPoints.size > 0)
 
+  test("Pickle", InstantTest) {
+    val patchWidth = 64
+    val extractor = AndExtractor(
+      PatchExtractor(Gray, patchWidth, 1),
+      ForegroundMaskExtractor(patchWidth))
+      
+    checkPickle(extractor)
+  }
+
   test("Patch and ForegroundMask", SlowTest, MatlabTest) {
     val patchWidth = 64
     val extractor = AndExtractor(
@@ -41,11 +50,11 @@ class TestAndExtractor extends FunGeneratorSuite with st.sparse.billy.MatlabTest
     assert(descriptors.flatten.size >= 8)
 
     descriptors.flatten foreach {
-      case (patch, foregroundMask) => {       
+      case (patch, foregroundMask) => {
         val patchImage = patch.mapValues(_.head.toDouble / 255).toImage
 
         val foregroundMaskImage = foregroundMask.toImage
-        
+
         logDirectory("PatchAndMask") { directory: ExistingDirectory =>
           patchImage.write(new File(directory, "patch.png"))
           foregroundMaskImage.write(new File(directory, "foregroundMask.png"))

@@ -23,7 +23,7 @@ import java.io.File
 ////////////////////////////////////////////////////////////////////////////////
 
 @RunWith(classOf[JUnitRunner])
-class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.TestUtil with Logging {
+class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.experiments.MatlabTestUtil with Logging {
   test("smooth is memoized", MediumTest) {
     val experiment = BlurredMiddlebury(
       2.002,
@@ -63,6 +63,49 @@ class TestBlurredMiddlebury extends FunGeneratorSuite with st.sparse.billy.exper
         DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST),
         OpenCVExtractor.BRIEF,
         VectorMatcher.L0))
+
+    checkPickle(experiment)
+
+    val cached = Experiment.cached(experiment)
+    val (results0, time0) = time(cached.run)
+    val (results1, time1) = time(cached.run)
+
+    logger.info(s"time0: $time0")
+    logger.info(s"time1: $time1")
+    assert(results0 == results1)
+  }
+
+  test("run cached shape", SlowTest) {
+    val detector = DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST)
+    val extractor = AndExtractor(
+      PatchExtractor(Gray, 24, 1),
+      ForegroundMaskExtractor(24))
+    val matcher = PixelSMatcher(0, 0, 0, 1)
+    val middlebury = Middlebury(
+      2005,
+      "Moebius",
+      10,
+      detector,
+      extractor,
+      matcher)
+
+    val experiment = BlurredMiddlebury(
+      2.002,
+      1,
+      0.5,
+      middlebury)
+
+//    checkPickle(detector)
+//    checkPickle(extractor)
+//    checkPickle(matcher)
+//    checkPickle(middlebury)
+//    checkJson(experiment)
+    
+    checkJson(detector)
+    checkJson(extractor)
+    checkJson(matcher)
+    checkJson(middlebury)
+    checkJson(experiment)
 
     val cached = Experiment.cached(experiment)
     val (results0, time0) = time(cached.run)

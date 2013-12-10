@@ -8,7 +8,7 @@ import st.sparse.billy._
 import st.sparse.sundry._
 
 trait MatlabTestUtil extends st.sparse.billy.experiments.TestUtil with st.sparse.billy.MatlabTestUtil {
-  override val runtimeConfig = RuntimeConfig(
+  override implicit val runtimeConfig = RuntimeConfig(
     ExistingDirectory(new File(resourceRoot, "/data")),
     database,
     outputRoot,

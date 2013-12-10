@@ -29,18 +29,18 @@ class TestJsonProtocol extends FunGeneratorSuite with st.sparse.billy.experiment
   test("Detector", InstantTest) {
     val detector = OpenCVDetector.FAST
 
-    checkJsonSerialization(detector)
+    checkJson(detector)
   }
 
   test("BoundedDetector", InstantTest) {
     val detector = BoundedDetector(100, OpenCVDetector.FAST)
 
-    checkJsonSerialization(detector)
+    checkJson(detector)
   }
 
   test("DoublyBoundedPairDetector", InstantTest) {
     val detector = DoublyBoundedPairDetector(2, 10, 100, OpenCVDetector.FAST)
 
-    checkJsonSerialization(detector)
+    checkJson(detector)
   }
 }

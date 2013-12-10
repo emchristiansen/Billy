@@ -4,6 +4,7 @@ import spray.json._
 import spray.json.DefaultJsonProtocol
 import breeze.linalg._
 import scala.reflect.ClassTag
+import org.joda.time.DateTime
 
 trait JsonProtocol extends DefaultJsonProtocol {
   def jsonFormat0[A](singleton: A): RootJsonFormat[A] = new RootJsonFormat[A] {
@@ -32,7 +33,7 @@ trait JsonProtocol extends DefaultJsonProtocol {
   }
 
   private case class DenseMatrixData[A](rows: Int, data: List[A])
-  private implicit def denseMatrixDataFormat[A: JsonFormat] =
+  private implicit def denseMatrixDataFormat[A: JsonFormat]: JsonFormat[DenseMatrixData[A]] =
     jsonFormat2(DenseMatrixData.apply[A])
 
   implicit def denseMatrixFormat[A: JsonFormat: ClassTag] =
@@ -45,4 +46,9 @@ trait JsonProtocol extends DefaultJsonProtocol {
         new DenseMatrix(data.rows, data.data.toArray)
       }
     }
+  
+  implicit def dateTimeFormat = new RootJsonFormat[DateTime] {
+    override def write(dateTime: DateTime) = dateTime.toString().toJson
+    override def read(value: JsValue) = new DateTime(value.convertTo[String])
+  }
 }

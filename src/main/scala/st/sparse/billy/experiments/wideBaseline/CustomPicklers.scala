@@ -86,4 +86,39 @@ trait CustomPicklers extends billy.CustomPicklers {
           matcher)
       }
     }
+
+  implicit def blurredMiddleburyPickler[D <% PairDetector: SPickler: Unpickler: FastTypeTag, E <% Extractor[F]: SPickler: Unpickler: FastTypeTag, M <% Matcher[F]: SPickler: Unpickler: FastTypeTag, F](
+    implicit implicitFormat: PickleFormat,
+    middleburyFFT: FastTypeTag[Middlebury[D, E, M, F]]) =
+    new SPickler[BlurredMiddlebury[D, E, M, F]] with Unpickler[BlurredMiddlebury[D, E, M, F]] {
+      override val format = implicitFormat
+
+      override def pickle(
+        picklee: BlurredMiddlebury[D, E, M, F],
+        builder: PBuilder) {
+        builder.beginEntry(picklee)
+
+        putField(builder, "similarityThreshold", picklee.similarityThreshold)
+        putField(builder, "numSmoothingIterations", picklee.numSmoothingIterations)
+        putField(builder, "scaleFactor", picklee.scaleFactor)
+        putField(builder, "middlebury", picklee.middlebury)
+
+        builder.endEntry()
+      }
+
+      override def unpickle(
+        tag: => FastTypeTag[_],
+        reader: PReader): BlurredMiddlebury[D, E, M, F] = {
+        val similarityThreshold = readField[Double](reader)
+        val numSmoothingIterations = readField[Int](reader)
+        val scaleFactor = readField[Double](reader)
+        val middlebury = readField[Middlebury[D, E, M, F]](reader)
+
+        BlurredMiddlebury(
+          similarityThreshold,
+          numSmoothingIterations,
+          scaleFactor,
+          middlebury)
+      }
+    }
 }
