@@ -87,36 +87,81 @@ case class BlurredMiddlebury[D <% PairDetector, E <% Extractor[F], M <% Matcher[
   //        Image(cacheFile)
   //      }
 
-  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image = {
-    def raw: (Image, Image) => Image = (image, disparity) => {
+  def smooth(implicit runtimeConfig: RuntimeConfig): (Image, Image) => Image = {
+    def anisotropicDiffusion: (Image, Double, Image) => Image =
+      (image, similarityThreshold, similarities) => image.anisotropicDiffusion(
+        similarityThreshold,
+        similarities)
+
+    val anisotropicDiffusionMemo = Memo.connectElseCreateJson(
+      "memo_blurredMiddlebury_anisotropicDiffusion",
+      runtimeConfig.database,
+      anisotropicDiffusion.tupled)
+
+    (image: Image, disparity: Image) => {
       val smoothed = Stream.iterate(image) { image =>
-        image.anisotropicDiffusion(
+        anisotropicDiffusionMemo((
+          image,
           similarityThreshold,
-          disparity)
+          disparity))
       }
 
       smoothed(numSmoothingIterations)
     }
-
-    Memo.connectElseCreateJson(
-      "memo_blurredMiddlebury_smooth",
-      runtimeConfig.database,
-      raw.tupled)
   }
+
+  //  def smooth(implicit runtimeConfig: RuntimeConfig): ((Image, Image)) => Image = {
+  //    def raw: (Image, Image) => Image = (image, disparity) => {
+  //      val smoothed = Stream.iterate(image) { image =>
+  //        image.anisotropicDiffusion(
+  //          similarityThreshold,
+  //          disparity)
+  //      }
+  //
+  //      smoothed(numSmoothingIterations)
+  //    }
+  //
+  //    Memo.connectElseCreateJson(
+  //      "memo_blurredMiddlebury_smooth",
+  //      runtimeConfig.database,
+  //      raw.tupled)
+  //  }
+
+  //  def smooth(implicit runtimeConfig: RuntimeConfig): (Image, Image) => Image = {
+  //    val memoized = Memo.connectElseCreateJson(
+  //      "memo_blurredMiddlebury_smooth",
+  //      runtimeConfig.database,
+  //      raw.tupled)     
+  //    
+  //    def raw: (Image, Image, Int) => Image = (image, disparity, numIterations) => { 
+  //      require(numIterations >= 0)
+  //      
+  //      if (numIterations == 0) image
+  //      else {
+  //        val recursed = memoized((image, disparity, numIterations - 1))
+  //        recursed.anisotropicDiffusion(
+  //          similarityThreshold,
+  //          disparity)
+  //      }
+  //    }
+  //    
+  //    (image: Image, disparity: Image) => 
+  //      memoized(image, disparity, numSmoothingIterations)
+  //  }  
 
   override def leftImage(implicit runtimeConfig: RuntimeConfig) = {
     val disparity = Image(ExistingFile(new File(
       middlebury.databaseRoot,
       "disp1.png")))
     val image = middlebury.leftImage
-    smooth.apply((image, disparity))
+    smooth.apply(image, disparity)
   }
   override def rightImage(implicit runtimeConfig: RuntimeConfig) = {
     val disparity = Image(ExistingFile(new File(
       middlebury.databaseRoot,
       "disp5.png")))
     val image = middlebury.rightImage
-    smooth.apply((image, disparity))
+    smooth.apply(image, disparity)
   }
   override def correspondenceMap(implicit runtimeConfig: RuntimeConfig) =
     middlebury.correspondenceMap
